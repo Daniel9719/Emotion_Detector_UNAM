@@ -5,8 +5,8 @@
  *      Author: danie
  */
 
-#ifndef CHAR_EXTRACTION_PDS_BURG_H_
-#define CHAR_EXTRACTION_PDS_BURG_H_
+#ifndef CHAR_EXTRACTION_PSD_BURG_H_
+#define CHAR_EXTRACTION_PSD_BURG_H_
 
 #include <stdint.h>
 #include <math.h>
@@ -19,6 +19,7 @@
 //%%%%%%%%%%%%%%%%%%    PDS FUNCTIONS   %%%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 float ARBurg(float* X, uint16_t order, uint16_t signal);
-void AR2PSD(float rho, float T);
+float* AR2PSD(float rho, float Ts);
+void DMA_Channels_Config(uint16_t Size);
 
-#endif /* CHAR_EXTRACTION_PDS_BURG_H_ */
+#endif /* CHAR_EXTRACTION_PSD_BURG_H_ */

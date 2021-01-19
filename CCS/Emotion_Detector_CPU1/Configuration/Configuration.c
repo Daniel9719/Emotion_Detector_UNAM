@@ -301,7 +301,7 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
                 AutoTx=(Data&0x40)>>6;
                 Clb_Mode=(Data&0x80)>>7;
                 if(Clb_Mode){
-                    GPIO_PORTA_CLEAR_R|=0x7;            //Turn off Cyan LED RGB for Calibration Mode
+                    GPIO_PORTA_CLEAR_R|=0x3;            //Turn off Cyan LED RGB for Calibration Mode
                     GPIO_PORTA_SET_R|=0x5;              //Turn on Cyan LED RGB for Calibration Mode
                     AS7026GG_ADC_Channel(0);
                 }

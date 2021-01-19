@@ -227,6 +227,7 @@ VarsMap:
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%   GPIO PORTS CONFIGURATIONS  %%%%%%%%%%%%%%%%%%%%
+//                  R: GPIO2     G: GPIO1    B: GPIO0
 //                   SCL: GPIO105        SDA: GPIO104
 //               SCIB RX: GPIO19     SCIB TX: GPIO18
 //                 XINT3: GPIO 67      XINT2: GPIO22

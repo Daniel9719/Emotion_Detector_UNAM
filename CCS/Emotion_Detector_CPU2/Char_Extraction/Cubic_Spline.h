@@ -18,6 +18,7 @@
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%    CUBIC SPLINE FUNCTIONS    %%%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
-void Freq_Extraction(float* Input, uint16_t Type);
+float* Cubic_Spline(float* h, float* Y);
+void DMA_Channels_Config(uint16_t Size);
 
 #endif /* CHAR_EXTRACTION_CUBIC_SPLINE_H_ */

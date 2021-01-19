@@ -1,22 +1,23 @@
 /*
- * PDS_Burg.c
+ * PSD_Burg.c
  *
  *  Created on: 03/01/2021
  *      Author: danie
  */
-#include<Char_extraction/PDS_Burg.h>
+#include<Char_extraction/PSD_Burg.h>
+#include<Char_extraction/Cubic_Spline.h>
 
 //float AR[ARorder];
 float ef[1024]={0};
 float eb[1024]={0};
 float FFT_R[NFFT]={0};
 //float FFT_I[NFFT];
-float PDS[NFFT]={0};
+float PSD[NFFT]={0};
 
 extern float* fft_float(float* ,uint16_t);
 
 //--------------------------------------------------------------------
-//%%%%%%%%%    AR PARAMETERS ESTIMATION USING BURG METHOD    %%%%%%%%%
+//%%%%%%%%   AR COEFFICIENTS ESTIMATION USING BURG'S METHOD   %%%%%%%%
 //       float* X: Pointer to array with input data
 // uint16_t order: Order number for the AR estimation (up to order 50)
 //uint16_t signal: (0) EDA (1) PRV
@@ -27,26 +28,22 @@ float ARBurg(float* X, uint16_t order, uint16_t Type){
     float num, den, rho=0, temp, Nf, kp, new_rho, aux;
     uint16_t Ni;
 
-    int i;
-    Ni = signal? 512:1024;
+    Ni = Type? 512:1024;              //If Signal (1) PRV (0) EDA
 //    Ni = Type? 11:1024;
-    for(i=0;i<Ni;i++){
-        eb[i]=PRV[i];
-        ef[i]=PRV[i];
+    for(n=0;n<Ni;n++){
+        eb[n]=X[n];
+        ef[n]=X[n];
+        rho += X[n]*X[n];
     }
 
     Nf = (float)(Ni);
-    for(n=0;n<Ni;n++){
-        rho += X[n]*X[n];
-    }
     den = rho*2;
     rho /= Nf;
     temp = 1.0;
 
-    while(DMA_CH1_CONTROL_R&0x800){}       //Mientras el TRANSFER del CH1 no sea cero
-    while(DMA_PRIORITYSTAT_R&0x7){}         //Mientras el CH1 permanezca activo
-    DMA_CH1_CONTROL_R|=0x2;                 //HALT:Pone al canal en Standby al terminar Transfer
+    while(DMA_CH1_CONTROL_R&0x800){}       //While CH1 transfer isn't complete (PSD!=0)
 
+    //AR coeffitients estimation
     for(k=0;k<order;k++){
         num=0;
         for(n=k+1;n<Ni;n++){
@@ -58,15 +55,15 @@ float ARBurg(float* X, uint16_t order, uint16_t Type){
         temp = 1.0-(kp*kp);
         new_rho = temp*rho;
         rho = new_rho;
-        PDS[k+1] = kp;
+        PSD[k+1] = kp;
         if(k!=0){
             //Update the AR coefficients
             khalf = (k+1)>>1;
             for(n=0;n<khalf;n++){
-                aux = PDS[n+1];
-                PDS[n+1] = aux + kp*PDS[k-n];
+                aux = PSD[n+1];
+                PSD[n+1] = aux + kp*PSD[k-n];
                 if(n!=k-n-1){
-                    PDS[k-n] = PDS[k-n]+kp*aux;
+                    PSD[k-n] = PSD[k-n]+kp*aux;
                 }
             }
         }
@@ -82,17 +79,18 @@ float ARBurg(float* X, uint16_t order, uint16_t Type){
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%    AR PARAMETRIC POWER DENSITY SPECTRUM     %%%%%%%%%%%%%
-//float rho: Value of parameter rho
-//  float T: Sampling period form the signal
+//    float rho: Value of parameter rho
+//      float T: Sampling period form the signal
+//return float*: Pointer to Burg PSD array
 //--------------------------------------------------------------------
-void AR2PSD(float rho, float Ts){
+float* AR2PSD(float rho, float Ts){
     uint16_t k;
-    float* PDSpt;
-    PDS[0] = 1.0;
-    PDSpt = fft_float(PDS, NFFT);               //freq_res=1/(Ts*NFFT)
-    for(k=0;k<100;k++){
-        PDSpt[k] = 10*log10((rho*Ts*2)/PDSpt[k]);
+    float* PSDpt;
+    PSD[0] = 1.0;
+    PSDpt = fft_float(PSD, NFFT);               //freq_res=1/(Ts*NFFT)
+    for(k=0;k<101;k++){
+        PSDpt[k] = 10*log10((rho*Ts*2)/PSDpt[k]);
     }
+    return PSDpt;
 }
-
 

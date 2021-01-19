@@ -13,6 +13,96 @@ extern uint16_t volatile SCI_Mode;                             //(0) AT Mode   (
 uint16_t Sporadic_Error;
 
 //--------------------------------------------------------------------
+//%%%%%%%%%%%%%%%%%%%%%   DMA CONFIGURATION    %%%%%%%%%%%%%%%%%%%%%%%
+//--------------------------------------------------------------------
+void Config_DMA(void){
+    //  BURST:Columna   TRANSFER:Renglón  Realiza 4 ciclos por word
+    CPUSYS_PCLKCR0_R|=0x4;                  //Enable DMA Clock
+    CPUSYS_SECMSEL_R=0x4;                   //PF2SEL:Puente conectado al DMA                    DOUBT!!!!
+    DMA_DEBUGCTRL_R|=0x8000;                //FREE: DMA corre durante un emulation halt
+
+    //CHANNEL 1 (EDA)
+    DMA_CH1_MODE_R=0x4500;                  //DATASIZE: 32 bits of transfer (1)
+                                            //ONESHOT: Channel performs an entire transfer
+                                            //PERINTE: Enable pheripheral event trigger
+                                            //PERINTSEL: No peripheral (0)
+    DMA_CH1_BURSTSIZE_R=31;                 //Burst Size=31+1=1 words per burst
+    DMA_CH1_SRCBURSTSTEP_R=1;               //Source Step=1 word
+    DMA_CH1_DSTBUSRTSTEP_R|=1;              //Destination Step=1 word
+
+    DMA_CH1_TRANSFERSIZE_R=63;              //Transfer Size=63+1=64 bursts per transfer
+    DMA_CH1_SRCTRANSFERSTEP_R=1;            //Source Step=1 word
+    DMA_CH1_DSTTRANSFERSTEP_R|=1;           //Destination Step=1 word
+
+    DMA_CH1_SRCBEGADDRSHADOW_R=(uint32_t)(&EDA);
+    DMA_CH1_SRCADDRSHADOW_R=(uint32_t)(&EDA[]);
+    DMA_CH1_DSTBEGADDRSHADOW_R=(uint32_t)(&EDA[0]);
+    DMA_CH1_DSTADDRESHADOW_R=(uint32_t)(&EDA[0]);
+
+    DMA_CH1_CONTROL_R|=0x91;                 //RUN: Enable CH1
+                                             //ERRCLR: Limpia bandera OVRFLG
+                                             //PERINTCLR: Limpia bandera PERINTFLG
+
+    //CHANNEL 2 (PRV_x)
+    DMA_CH2_MODE_R=0x4500;                  //DATASIZE: 32 bits of transfer (1)
+                                            //ONESHOT: Channel performs an entire transfer
+                                            //PERINTE: Enable pheripheral event trigger
+                                            //PERINTSEL: No peripheral (0)
+    DMA_CH2_BURSTSIZE_R=0;                  //Burst Size=0+1=1 words per burst
+    DMA_CH2_SRCBURSTSTEP_R=1;               //Source Step=1 word
+    DMA_CH2_DSTBUSRTSTEP_R|=1;              //Destination Step=1 word
+
+    DMA_CH2_SRCTRANSFERSTEP_R=1;            //Source Step=1 word
+    DMA_CH2_DSTTRANSFERSTEP_R|=1;           //Destination Step=1 word
+
+    DMA_CH2_DSTBEGADDRSHADOW_R=(uint32_t)(&Gauss[0]);
+    DMA_CH2_DSTADDRESHADOW_R=(uint32_t)(&Gauss[0]);
+
+    DMA_CH2_CONTROL_R|=0x91;                 //RUN: Enable CH2
+                                             //ERRCLR: Limpia bandera OVRFLG
+                                             //PERINTCLR: Limpia bandera PERINTFLG
+    //CHANNEL 3 (PRV_y)
+    DMA_CH3_MODE_R=0x4500;                  //DATASIZE: 32 bits of transfer (1)
+                                            //ONESHOT: Channel performs an entire transfer
+                                            //PERINTE: Enable pheripheral event trigger
+                                            //PERINTSEL: No peripheral (0)
+    DMA_CH3_BURSTSIZE_R=0;                  //Burst Size=0+1=1 words per burst
+    DMA_CH3_SRCBURSTSTEP_R=1;               //Source Step=1 word
+    DMA_CH3_DSTBUSRTSTEP_R|=1;              //Destination Step=1 word
+
+    DMA_CH3_SRCTRANSFERSTEP_R=1;            //Source Step=1 word
+    DMA_CH3_DSTTRANSFERSTEP_R|=1;           //Destination Step=1 word
+
+    DMA_CH3_DSTBEGADDRSHADOW_R=(uint32_t)(&h[0]);
+    DMA_CH3_DSTADDRESHADOW_R=(uint32_t)(&h[0]);
+
+    DMA_CH3_CONTROL_R|=0x91;                 //RUN: Enable CH3
+                                             //ERRCLR: Limpia bandera OVRFLG
+                                             //PERINTCLR: Limpia bandera PERINTFLG
+
+    //CHANNEL 4 (FIFO Emotion)
+    DMA_CH4_MODE_R=0x4500;                  //DATASIZE: 32 bits of transfer (1)
+                                            //ONESHOT: Channel performs an entire transfer
+                                            //PERINTE: Enable pheripheral event trigger
+                                            //PERINTSEL: No peripheral (0)
+    DMA_CH4_BURSTSIZE_R=0;                  //Burst Size=0+1=1 words per burst
+    DMA_CH4_SRCBURSTSTEP_R=1;               //Source Step=1 word
+    DMA_CH4_DSTBUSRTSTEP_R|=1;              //Destination Step=1 word
+    DMA_CH4_SRCTRANSFERSTEP_R=1;            //Source Step=1 word
+    DMA_CH4_DSTTRANSFERSTEP_R|=1;           //Destination Step=1 word
+
+    DMA_CH4_DSTBEGADDRSHADOW_R=(uint32_t)(&FIFO_Emotion[0]);
+    DMA_CH4_DSTADDRESHADOW_R=(uint32_t)(&FIFO_Emotion[0]);
+
+    DMA_CH4_CONTROL_R|=0x91;                 //RUN: Enable CH3
+                                             //ERRCLR: Limpia bandera OVRFLG
+                                             //PERINTCLR: Limpia bandera PERINTFLG
+
+    DMACLASSR_DMACHSRCSEL1_R=0x0;           //CH4, CH3, CH2, CH1 is triggered by Software
+    DMACLASSR_DMACHSRCSEL2_R=0x0;           //CH5 is triggered by Software
+}
+
+//--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%%%%    CONFIGURATION PIE    %%%%%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 void Config_PIE(void){

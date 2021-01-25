@@ -29,11 +29,11 @@ float ARBurg(float* X, uint16_t order, uint16_t Type){
     uint16_t Ni;
 
     Ni = Type? 512:1024;              //If Signal (1) PRV (0) EDA
-//    Ni = Type? 11:1024;
+
     for(n=0;n<Ni;n++){
         eb[n]=X[n];
         ef[n]=X[n];
-        rho += X[n]*X[n];
+        rho += (X[n]*X[n]);
     }
 
     Nf = (float)(Ni);
@@ -41,13 +41,13 @@ float ARBurg(float* X, uint16_t order, uint16_t Type){
     rho /= Nf;
     temp = 1.0;
 
-    while(DMA_CH1_CONTROL_R&0x800){}       //While CH1 transfer isn't complete (PSD!=0)
+//    while(DMA_CH1_CONTROL_R&0x800){}       //While CH1 transfer isn't complete (PSD!=0)
 
-    //AR coeffitients estimation
+    //AR coefficients estimation
     for(k=0;k<order;k++){
         num=0;
         for(n=k+1;n<Ni;n++){
-            num += ef[n]*eb[n-1];
+            num += (ef[n]*eb[n-1]);
         }
         // Calculate the next order reflection coefficient
         den = temp*den-(ef[k]*ef[k])-(eb[Ni-1]*eb[Ni-1]);

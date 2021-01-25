@@ -11,14 +11,14 @@
 #include <stdint.h>
 #include <tms320f28379d.h>
 
-#define N 213
+#define N 853
 //#define N 11
-#define lenCS 512
+#define lenCS 2048
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%    CUBIC SPLINE FUNCTIONS    %%%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 float* Cubic_Spline(float* h, float* Y);
-void DMA_Channels_Config(uint16_t Size);
+void DMA_Channels_Config(uint16_t BegAddr, uint16_t Size);
 
 #endif /* CHAR_EXTRACTION_CUBIC_SPLINE_H_ */

@@ -2,57 +2,28 @@
 #include <tms320f28379d.h>
 #include <driverlib/cpu.h>
 
+#include "ConstantesPrueba.h"
 #include "Char_Extraction/Freq_Extraction.h"
 #include "Char_Extraction/PSD_Burg.h"
 
-//#include "Char_Extraction/Cubic_Spline.h"
-
 extern volatile float PSD[];
 extern volatile float Gauss[];
-//extern volatile float h[];
 extern volatile float d[];
 extern volatile float S[];
 
-//float X[N]={1,1,1,1,0,0,0,0};
-float X[]={0.75,1.55,2.25,2.98,3.76,4.45,4.95,5.48,6.2,7,7.9};
-float PRV[]={0.75,0.8,0.7,0.73,0.78,0.69,0.5,0.53,0.72,0.8,0.9};
+//float X[]={1,1,1,1,0,0,0,0};
 
-float Zero=0;
-//float Y[]={0.75,0.8,0.7,0.73,0.78,0.69,0.5,0.53,0.72,0.8,0.9}
-
-volatile uint16_t CS_UpN=0, CS_LowN=0;
-volatile float CS_LowAcum=0, CS_UpAcum, CS_UpLim=64.0, CS_LowLim=15.0;
+volatile uint16_t CS_UpN=311, CS_LowN=0, CS_OVLP=0;
+volatile float CS_LowAcum=0, CS_UpAcum=256.512, CS_UpLim=256.0, CS_LowLim=15.0;
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%%%%   DMA CONFIGURATION    %%%%%%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 void Config_DMA(void){
-    //  BURST:Columna   TRANSFER:Renglón  Realiza 4 ciclos por word
+    //BURST:Column     TRANSFER:Row    Makes 4 cycles per word
     CPUSYS_PCLKCR0_R|=0x4;                  //Enable DMA Clock
     CPUSYS_SECMSEL_R=0x4;                   //PF2SEL:Puente conectado al DMA                    DOUBT!!!!
     DMA_DEBUGCTRL_R|=0x8000;                //FREE: DMA corre durante un emulation halt
-
-    //CHANNEL 1 (PDS)
-    DMA_CH1_MODE_R=0x4500;                  //DATASIZE: 32 bits of transfer (1)
-                                            //ONESHOT: Channel performs an entire transfer
-                                            //PERINTE: Enable pheripheral event trigger
-                                            //PERINTSEL: No peripheral (0)
-    DMA_CH1_BURSTSIZE_R=31;                 //Burst Size=31+1=1 words per burst
-    DMA_CH1_SRCBURSTSTEP_R=1;               //Source Step=1 word
-    DMA_CH1_DSTBUSRTSTEP_R|=1;              //Destination Step=1 word
-
-    DMA_CH1_TRANSFERSIZE_R=63;              //Transfer Size=63+1=64 bursts per transfer
-    DMA_CH1_SRCTRANSFERSTEP_R=1;            //Source Step=1 word
-    DMA_CH1_DSTTRANSFERSTEP_R|=1;           //Destination Step=1 word
-
-    DMA_CH1_SRCBEGADDRSHADOW_R=(uint32_t)(&Zero);
-    DMA_CH1_SRCADDRSHADOW_R=(uint32_t)(&Zero);
-    DMA_CH1_DSTBEGADDRSHADOW_R=(uint32_t)(&PSD[0]);
-    DMA_CH1_DSTADDRESHADOW_R=(uint32_t)(&PSD[0]);
-
-    DMA_CH1_CONTROL_R|=0x91;                 //RUN: Enable CH1
-                                             //ERRCLR: Limpia bandera OVRFLG
-                                             //PERINTCLR: Limpia bandera PERINTFLG
 
     //CHANNEL 2 (Cubic Spline [Gauss])
     DMA_CH2_MODE_R=0x4500;                  //DATASIZE: 32 bits of transfer (1)
@@ -115,15 +86,27 @@ void Config_DMA(void){
     DMACLASSR_DMACHSRCSEL2_R=0x0;           //CH5 is triggered by Software
 }
 
+void OVLP_Reset(void){
+    CS_OVLP=0;
+
+    CS_UpN=0;
+    CS_LowN=0;
+
+    CS_UpAcum=0;
+    CS_LowAcum=0;
+
+    CS_UpLim=64.0;              //Quizas poner en otro lado
+}
+
 int main(void){
     EALLOW;
 
     Config_DMA();
 
     EDIS;
-
+//    OVLP_Reset();
     while(1){
-//	    Freq_Extraction(PRV_x,PRV_y,PRVSig);
+	    Freq_Extraction(Xej,Yej,PRVSig);
 //	    Freq_Extraction(0,EDA,EDASig);
 	}
 }

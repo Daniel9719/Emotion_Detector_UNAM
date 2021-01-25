@@ -3,36 +3,36 @@
 			.global _FFT_R				;Vars declared in C
 
 Marip:		.usect  "ASM_VARS", 1, 8
-Grupos:		.usect  "ASM_VARS", 1, 8
+Groups:		.usect  "ASM_VARS", 1, 8
 indA:		.usect  "ASM_VARS", 1, 8
 indB:		.usect  "ASM_VARS", 1, 8
 r:			.usect  "ASM_VARS", 1, 8
 NFFT:		.usect  "ASM_VARS", 1, 8
 NFFT_2:		.usect  "ASM_VARS", 1, 8
 
-Etapas 		.set 	11
-;Etapas 		.set 	3
+Stages 		.set 	11
+;Stages 		.set 	3
 
 ;***** NOTE: This FFT gives the square of the magnitude of each spectrum component *****
 
 _fft_float	;XAR4=&PDS(FFT_I)	  AL=NFFT
-			MOVW	 DP, #Grupos
+			MOVW	 DP, #Groups
 				LC       BR_ZR
 	;------- Counters Assignation ----------
-			MOVL   	 XAR1, #Etapas
+			MOVL   	 XAR1, #Stages
 			MOV   	 AL, @AR1
 			SUB 	 AL, #1
-			MOV   	 AR0, AL				;AR0 = e = #Etapas-1
+			MOV   	 AR0, AL				;AR0 = e = #Stages-1
 			MOV   	 AL, @NFFT_2
-			MOV		 @Grupos, AL			;Grupos = #Grupos = TamFFT/2
+			MOV		 @Groups, AL			;Groups = #Groups = TamFFT/2
 			MOV		 ACC, #1
 			MOV		 @Marip, AL				;Marip = #Marip = 1
-ETAPAS
-			MOV		 AL, @Grupos			;Grupos = #Grupos = TamFFT/2
+STAGES
+			MOV		 AL, @Groups			;Groups = #Groups = TamFFT/2
 			SUB 	 AL, #1
-			MOV   	 AR1, AL				;AR1 = g = #Grupos = TamFFT/2-1
+			MOV   	 AR1, AL				;AR1 = g = #Groups = TamFFT/2-1
 			MOV 	 @indA, #0				;indA = 0
-GRUPOS
+GROUPS
 			MOV		 AL, @Marip				;Marip = #Marip = 1
 			SUB 	 AL, #1
 			MOV		 AR2, AL				;AR2 = m = #Marip = 1-1
@@ -44,8 +44,8 @@ MARIP
 			SUB		 AL, AR2
 			SB		 CondEQ1, EQ			;Si m<=0 salta CondLEQ1
 			MOV		 AL, @r
-			ADD		 AL, @Grupos
-			MOV		 @r, AL					;Si m>0 r=r+Grupos
+			ADD		 AL, @Groups
+			MOV		 @r, AL					;Si m>0 r=r+Groups
 CondEQ1     MOV		 T, @indA
 			MOV		 AL, @Marip
 			LSL		 AL, #1
@@ -74,8 +74,8 @@ CondEQ1     MOV		 T, @indA
 	;-------------- Butterfly ------------
 				LC BUTTFLY
 			MOV		 AL, AR0
-			SB		 CondEQ2, EQ			;Si e=0   Última etapa?
-			SB		 CondNEQ2, NEQ			;Si e!=0  No es la última etapa
+			SB		 CondEQ2, EQ			;Si e=0   Last stage?
+			SB		 CondNEQ2, NEQ			;Si e!=0  Not the last stage
 CondEQ2			LC ESPECTRO
 CondNEQ2	MOV		 AL, @indA
 			ADD		 AL, #2
@@ -87,24 +87,27 @@ CondNEQ2	MOV		 AL, @indA
 			LSL		 AL, #1
 			ADD		 AL, @T
 			MOV		 @indA, AL				;indA = indA+Marip
-		BANZ GRUPOS, AR1 --					;AR1 = #Grupos
+		BANZ GROUPS, AR1 --					;AR1 = #Groups
 
-			MOV 	 AL, @Grupos
+			MOV 	 AL, @Groups
 			ASR 	 AL, #1
-			MOV 	 @Grupos, AL			;Grupos = Grupos/2
+			MOV 	 @Groups, AL			;Groups = Groups/2
 			MOV 	 AL, @Marip
 			LSL 	 AL, #1
 			MOV 	 @Marip, AL				;Marip = Marip*2
-		BANZ ETAPAS, AR0 --					;AR0 = #Etapas
+		BANZ STAGES, AR0 --					;AR0 = #Stages
 			MOVL	 XAR4, #_FFT_R
 	LRETR
 
-;**********  Bit Reverse & Zero filling of FFT_I *********
+;**********  Bit Reverse, Hanning Windowing & Zero filling of FFT_I *********
 BR_ZR		;XAR4=&FFT_I
 			MOVL  	 XAR5, #_FFT_R			;XAR5=FFT_R
 			MOV		 @NFFT, AL				;NFFT=NFFT
 			MOV   	 AR0, AL				;AR0=NFFT
-			SFR		 ACC, #1
+			LSL		 AL, #1
+			MOV		 @NFFT_2, AL
+			I16TOF32 R0H, @NFFT_2			;R0H = 2*NFFT
+			LSR		 AL, #2
 			MOV		 @NFFT_2, AL
 			MOV	 	 AL, @NFFT
 			LSL		 ACC, #1
@@ -114,11 +117,29 @@ BR_ZR		;XAR4=&FFT_I
 			MOVL   	 XAR7, ACC				;AR7=NFFT-1
 CICLO1		NOP	 	 *, ARP1
 			MOVL   	 ACC, *BR0++			;ACC=*XAR1   XAR1=XAR1+BR(AR0)
-			MOVL	 XT, *+XAR4[AR1]		;T = FFT_I[indA]
+			MOV		 AL, AR1
+			LSR		 AL, #1
+			MOV	 	 @indA, AL				;indA = AR2+BR(AR0)
+			I16TOF32 R1H, @indA				;n to Float
 			ZAPA
+			MOV32 	 R3H, *+XAR4[AR1]		;R3H = FFT_I[indA]
+			DIVF32	 R2H, R1H, R0H			;R2H = n/2*NFFT
+			NOP
+			NOP
+			NOP
+			NOP
+			SINPUF32 R2H, R2H				;R2H = sin(2*pi*n/2*NFFT)
+			NOP
+			NOP
+			NOP
+			MPYF32   R2H, R2H, R2H			;R2H = sin^2(2*pi*n/2*NFFT)
+			NOP
+			NOP
+			MPYF32	 R3H, R3H, R2H			;R3H = FFT_I[indA]*HannWindow
+			NOP
 			MOVL     *+XAR4[AR1], ACC		;FFT_I[indA]=0
-			MOVL   	 *XAR5++, XT			;FFT_R[i]=FFT_I[BR]
-			BANZ  	 CICLO1, AR7--			;Se repite N+1 veces
+			MOV32  	 *XAR5++, R3H			;FFT_R[i]=FFT_I[BR]*HannWindow
+			BANZ  	 CICLO1, AR7--			;It repeats N+1 times
 	LRET
 
 ;**********  Butterfly operation *********

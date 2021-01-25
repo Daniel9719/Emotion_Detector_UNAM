@@ -1,24 +1,23 @@
 /*
- * PDS_Burg.h
+ * PSD_Periodogram.h
  *
- *  Created on: 04/01/2021
+ *  Created on: 24/01/2021
  *      Author: danie
  */
 
-#ifndef CHAR_EXTRACTION_PSD_BURG_H_
-#define CHAR_EXTRACTION_PSD_BURG_H_
+#ifndef CHAR_EXTRACTION_PSD_PERIODOGRAM_H_
+#define CHAR_EXTRACTION_PSD_PERIODOGRAM_H_
 
 #include <stdint.h>
 #include <math.h>
 #include <tms320f28379d.h>
 
 #define NFFT 2048
-#define ARorder 50
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%    PDS FUNCTIONS   %%%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
-float ARBurg(float* X, uint16_t order, uint16_t signal);
-float* AR2PSD(float rho, float Ts);
+float* PSD_Periodogram(float* Ptr);
 
-#endif /* CHAR_EXTRACTION_PSD_BURG_H_ */
+
+#endif /* CHAR_EXTRACTION_PSD_PERIODOGRAM_H_ */

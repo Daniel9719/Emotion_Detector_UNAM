@@ -303,53 +303,68 @@ void Config_I2CA(void){
 //%%%%%%%%%%%%%%%%%%%%%   DMA CONFIGURATION    %%%%%%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 void Config_DMA(void){
-    //  BURST:Columna   TRANSFER:Renglón  Realiza 4 ciclos por word
-    CPUSYS_PCLKCR0_R|=0x4;                  //Hab reloj DMA
-    CPUSYS_SECMSEL_R=0x4;                   //PF2SEL:Puente conectado al DMA
-    DMA_DEBUGCTRL_R|=0x8000;                 //FREE: DMA corre durante un emulation halt
-    //CANAL 4
-    DMA_CH4_MODE_R=0x0500;                  //DATASIZE: 16 bits de transferencia (0)
-                                            //ONESHOT: Cada disparo ocasiona toda una transferencia
-                                            //PERINTE: Hab disparo por periferico o software
-                                            //PERINTSEL: Ningun periférico/Por software (0)
-    DMA_CH4_CONTROL_R|=0x90;                //ERRCLR: Limpia bandera OVRFLG
-                                            //PERINTCLR: Limpia bandera PERINTFLG
+    //BURST:Column     TRANSFER:Row    Makes 4 cycles per word
+    CPUSYS_PCLKCR0_R|=0x4;                  //Enable DMA Clock
+    CPUSYS_SECMSEL_R=0x4;                   //PF2SEL:Puente conectado al DMA                    DOUBT!!!!
+    DMA_DEBUGCTRL_R|=0x8000;                //FREE: DMA corre durante un emulation halt
 
-    DMA_CH4_BURSTSIZE_R=31;                 //Tamaño Burst=31+1=32 words por burst
-    DMA_CH4_SRCBURSTSTEP_R=1;               //Paso Fuente=1 word
-    DMA_CH4_DSTBUSRTSTEP_R|=1;              //Paso Destino=1 word
+    //CHANNEL 1 (EDA)
+    DMA_CH1_MODE_R=0x4500;                  //DATASIZE: 32 bits of transfer (1)
+                                            //ONESHOT: Channel performs an entire transfer
+                                            //PERINTE: Enable pheripheral event trigger
+                                            //PERINTSEL: No peripheral (0)
+    DMA_CH1_BURSTSIZE_R=0;                  //Burst Size=0+1=1 words per burst
+    DMA_CH1_SRCBURSTSTEP_R=1;               //Source Step=1 word
+    DMA_CH1_DSTBUSRTSTEP_R|=1;              //Destination Step=1 word
 
-    DMA_CH4_TRANSFERSIZE_R=31;              //Tamaño Burst=31+1=32 burst por transfer
-    DMA_CH4_SRCTRANSFERSTEP_R=1;            //Paso Fuente=1 word
-    DMA_CH4_DSTTRANSFERSTEP_R|=1;           //Paso Destino=1 word
+    DMA_CH1_SRCTRANSFERSTEP_R=1;            //Source Step=1 word
+    DMA_CH1_DSTTRANSFERSTEP_R|=1;           //Destination Step=1 word
 
-//    DMA_CH4_SRCBEGADDRSHADOW_R=(uint32_t)(&Emotion_Buff[1]);
-//    DMA_CH4_SRCADDRSHADOW_R=(uint32_t)(&Emotion_Buff[1]);
-//    DMA_CH4_DSTBEGADDRSHADOW_R=(uint32_t)(&Emotion_Buff[0]);
-//    DMA_CH4_DSTADDRESHADOW_R=(uint32_t)(&Emotion_Buff[0]);
+//    DMA_CH1_DSTBEGADDRSHADOW_R=(uint32_t)(&Gauss[0]);
+//    DMA_CH1_DSTADDRESHADOW_R=(uint32_t)(&Gauss[0]);
 
-//    //CANAL 3
-//    DMA_CH3_MODE_R=0x0500;                  //DATASIZE: 16 bits de transferencia (0)
-//                                            //ONESHOT: Cada disparo ocasiona toda una transferencia
-//                                            //PERINTE: Hab disparo por periferico o software
-//                                            //PERINTSEL: Ningun periférico/Por software (0)
-//    DMA_CH3_CONTROL_R|=0x90;                //ERRCLR: Limpia bandera OVRFLG
-//                                            //PERINTCLR: Limpia bandera PERINTFLG
-//
-//    DMA_CH3_BURSTSIZE_R=31;                 //Tamaño Burst=31+1=32 words por burst
-//    DMA_CH3_SRCBURSTSTEP_R=1;               //Paso Fuente=1 word
-//    DMA_CH3_DSTBUSRTSTEP_R|=1;              //Paso Destino=1 word
-//
-//    DMA_CH3_TRANSFERSIZE_R=31;              //Tamaño Burst=31+1=32 burst por transfer
-//    DMA_CH3_SRCTRANSFERSTEP_R=1;            //Paso Fuente=1 word
-//    DMA_CH3_DSTTRANSFERSTEP_R|=1;           //Paso Destino=1 word
-//
-//    DMA_CH3_SRCBEGADDRSHADOW_R=(uint32_t)(&ynFir);
-//    DMA_CH3_SRCADDRSHADOW_R=(uint32_t)(&ynFir);
-//    DMA_CH3_DSTBEGADDRSHADOW_R=(uint32_t)(&Vect_Im);
-//    DMA_CH3_DSTADDRESHADOW_R=(uint32_t)(&Vect_Im);
+    DMA_CH1_CONTROL_R|=0x91;                 //RUN: Enable CH1
+                                             //ERRCLR: Limpia bandera OVRFLG
+                                             //PERINTCLR: Limpia bandera PERINTFLG
 
-    DMACLASSR_DMACHSRCSEL1_R=0x0;           //CH4, CH3 se dispara por Software
-    DMA_CH4_CONTROL_R|=0x1;                 //RUN: Hab el CH4
-    DMA_CH3_CONTROL_R|=0x1;                 //RUN: Hab el CH3
+    //CHANNEL 5 (PRV_h)
+    DMA_CH5_MODE_R=0x4500;                  //DATASIZE: 32 bits of transfer (1)
+                                            //ONESHOT: Channel performs an entire transfer
+                                            //PERINTE: Enable pheripheral event trigger
+                                            //PERINTSEL: No peripheral (0)
+    DMA_CH5_BURSTSIZE_R=0;                  //Burst Size=0+1=1 words per burst
+    DMA_CH5_SRCBURSTSTEP_R=1;               //Source Step=1 word
+    DMA_CH5_DSTBUSRTSTEP_R|=1;              //Destination Step=1 word
+
+    DMA_CH5_SRCTRANSFERSTEP_R=1;            //Source Step=1 word
+    DMA_CH5_DSTTRANSFERSTEP_R|=1;           //Destination Step=1 word
+
+//    DMA_CH5_DSTBEGADDRSHADOW_R=(uint32_t)(&Gauss[0]);
+//    DMA_CH5_DSTADDRESHADOW_R=(uint32_t)(&Gauss[0]);
+
+    DMA_CH5_CONTROL_R|=0x91;                 //RUN: Enable CH5
+                                             //ERRCLR: Limpia bandera OVRFLG
+                                             //PERINTCLR: Limpia bandera PERINTFLG
+
+    //CHANNEL 6 (PRV_y)
+    DMA_CH6_MODE_R=0x4500;                  //DATASIZE: 32 bits of transfer (1)
+                                            //ONESHOT: Channel performs an entire transfer
+                                            //PERINTE: Enable pheripheral event trigger
+                                            //PERINTSEL: No peripheral (0)
+    DMA_CH6_BURSTSIZE_R=0;                  //Burst Size=0+1=1 words per burst
+    DMA_CH6_SRCBURSTSTEP_R=1;               //Source Step=1 word
+    DMA_CH6_DSTBUSRTSTEP_R|=1;              //Destination Step=1 word
+
+    DMA_CH6_SRCTRANSFERSTEP_R=1;            //Source Step=1 word
+    DMA_CH6_DSTTRANSFERSTEP_R|=1;           //Destination Step=1 word
+
+//    DMA_CH6_DSTBEGADDRSHADOW_R=(uint32_t)(&Gauss[0]);
+//    DMA_CH6_DSTADDRESHADOW_R=(uint32_t)(&Gauss[0]);
+
+    DMA_CH6_CONTROL_R|=0x91;                 //RUN: Enable CH6
+                                             //ERRCLR: Limpia bandera OVRFLG
+                                             //PERINTCLR: Limpia bandera PERINTFLG
+
+    DMACLASSR_DMACHSRCSEL1_R=0x0;            //CH4, CH3, CH2, CH1 is triggered by Software
+    DMACLASSR_DMACHSRCSEL2_R=0x0;            //CH5 is triggered by Software
 }

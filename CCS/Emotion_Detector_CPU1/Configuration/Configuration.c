@@ -16,10 +16,10 @@
 
 //-----------------------------------//
 //uint16_t AUX_Emotion;
-//float AUX_MeanVect[8];
-//float AUX_ApriVect[8];
-//float AUX_Cov_S[4];
-//float AUX_FLD_W[4][22];
+float AUX_FLD_W[4][22];
+float AUX_MeanVect[8];
+float AUX_ApriVect[8];
+float AUX_Cov_S[4];
 //struct Characteristics_Value2{
 //    float PRV_LF_HF;
 //    float PRV_VLF;
@@ -50,10 +50,10 @@ uint16_t No_Emotions=0;
 uint16_t Emotion_Buff[128];
 
 volatile uint16_t* Emotion_Pt;
-float* MeanVect_Pt;
-float* ApriVect_Pt;
-float* Cov_S_Pt;
-float* FLD_W_Pt;
+float* FLD_W_Pt=&AUX_FLD_W[0][0];
+float* MeanVect_Pt=AUX_MeanVect;
+float* ApriVect_Pt=AUX_ApriVect;
+float* Cov_S_Pt=AUX_Cov_S;
 volatile float* Chars_Val2_Pt;
 
 struct Characteristics_Asignation{
@@ -193,7 +193,7 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
     static uint16_t Charact_Row=0;
     static volatile float* Pointer1;
     static volatile float* Pointer2=&Chars_Val1.pNN50;
-    static uint32_t DataQ16=0;
+    static int32_t DataQ16=0;
 
     uint16_t Buffer=0;
     uint16_t Address=Var_Addr&0x1F;
@@ -327,13 +327,13 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
                 Chars_Asig.PRV[CC_Row]=(Chars_Asig.PRV[CC_Row]&0xFF00)|Data;
                 break;
             case 0x04:       //----------------PRV2 CHARACT-----------------//
-                Chars_Asig.PRV[CC_Row]=(Chars_Asig.PRV[CC_Row]&0x00FF)|(Data<<8);
+                Chars_Asig.PRV[CC_Row]=(Chars_Asig.PRV[CC_Row]&0x00FF)|((Data&0xF)<<8);
                 break;
             case 0x05:       //----------------EDA1 CHARACT-----------------//
                 Chars_Asig.EDA[CC_Row]=(Chars_Asig.EDA[CC_Row]&0xFF00)|Data;
                 break;
             case 0x06:       //----------------EDA2 CHARACT-----------------//
-                Chars_Asig.EDA[CC_Row]=(Chars_Asig.EDA[CC_Row]&0x00FF)|(Data<<8);
+                Chars_Asig.EDA[CC_Row]=(Chars_Asig.EDA[CC_Row]&0x00FF)|((Data&0x3)<<8);
                 Config_Auto=0;
                 break;
             case 0x07:       //----------------Wn CONFIG--------------------//
@@ -345,16 +345,16 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
                 }
                 break;
             case 0x08:       //----------------FLD MATRIX Wn 1--------------//
-                DataQ16=(DataQ16&0xFFFFFF00)|Data;
+                DataQ16=(DataQ16 & 0xFFFFFF00)|Data;
                 break;
             case 0x09:       //----------------FLD MATRIX Wn 2--------------//
-                DataQ16=(DataQ16&0xFFFF00FF)|(Data<<8);
+                DataQ16=(DataQ16 & 0xFFFF00FF)|(Data<<8);
                 break;
             case 0x0A:       //----------------FLD MATRIX Wn 3--------------//
-                DataQ16=(DataQ16&0xFF00FFFF)|((uint32_t)(Data)<<16);
+                DataQ16=(DataQ16 & 0xFF00FFFF)|((uint32_t)(Data)<<16);
                 break;
             case 0x0B:       //----------------FLD MATRIX Wn 4--------------//
-                DataQ16=(DataQ16&0x00FFFFFF)|((uint32_t)(Data)<<24);
+                DataQ16=(DataQ16 & 0x00FFFFFF)|((int32_t)(Data)<<24);
                 FLD_W_Pt[W_Row*22+W_Col]=(float)(DataQ16)/Q16;
                 Config_Auto=0;
                 break;
@@ -387,12 +387,12 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
                 DataQ16=(DataQ16&0xFF00FFFF)|((uint32_t)(Data)<<16);
                 break;
             case 0x10:       //----------------mk/pik/S VECTOR 4------------//
-                DataQ16=(DataQ16&0x00FFFFFF)|((uint32_t)(Data)<<24);
+                DataQ16=(DataQ16&0x00FFFFFF)|((int32_t)(Data)<<24);
                 Pointer1[Vect_Col]=(float)(DataQ16)/Q16;
                 Config_Auto=0;
                 break;
             case 0x12:       //----------------CHARACT CONFIG---------------//
-                Charact_Row=Data&0xF;
+                Charact_Row=Data&0x1F;
                 if(Charact_Row<0x10){
                     Pointer2=&Chars_Val1.pNN50;
                 }
@@ -400,7 +400,7 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
                     Pointer2=Chars_Val2_Pt;
                     Charact_Row-=0x10;
                 }
-                if(Data&0x10){
+                if(Data&0x20){
                     Config_Auto=1;
                     Config_Addr=Var_Addr+1;
                     Config_Addr|=0x80;          //Converts Address to Reading type

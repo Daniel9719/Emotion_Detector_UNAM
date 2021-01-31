@@ -6,7 +6,6 @@
 #include "Char_Extraction/Freq_Extraction.h"
 #include "Char_Extraction/PSD_Burg.h"
 
-extern volatile float PSD[];
 extern volatile float Gauss[];
 extern volatile float d[];
 extern volatile float S[];

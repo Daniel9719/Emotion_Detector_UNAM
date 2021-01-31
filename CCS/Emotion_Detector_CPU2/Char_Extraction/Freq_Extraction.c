@@ -39,9 +39,8 @@ void Freq_Extraction(float* InputX, float* InputY, uint16_t Type){
         Ptr=Cubic_Spline(InputX, InputY);
         EALLOW;
         DMA_CH2_CONTROL_R|=0x8;             //PERINTFRC:Force peripheral event from CH2 (OVLP Gauss)
-        DMA_CH3_CONTROL_R|=0x8;             //PERINTFRC:Force peripheral event from CH3 (OVLP h)
-        DMA_CH4_CONTROL_R|=0x8;             //PERINTFRC:Force peripheral event from CH4 (OVLP d)
-        DMA_CH5_CONTROL_R|=0x8;             //PERINTFRC:Force peripheral event from CH5 (OVLP S)
+        DMA_CH3_CONTROL_R|=0x8;             //PERINTFRC:Force peripheral event from CH3 (OVLP d)
+        DMA_CH4_CONTROL_R|=0x8;             //PERINTFRC:Force peripheral event from CH4 (OVLP S)
         EDIS;
     }
     if(Type){                           //If Input==PRV

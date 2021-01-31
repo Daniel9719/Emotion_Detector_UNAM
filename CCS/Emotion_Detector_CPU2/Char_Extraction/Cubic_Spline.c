@@ -95,20 +95,21 @@ float* Cubic_Spline(float* h, float* Y){
 }
 
 void DMA_Channels_Config(uint16_t BegAddr, uint16_t Size){
-    Size--;
+    Size-=3;
+    Size=Size<<1;
     EALLOW;
 
-    DMA_CH2_TRANSFERSIZE_R=Size;              //Transfer Size=Size+1=64 bursts per transfer
+    DMA_CH2_TRANSFERSIZE_R=Size;              //Transfer Size=Size+1 bursts per transfer
     DMA_CH2_SRCBEGADDRSHADOW_R=(uint32_t)(&Gauss[BegAddr]);
     DMA_CH2_SRCADDRSHADOW_R=(uint32_t)(&Gauss[BegAddr]);
 
-    DMA_CH3_TRANSFERSIZE_R=Size;              //Transfer Size=Size+1=64 bursts per transfer
-    DMA_CH3_SRCBEGADDRSHADOW_R=(uint32_t)(&Gauss[BegAddr]);
+    DMA_CH3_TRANSFERSIZE_R=Size;              //Transfer Size=Size+1 bursts per transfer
+    DMA_CH3_SRCBEGADDRSHADOW_R=(uint32_t)(&d[BegAddr]);
     DMA_CH3_SRCADDRSHADOW_R=(uint32_t)(&d[BegAddr]);
 
-    DMA_CH4_TRANSFERSIZE_R=Size;              //Transfer Size=Size+1=64 bursts per transfer
-    DMA_CH4_SRCBEGADDRSHADOW_R=(uint32_t)(&S[BegAddr]);
-    DMA_CH4_SRCADDRSHADOW_R=(uint32_t)(&S[BegAddr]);
+    DMA_CH4_TRANSFERSIZE_R=Size;              //Transfer Size=Size+1 bursts per transfer
+    DMA_CH4_SRCBEGADDRSHADOW_R=(uint32_t)(&S[BegAddr+1]);
+    DMA_CH4_SRCADDRSHADOW_R=(uint32_t)(&S[BegAddr+1]);
 
     EDIS;
 }

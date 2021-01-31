@@ -3,8 +3,9 @@
 #include"driverlib/inc/tms320f28379d.h"
 #include"HM10_BLE.h"
 
-extern int SCI_State;
-extern bool SCI_Sent;
+extern volatile int SCI_State;
+extern bool SCI_TxAvail;
+extern volatile bool SCI_RxAvail;
 extern uint16_t* SCI_StartPt;
 extern uint16_t* SCI_EndPt;
 extern uint16_t SCI_Data;
@@ -70,30 +71,37 @@ void ComandoAT(char *Comando, char *Opcion){
 }
 
 //--------------------------------------------------------------------
-//%%%%%%%%%%%%%%    CONFIGURACIÓN DEL MÓDULO HM10    %%%%%%%%%%%%%%%%%
+//%%%%%%%%%%%%%%%%    HM10 MODULE CONFIGURATION    %%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 void HM10_Config(void){
-    SCI_State=1;
-    SCI_Sent=false;
-    while(SCI_State<6){
-        if(!SCI_Sent){
+    SCI_State=0;
+    SCI_RxAvail=true;
+    while(SCI_State<5){                                 //While all the conditions (cases) aren't completed
+        if(SCI_RxAvail){                                  //If an "OK" statement has arrived
             switch(SCI_State){
             case 0:
-                ComandoAT(AT_NAME,"EmoDet_UNAM");    //Nombre del sensor por BLE
+                ComandoAT(AT_NAME,"EmoDet_UNAM");       //Setting name for HM10 Module to EmoDet_UNAM
+                SCI_RxAvail=false;
                 break;
             case 1:
-                ComandoAT(AT_NOTI,"1");                 //Hab Notificación al conectarse el módulo (OK+CONN o OK+LOST)
+                ComandoAT(AT_NOTI,"1");                 //Enable notification when the module is connected or disconnected (OK+CONN or OK+LOST)
+                SCI_RxAvail=false;
                 break;
             case 2:
-                ComandoAT(AT_BAUD,"8");                 //Establecimiento de la tasa de transmisión con el módem a 115200
+                ComandoAT(AT_BAUD,"8");                 //Establish data rate to (8) 115200
+                SCI_RxAvail=false;
                 break;
             case 3:
-                ComandoAT(AT,"");                       //Verify function HM10 with new data rate
+                ComandoAT(AT_POWE,"2");                 //Establish Tx Power to (2) 0 dBm
+                SCI_RxAvail=false;
+                break;
+            case 4:
+                ComandoAT(AT,"");                       //Verify functioning of HM10 with AT command
+                SCI_RxAvail=false;
                 break;
             default:
                 break;
             }
-            SCI_Sent=true;
         }
     }
 }

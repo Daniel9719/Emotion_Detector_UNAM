@@ -24,5 +24,6 @@ __interrupt void Inter_SCIBTX (void);
 void Config_Ports(void);
 void Config_SCIB(void);
 void Config_I2CA(void);
+void Config_DMA(void);
 
 #endif /* COMMUNICATIONS_H_ */

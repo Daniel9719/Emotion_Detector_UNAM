@@ -97,7 +97,7 @@ SECTIONS
 						 
    /* Allocate uninitalized data sections: */
    .stack              : > RAMM1        PAGE = 1
-   .ebss               : >> RAMLS5 | RAMGS0 | RAMGS1 | RAMGS2 | RAMGS3 | RAMGS4 | RAMGS5    PAGE = 1
+   .ebss               : >> RAMGS0 | RAMGS1 | RAMGS2 | RAMGS3 | RAMGS4 | RAMGS5    PAGE = 1
    .data               : > RAMGS4       PAGE = 1
    .esysmem            : > RAMLS5       PAGE = 1
 

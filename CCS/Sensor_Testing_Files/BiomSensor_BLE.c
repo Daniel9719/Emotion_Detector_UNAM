@@ -10,8 +10,9 @@
 
 #define size 10
 
-int SCI_State;
-bool SCI_Sent;
+volatile int SCI_State;
+volatile bool SCI_RxAvail=true;
+bool SCI_TxAvail=true;
 int16_t* SCI_StartPt;
 int16_t* SCI_EndPt;
 uint16_t SCI_Data;
@@ -126,8 +127,8 @@ __interrupt void Inter_I2CA (void){
     }
 //--------------SEND DATA TO SCI---------------//
     if(i==size){
-        while(!SCI_Sent){}
-        SCI_Sent=false;
+        while(!SCI_TxAvail){}
+        SCI_TxAvail=false;
         SCI_StartPt=&Biom1.LED_V[0];
         SCI_EndPt=&Biom1.EDA[size];
         SCI_Data=Biom1.LED_V[0];
@@ -146,10 +147,48 @@ __interrupt void Inter_SCIBTX (void){
     SCIB_WData();
     if(SCI_StartPt==SCI_EndPt){
         SCIB_FFTX_R&=~0x20;                 //TXFFIENA: Disable Inter Tx FIFO
-        SCI_Sent=true;
+        SCI_TxAvail=true;
     }
     SCIB_FFTX_R|=0x40;                      //RXFFINTCLR: Clean RXFFIL interrupt
     PIE_ACK_R|=0x100;                       //Clean Group 9 interrupt flag
+}
+
+//--------------------------------------------------------------------
+//%%%%%%%%%%%%%%%%%%%%    INTERRUPCIÓN SCIB RX    %%%%%%%%%%%%%%%%%%%%
+//--------------------------------------------------------------------
+__interrupt void Inter_SCIBRX (void){
+    static char SCI_RxData[26];
+    static char* SCI_RxPt=SCI_RxData;
+    static bool RxType=true;                                //(true) Text  (false) Data
+    uint16_t SCI_Mode=0;                             //(0) AT Mode   (1) Connection Mode  (2) Standby Mode
+
+    SCIB_FFRX_R|=0x40;                                      //RXFFINTCLR: Clean interrupt RXFFIL
+    while(SCIB_FFRX_R&0x1F00){                              //While SCI FIFO RX is not empty
+        SCIB_Read(SCI_RxPt);                                //Reading Data from Rx FIFO
+        if(RxType){                                         //If Text RxType (true)
+            if((*SCI_RxPt++)==0xA){                         //If String contains a "\n" statement
+                switch(SCI_Mode){
+                case 0:                                     //AT Mode
+                    if(strstr(SCI_RxData,"OK")!=NULL){
+                        SCI_State++;                        //Increase State
+                        SCI_RxAvail=true;
+                        if(SCI_State==5){ SCI_Mode=1; }     //Switch to Connection Mode
+                    }
+                    break;
+                case 1:                                     //Connection Mode
+                    if(strstr(SCI_RxData,"OK+CONN")!=NULL){ SCI_Mode=2; }               //Switch to Standby Mode
+                    break;
+                case 2:                                     //Standby Mode
+                    if(strstr(SCI_RxData,"OK+LOST")!=NULL){ SCI_Mode=1; }               //Switch to Connection Mode
+                    else if(strstr(SCI_RxData,"EM_DET_UNAM")!=NULL){ RxType=false; }    //Switch to Data RxType
+                    break;
+                }
+            SCI_RxPt=SCI_RxData;
+            Clean_Reg(SCI_RxData);
+            }
+        }
+    }
+    PIE_ACK_R|=0x100;                                     //Clean flag interrupt from Group 9
 }
 
 //--------------------------------------------------------------------
@@ -238,12 +277,16 @@ void main(void){
         //Asignación de ISR a registro con interrupción del I2CA, XINT2 y SCIB RX
         INT1_5_XINT2_R=(uint32_t)(&Inter_GPIO22);
         INT8_2_I2CAFIFO_R=(uint32_t)(&Inter_I2CA);
+        INT9_3_SCIBRX_R=(uint32_t)(&Inter_SCIBRX);
         INT9_4_SCIBTX_R=(uint32_t)(&Inter_SCIBTX);
+
         Config_PIE();
     EDIS;
 
     EINT;                                   //Habilitar interrupciones mascarables
-    SCI_Sent=true;
+    SCI_TxAvail=true;
+    HM10_Config();
+    while(SCI_State!=5)
     Biom_Config();
     while(1){
     }

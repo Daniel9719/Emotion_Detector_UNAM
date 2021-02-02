@@ -16,6 +16,7 @@ bool SCI_TxAvail=true;
 int16_t* SCI_StartPt;
 int16_t* SCI_EndPt;
 uint16_t SCI_Data;
+volatile uint16_t SCI_Mode=0;                             //(0) AT Mode   (1) Connection Mode  (2) Standby Mode
 
 struct Sensor_Biometrico{
     int16_t LED_V[size];
@@ -160,7 +161,6 @@ __interrupt void Inter_SCIBRX (void){
     static char SCI_RxData[26];
     static char* SCI_RxPt=SCI_RxData;
     static bool RxType=true;                                //(true) Text  (false) Data
-    uint16_t SCI_Mode=0;                             //(0) AT Mode   (1) Connection Mode  (2) Standby Mode
 
     SCIB_FFRX_R|=0x40;                                      //RXFFINTCLR: Clean interrupt RXFFIL
     while(SCIB_FFRX_R&0x1F00){                              //While SCI FIFO RX is not empty
@@ -286,7 +286,7 @@ void main(void){
     EINT;                                   //Habilitar interrupciones mascarables
     SCI_TxAvail=true;
     HM10_Config();
-    while(SCI_State!=5)
+    while(SCI_Mode!=2);                     //While the BLE device isn't connected
     Biom_Config();
     while(1){
     }

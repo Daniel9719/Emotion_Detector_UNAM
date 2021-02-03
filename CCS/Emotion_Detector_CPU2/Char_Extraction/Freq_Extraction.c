@@ -26,7 +26,7 @@ struct Characteristics_Value2{
 // float* InputY: Pointer to data input Y
 //uint16_t Type: (0) EDA (1) PRV
 //--------------------------------------------------------------------
-void Freq_Extraction(float* InputX, float* InputY, uint16_t Type){
+void Freq_Extraction(float* InputX, float* InputY, uint16_t Type){ //Takes 1.133 seg = 11333000 ciclos
     int i=0;
     float  Aux1=0, Aux2=0, Aux3=0;
     float* Ptr=InputY;

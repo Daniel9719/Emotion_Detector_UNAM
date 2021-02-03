@@ -400,11 +400,11 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
                     Pointer2=Chars_Val2_Pt;
                     Charact_Row-=0x10;
                 }
-                if(Data&0x20){
-                    Config_Auto=1;
-                    Config_Addr=Var_Addr+1;
-                    Config_Addr|=0x80;          //Converts Address to Reading type
-                }
+//                if(Data&0x20){
+//                    Config_Auto=1;
+//                    Config_Addr=Var_Addr+1;
+//                    Config_Addr|=0x80;          //Converts Address to Reading type
+//                }
                 break;
         }
     }

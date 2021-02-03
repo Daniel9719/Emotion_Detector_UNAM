@@ -1,3 +1,4 @@
+
 #-------------------IMPORTACIÓN DE MÓDULOS------------------------#
 
 from tkinter import *
@@ -13,13 +14,13 @@ import matplotlib.pyplot as plt
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
-from pandas import DataFrame, read_csv
+from pandas import DataFrame
 
 #Open files
 from tkinter import filedialog
 
 #Import functions from EMDC
-from EMDC import train
+from EMDC import features_csv, targets_csv, train_and_test
 
 def declarar_widgets(rf_coms, root, loop):
     #Variables for connection and measure buttons
@@ -243,7 +244,7 @@ def medir(rf_coms, loop):
                enviar_parametros_clasific_btn['state'] = tk.DISABLED
                toggle_medir = 0
                #Activa bit 5 de configuración (Iniciar medición)
-               rf_coms.Config |= 0xA0 
+               rf_coms.Config |= 0x20 
                
             else:
                medir_btn['text']="Iniciar medición"
@@ -251,7 +252,7 @@ def medir(rf_coms, loop):
                enviar_parametros_config_btn['state'] = tk.ACTIVE
                toggle_medir = 1
                #Desactiva bit 5 de configuración (Detener medición)
-               rf_coms.Config &= 0x5F 
+               rf_coms.Config &= 0xDF 
                
             #Send Config register to start measurement
             loop.create_task(rf_coms.Send_Start_Measurement(), name="Task4")
@@ -333,25 +334,22 @@ def enviar_config(rf_coms, loop):
 #Función que se ejecuta cuando se presiona el botón "Elegir características"
 def abrir_archivo_caract(root):
     global mi_imagen
-    global filename_features
     #Primer parámetro es la dirección inicial donde va a buscar
     #El titulo aparece en la parte superior izquierda
     #El tercer parámetro le dices qué tipo de archivos buscar
     root.filename = filedialog.askopenfilename(initialdir ="/archivos", title= "Selecciona un archivo", filetypes=(("all files", "*.*"), ("txt files", "*.txt")))
-    filename_features = root.filename
+    
     nombre_archivo_caract.insert(0, root.filename)
 
 #Función que se ejecuta cuando se presiona el botón "Elegir clases"    
 def abrir_archivo_clases(root):
     global mi_imagen
-    global filename_targets
     #Primer parámetro es la dirección inicial donde va a buscar
     #El titulo aparece en la parte superior izquierda
     #El tercer parámetro le dices qué tipo de archivos buscar
     root.filename = filedialog.askopenfilename(initialdir ="/archivos", title= "Selecciona un archivo", filetypes=(("all files", "*.*"), ("txt files", "*.txt")))
-    filename_targets = root.filename
+    
     nombre_archivo_clases.insert(0, root.filename)
-
     
 #Función que se ejecuta cuando se presiona el botón de "Entrenar"
 def entrenar(rf_coms):
@@ -366,7 +364,7 @@ def entrenar(rf_coms):
     #Si ya se eligieron ambos archivos se muestra un mensaje de que se ha entrenado al sistema
     else: 
         #Función de EMDC para entrenar 
-        rf_coms.Chars_Asig, rf_coms.FLD_W, rf_coms.Mean_Vect, rf_coms.Pik_Vect, rf_coms.Cov_S_Inv=train(filename_features,filename_targets)
+        rf_coms.Chars_Asig, rf_coms.FLD_W, rf_coms.Mean_Vect, rf_coms.Pik_Vect, rf_coms.Cov_S_Inv=train_and_test(features_csv,targets_csv)
         messagebox.showinfo("Mensaje de entrenamiento", "Sistema entrenado" )
         enviar_parametros_clasific_btn['state'] = tk.ACTIVE
 
@@ -474,20 +472,7 @@ def maniqui():
     Ex9.place(relx = 0.85, rely = 0.812)
      
 def borrar_hist():
-    #Leer archivo caract
-    features = read_csv(filename_features)
-    #Ver cuántas muestras tiene el archivo
-    samples=len(features)
-    for i in range(samples):
-        features.drop(index=(len(features)-1), inplace=True)
-        
-    #Leer archivo clases
-    targets = read_csv(filename_targets)
-    #Ver cuántas muestras tiene el archivo
-    samples=len(targets)
-    for i in range(samples):
-        targets.drop(index=(len(targets)-1), inplace=True)
-
+    return
 
 #Función que se ejecuta al presionar el botón de "Registrar" en la ventana del maniquí
 def agregar():
@@ -503,3 +488,4 @@ def on_close(root,loop):
      if close:
          loop.stop() 
          root.destroy()
+          

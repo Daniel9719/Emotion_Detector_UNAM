@@ -14,9 +14,6 @@ import pandas as pd
 
 np.random.seed(123)
 
-features_csv="features.csv"
-targets_csv="targets.csv" 
-
 def train(features_csv,targets_csv):    
 
     #Importación de características y clases
@@ -326,6 +323,11 @@ def train(features_csv,targets_csv):
     pi_k_3=np.log(pi_k_3)
     pi_k_4=np.log(pi_k_4)
     
+    print(f"W1={matrix_W_1} \n W2={matrix_W_2} \n W3={matrix_W_3} \n W4={matrix_W_4}")
+    print(f"mk1={m_k_1} \n mk2={m_k_2} \n mk3={m_k_3} \n mk4={m_k_4}")
+    print(f"pik1={pi_k_1} \n pik2={pi_k_2} \n pik3={pi_k_3} \n pik4={pi_k_4}")
+    print(f"S1={S_inv_1} \n S2={S_inv_2} \n S3={S_inv_3} \n S4={S_inv_4}")
+
     #recopilación de parámetros
     #SFFS
     list_SFFS=[index_cod_1,index_cod_2,index_cod_3,index_cod_4]
@@ -1151,4 +1153,6 @@ def train_and_test(features_csv,targets_csv):
     return list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv
 
 if __name__ == "__main__":
+    features_csv="SAMfeatures.csv"
+    targets_csv="targets.csv" 
     list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv=train_and_test(features_csv,targets_csv)

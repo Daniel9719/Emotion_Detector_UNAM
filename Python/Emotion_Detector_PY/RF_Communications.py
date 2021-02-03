@@ -187,7 +187,6 @@ class RF_COMS:
                           | (0<<16) 
                           | (self.FLD_W_Config<<8)   | 0x47 )
                     await self.BLE_Data_Tx(Data, length=6)
-                print(f"DataHex:{hex(Data)}")
                     
         # Sending Mean_Vect Matrix
         for i in range(0,len(self.Mean_Vect)):
@@ -199,7 +198,6 @@ class RF_COMS:
                       | ( int(self.Mean_Vect[i][0][j,0])<<16)  
                       | ( int(self.Vect_Config<<8))          | 0x4C )
                 await self.BLE_Data_Tx(Data, length=6)
-                print(f"DataHex:{hex(Data)}")
 
         # Sending Pik_Vect Matrix
         for i in range(0,len(self.Pik_Vect)):
@@ -210,10 +208,7 @@ class RF_COMS:
                       | ( int(self.Pik_Vect[i][1][j,0])<<24)  
                       | ( int(self.Pik_Vect[i][0][j,0])<<16)  
                       | ( int(self.Vect_Config<<8))          | 0x4C )
-                print(f"PikData:{hex(Data)}")
-                print(f"PureData:{Data}")
                 await self.BLE_Data_Tx(Data, length=6)
-                print(f"DataHex:{hex(Data)}")
 
         # Sending Cov_S_Inv Matrix
         for i in range(0,len(self.Cov_S_Inv)):
@@ -224,10 +219,9 @@ class RF_COMS:
                   | ( int(self.Cov_S_Inv[i][0][0,0])<<16)
                   | ( int(self.Vect_Config<<8))          | 0x4C )
             await self.BLE_Data_Tx(Data, length=6)
-            print(f"DataHex:{hex(Data)}")
 
     async def Send_Start_Measurement(self):
-        Data = (self.Config<<8) | 0x00
+        Data = (self.Config<<8) | 0x40
         await self.BLE_Data_Tx(Data, length=2)
 
     async def Request_Data(self):

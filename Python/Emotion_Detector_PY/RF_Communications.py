@@ -29,9 +29,10 @@ class RF_COMS:
         UUID_characteristic: str,
     ):
         # PANDAS VARIABLES
-        self.feat_df = pd.read_csv("features.csv")
         self.emo_df = pd.read_csv("Emotions.csv")
-        self.index_csv = -1
+        self.feat_df = pd.read_csv("features.csv")
+        self.emo_index = len(self.emo_df.index)
+        self.feat_index = len(self.feat_df.index)
         
         # BLE VARIABLES
         self.loop = loop
@@ -44,6 +45,7 @@ class RF_COMS:
         self.index = 0
         self.str = ''
         self.DataQ16 = 0
+        self.Auto = False
         
         # RF COMS VARIABLES
         self.Config = 0x06
@@ -65,7 +67,7 @@ class RF_COMS:
         # self.Hab_RGB = True
         # self.PS_Selector = 0
         
-        self.Emotion = 0
+        self.Emotion = 7
         self.Chars_Val = np.zeros(22, dtype=float)
 
     # BLE METHODS
@@ -76,6 +78,7 @@ class RF_COMS:
                 await self.connect()
             else:
                 self.select_device()
+        await self.Connect_EmotSensor()
         print("Still in manager")
 
     async def connect(self):
@@ -104,17 +107,20 @@ class RF_COMS:
 
     def BLE_Data_Rx(self, sender: str, data: Any):            
         Rx_len=range(0,len(data),1)
-        # print(f"Lenght:{len(data)}   Data:{data}")
         data=int.from_bytes(data, byteorder="little")
         for i in Rx_len:
             Byte = data&0xFF
-            if self.FirstByte:
-                Addr = Byte
+            if self.Auto == False:
+                if self.FirstByte:
+                    Addr = Byte
+                else:
+                    self.Rx_Menu(Addr, Byte)
+                # data=data>>8
+                self.FirstByte = not self.FirstByte
             else:
-                self.Rx_Menu(self, Addr, Byte)
-            # print(f"Recieved: {data2}")
+                Addr += 1
+                self.Rx_Menu(Addr, Byte)
             data=data>>8
-            self.FirstByte = not self.FirstByte
         
     async def BLE_Data_Tx(self, TxData, length=None):
         if self.client and self.connected:
@@ -144,7 +150,7 @@ class RF_COMS:
             # await self.client.unpair()
         
     # RF COMS METHODS
-    async def Connect(self):
+    async def Connect_EmotSensor(self):
         await self.BLE_Data_Tx("EM_DET_UNAM")
     
     async def Send_Config(self):
@@ -221,7 +227,6 @@ class RF_COMS:
             print(f"DataHex:{hex(Data)}")
 
     async def Send_Start_Measurement(self):
-        # self.Config |= 0x20
         Data = (self.Config<<8) | 0x00
         await self.BLE_Data_Tx(Data, length=2)
 
@@ -229,82 +234,84 @@ class RF_COMS:
         None
         
     def Rx_Menu(self, Addr: int, Data: int):
+        print(f"Addr={hex(Addr)}   Data:{hex(Data)}")
         if Addr == 0x11:
-            self.Emotion = Data
-            if Data == 7:       #Neutral
-                self.emo_df.append(['1','0','0'], ignore_index=True)   
-            elif Data == 1:     #Low Arousal - Negative Valence
-                self.emo_df.append(['0','0','0'], ignore_index=True)   
-            elif Data == 2:     #Low Arousal - Positive Valence
-                self.emo_df.append(['0','0','1'], ignore_index=True)
-            elif Data == 4:     #High Arousal - Negative Valence
-                self.emo_df.append(['0','1','0'], ignore_index=True)
-            elif Data == 6:     #High Arousal - Positive Valence
-                self.emo_df.append(['0','1','1'], ignore_index=True)    
+            self.Emotion = Data & 0x7
+            if self.Emotion == 7:       #Neutral
+                self.emo_df.loc[self.emo_index]=['1','0','0']
+            elif self.Emotion == 1:     #Low Arousal - Negative Valence
+                self.emo_df.loc[self.emo_index]=['0','0','0']
+            elif self.Emotion == 2:     #Low Arousal - Positive Valence
+                self.emo_df.loc[self.emo_index]=['0','0','1']
+            elif self.Emotion == 4:     #High Arousal - Negative Valence
+                self.emo_df.loc[self.emo_index]=['0','1','0']
+            elif self.Emotion == 6:     #High Arousal - Positive Valence
+                self.emo_df.loc[self.emo_index]=['0','1','1']  
+            self.emo_index += 1
             self.emo_df.to_csv("Emotions.csv", index=False)
         elif Addr == 0x12:
-            self.index = Data
-            if Data == 0:
+            self.index = Data & 0x1F
+            if Data & 0x20:
+                self.Auto = True
+            if self.index == 0:
                 self.str = 'pNN50'
-                self.feat_df.append(['0','0','0','0','0','0','0','0'
-                                    ,'0','0','0','0','0','0','0','0'
-                                    ,'0','0','0','0','0','0']
-                                    , ignore_index=True)
-                self.index_csv += 1
-            elif Data == 1:
+            elif self.index == 1:
                 self.str = 'NN50'
-            elif Data == 2:
+            elif self.index == 2:
                 self.str = 'RRmed'
-            elif Data == 3:
+            elif self.index == 3:
                 self.str = 'SDNN'
-            elif Data == 4:
+            elif self.index == 4:
                 self.str = 'RMSSD'
-            elif Data == 5:
+            elif self.index == 5:
                 self.str = 'SD1/SD2'
-            elif Data == 6:
+            elif self.index == 6:
                 self.str = 'SD1'
-            elif Data == 7:
+            elif self.index == 7:
                 self.str = 'SD2'
-            elif Data == 8:
+            elif self.index == 8:
                 self.str = 'NumSCR'
-            elif Data == 9:
+            elif self.index == 9:
                 self.str = 'AmpSCR'
-            elif Data == 10:
+            elif self.index == 10:
                 self.str = 'mTL'
-            elif Data == 11:
+            elif self.index == 11:
                 self.str = 'sdAmpl'
-            elif Data == 12:
+            elif self.index == 12:
                 self.str = 'ctl25'
-            elif Data == 13:
+            elif self.index == 13:
                 self.str = 'ctl50'
-            elif Data == 14:
+            elif self.index == 14:
                 self.str = 'ctl75'
-            elif Data == 15:
+            elif self.index == 15:
                 self.str = 'ctl90'
-            elif Data == 16:
+            elif self.index == 16:
                 self.str = 'LF/HF'
-            elif Data == 17:
+            elif self.index == 17:
                 self.str = 'VLF'
-            elif Data == 18:
+            elif self.index == 18:
                 self.str = 'PRV_LF'
-            elif Data == 19:
+            elif self.index == 19:
                 self.str = 'PRV_HF'
-            elif Data == 20:
+            elif self.index == 20:
                 self.str = 'EDA_LF'
-            elif Data == 21:
+            elif self.index == 21:
                 self.str = 'EDA_HF'
+                self.feat_index += 1
                 
         elif Addr == 0x13:
-            self.DataQ16 = (self.DataQ16 and 0xFFFFFF00)|Data;
+            self.DataQ16 = (self.DataQ16 & 0xFFFFFF00)|Data;
         elif Addr == 0x14:
-            self.DataQ16 = (self.DataQ16 and 0xFFFF00FF)|Data
+            self.DataQ16 = (self.DataQ16 & 0xFFFF00FF)|(Data<<8)
         elif Addr == 0x15:
-            self.DataQ16 = (self.DataQ16 and 0xFF00FFFF)|Data
+            self.DataQ16 = (self.DataQ16 & 0xFF00FFFF)|(Data<<16)
         elif Addr == 0x16:
             Q16 = 65536
-            self.DataQ16 = (self.DataQ16 and 0x00FFFFFF)|Data
+            self.DataQ16 = (self.DataQ16 & 0x00FFFFFF)|(Data<<24)
             self.Chars_Val[self.index] = float(self.DataQ16)/Q16
             
-            self.feat_df.at[self.index_csv, self.str] = self.Chars_Val[self.index]
+            self.feat_df.loc[self.feat_index, self.str] = self.Chars_Val[self.index]
+            print(f"{self.feat_df.head()}")
             self.feat_df.to_csv("Features.csv", index=False)
+            self.Auto = False
         

@@ -9,9 +9,19 @@ from RF_Communications import RF_COMS
 import nest_asyncio
 import time
 from EMDC import features_csv, targets_csv, train_and_test
+import tkinter as tk
+from User_Interface import declarar_widgets, on_close
 
 UUID_characteristic = "0000ffe1-0000-1000-8000-00805f9b34fb"
 
+async def GUI_updater(loop):
+    while True:
+        try:
+            root.update()
+            await asyncio.sleep(1/20)
+        except KeyboardInterrupt:
+            print("User stopped loop.")
+    
 async def main(loop):
     while True:
         # Task1 = loop.create_task(rf_coms.manager(), name="Task1")
@@ -20,7 +30,7 @@ async def main(loop):
         # future, pending = await asyncio.wait([Task1],return_when="ALL_COMPLETED")
         
         await rf_coms.manager()
-        await rf_coms.Connect() 
+        # await rf_coms.Connect() 
         rf_coms.Config = 0x46
         await rf_coms.Send_Config()   
 
@@ -44,12 +54,22 @@ if __name__ == "__main__":
     rf_coms = RF_COMS(
          loop, UUID_characteristic
     )
+    #Main GUI window
+    root = tk.Tk()
+    root.title("Dispositivo detector de emociones")
+    root.geometry("1500x700")
     
+    declarar_widgets(rf_coms, root, loop)
+    
+    #on_close function will be executed when trying to close the main window
+    root.protocol("WM_DELETE_WINDOW",  lambda: on_close(root,loop)) 
     
     try:
-        loop.run_until_complete(main(loop))
+        # loop.run_until_complete(main(loop))
+        Task1 = loop.create_task(GUI_updater(loop), name="Task1")
+        loop.run_forever()
         print("First loop finished")
-        loop.stop()
+        # loop.close()
     except KeyboardInterrupt:
         print("User stopped program.")
     finally:
@@ -57,5 +77,4 @@ if __name__ == "__main__":
         # loop.stop()
         loop.run_until_complete(rf_coms.cleanup())
         loop.stop()
-        # plt.show()
         # loop.close()

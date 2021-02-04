@@ -181,12 +181,12 @@ def declarar_widgets(rf_coms, root, loop):
     
     #-------------------BOTÓN BORRAR HISTORIAL------------------------#
     #Botón para borrar los archivos
-    borrar_btn = tk.Button(root, text="Borrar historial", bg = "#D3323F", state = tk.DISABLED, command = borrar_hist)
+    borrar_btn = tk.Button(root, text="Borrar historial", bg = "#D3323F", command = borrar_hist)
     borrar_btn.place(relx = 0.85, rely = 0.13, anchor = tk.CENTER)
     
     #-------------------TEXTO NOTA------------------------#
     #Nota
-    nota_l = tk.Label(root, fg= "#FFFFFF", text="Nota: Antes de presionar el botón de iniciar medición debe colocar el dedo sobre el sensor \n hasta que se apague el LED naranja", font="Helvetica 10 bold", bg='#2E5D94')
+    nota_l = tk.Label(root, fg= "#FFFFFF", text="Nota: Antes de presionar el botón de iniciar medición debe colocar el dedo sobre el sensor \n hasta que se apague el LED blanco", font="Helvetica 10 bold", bg='#2E5D94')
     nota_l.place(relx = 0.53, rely = 0.125, anchor=tk.CENTER)
     
 #------------------FUNCIONES BOTONES CONECTAR Y MEDIR------------------------#
@@ -480,14 +480,18 @@ def borrar_hist():
     samples=len(features)
     for i in range(samples):
         features.drop(index=(len(features)-1), inplace=True)
+    features.to_csv(filename_features, index=False)
         
     #Leer archivo clases
     targets = read_csv(filename_targets)
+    
     #Ver cuántas muestras tiene el archivo
     samples=len(targets)
     for i in range(samples):
         targets.drop(index=(len(targets)-1), inplace=True)
-
+    targets.to_csv(filename_targets, index=False)
+    
+    messagebox.showinfo("Mensaje de parámetros", "Historial borrado")
 
 #Función que se ejecuta al presionar el botón de "Registrar" en la ventana del maniquí
 def agregar():

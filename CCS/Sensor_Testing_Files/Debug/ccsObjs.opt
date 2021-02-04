@@ -1,0 +1,1 @@
+"./BiomSensor_BLE.obj" "./Biom_AS7026GG.obj" "./FIR.obj" "./HM10_BLE.obj" "./IEEE_I2C.obj" "../2837x_FLASH_lnk_cpu1.cmd" -llibc.a -l"C:/ti/c2000/C2000Ware_3_01_00_00/driverlib/f2837xd/driverlib/ccs/Debug/driverlib.lib" 

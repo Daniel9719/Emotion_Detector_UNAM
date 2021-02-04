@@ -1,0 +1,388 @@
+******************************************************************************
+             TMS320C2000 Linker PC v18.12.4                    
+******************************************************************************
+>> Linked Tue Feb  2 09:35:49 2021
+
+OUTPUT FILE NAME:   <Sensor_Testing_Files.out>
+ENTRY POINT SYMBOL: "_c_int00"  address: 000827d0
+
+
+MEMORY CONFIGURATION
+
+         name            origin    length      used     unused   attr    fill
+----------------------  --------  ---------  --------  --------  ----  --------
+PAGE 0:
+  RAMM0                 00000122   000002de  00000000  000002de  RWIX
+  RAMLS0                00008000   00000800  00000000  00000800  RWIX
+  RAMLS1                00008800   00000800  00000000  00000800  RWIX
+  RAMLS2                00009000   00000800  00000000  00000800  RWIX
+  RAMLS3                00009800   00000800  00000000  00000800  RWIX
+  RAMLS4                0000a000   00000800  00000000  00000800  RWIX
+  RAMD0                 0000b000   00000800  00000000  00000800  RWIX
+  RAMGS14               0001a000   00001000  00000000  00001000  RWIX
+  RAMGS15               0001b000   00001000  00000000  00001000  RWIX
+  BEGIN                 00080000   00000002  00000000  00000002  RWIX
+  FLASHA                00080002   00001ffe  00000000  00001ffe  RWIX
+  FLASHB                00082000   00002000  00000928  000016d8  RWIX
+  FLASHC                00084000   00002000  00000000  00002000  RWIX
+  FLASHD                00086000   00002000  00000000  00002000  RWIX
+  FLASHE                00088000   00008000  00000000  00008000  RWIX
+  FLASHF                00090000   00008000  0000005c  00007fa4  RWIX
+  FLASHG                00098000   00008000  00000000  00008000  RWIX
+  FLASHH                000a0000   00008000  00000000  00008000  RWIX
+  FLASHI                000a8000   00008000  00000000  00008000  RWIX
+  FLASHJ                000b0000   00008000  00000000  00008000  RWIX
+  FLASHK                000b8000   00002000  00000000  00002000  RWIX
+  FLASHL                000ba000   00002000  00000000  00002000  RWIX
+  FLASHM                000bc000   00002000  00000000  00002000  RWIX
+  FLASHN                000be000   00002000  00000000  00002000  RWIX
+  RESET                 003fffc0   00000002  00000000  00000002  RWIX
+
+PAGE 1:
+  BOOT_RSVD             00000002   00000120  00000000  00000120  RWIX
+  RAMM1                 00000400   00000400  00000200  00000200  RWIX
+  RAMLS5                0000a800   00000800  000002ab  00000555  RWIX
+  RAMD1                 0000b800   00000800  00000000  00000800  RWIX
+  RAMGS0                0000c000   00001000  00000000  00001000  RWIX
+  RAMGS1                0000d000   00001000  00000000  00001000  RWIX
+  RAMGS2                0000e000   00001000  00000000  00001000  RWIX
+  RAMGS3                0000f000   00001000  00000000  00001000  RWIX
+  RAMGS4                00010000   00001000  00000000  00001000  RWIX
+  RAMGS5                00011000   00001000  00000000  00001000  RWIX
+  RAMGS6                00012000   00001000  00000000  00001000  RWIX
+  RAMGS7                00013000   00001000  00000000  00001000  RWIX
+  RAMGS8                00014000   00001000  00000000  00001000  RWIX
+  RAMGS9                00015000   00001000  00000000  00001000  RWIX
+  RAMGS10               00016000   00001000  00000000  00001000  RWIX
+  RAMGS11               00017000   00001000  00000000  00001000  RWIX
+  RAMGS12               00018000   00001000  00000000  00001000  RWIX
+  RAMGS13               00019000   00001000  00000000  00001000  RWIX
+  CPU2TOCPU1RAM         0003f800   00000400  00000000  00000400  RWIX
+  CPU1TOCPU2RAM         0003fc00   00000400  00000000  00000400  RWIX
+
+
+SECTION ALLOCATION MAP
+
+ output                                  attributes/
+section   page    origin      length       input sections
+--------  ----  ----------  ----------   ----------------
+.cinit     0    00082000    00000125     
+                  00082000    00000068     BiomSensor_BLE.obj (.cinit:_coef_FIR_EDA)
+                  00082068    00000068     BiomSensor_BLE.obj (.cinit:_coef_FIR_PPG)
+                  000820d0    00000037     BiomSensor_BLE.obj (.cinit)
+                  00082107    0000000e     rts2800_fpu32.lib : exit.c.obj (.cinit)
+                  00082115    00000005                       : _lock.c.obj (.cinit:__lock)
+                  0008211a    00000005                       : _lock.c.obj (.cinit:__unlock)
+                  0008211f    00000004     HM10_BLE.obj (.cinit)
+                  00082123    00000002     --HOLE-- [fill = 0]
+
+.pinit     0    00082000    00000000     UNINITIALIZED
+
+.TI.ramfunc 
+*          0    00008000    00000000     UNINITIALIZED
+
+.stack     1    00000400    00000200     UNINITIALIZED
+                  00000400    00000200     --HOLE--
+
+.reset     0    003fffc0    00000002     DSECT
+                  003fffc0    00000002     rts2800_fpu32.lib : boot28.asm.obj (.reset)
+
+GETBUFFER 
+*          0    0003f800    00000000     DSECT
+
+GETWRITEIDX 
+*          0    0003f800    00000000     DSECT
+
+PUTREADIDX 
+*          0    0003f800    00000000     DSECT
+
+.text      0    00082128    00000803     
+                  00082128    000002ac     Biom_AS7026GG.obj (.text)
+                  000823d4    0000023e     BiomSensor_BLE.obj (.text:retain)
+                  00082612    000000f1     BiomSensor_BLE.obj (.text)
+                  00082703    000000cd     HM10_BLE.obj (.text)
+                  000827d0    00000056     rts2800_fpu32.lib : boot28.asm.obj (.text)
+                  00082826    00000036     IEEE_I2C.obj (.text)
+                  0008285c    0000002a     FIR.obj (.text)
+                  00082886    00000029     rts2800_fpu32.lib : exit.c.obj (.text)
+                  000828af    00000024                       : cpy_tbl.c.obj (.text)
+                  000828d3    0000001d                       : memcpy.c.obj (.text)
+                  000828f0    00000019                       : args_main.c.obj (.text)
+                  00082909    00000016                       : strstr.c.obj (.text)
+                  0008291f    00000009                       : _lock.c.obj (.text)
+                  00082928    00000002                       : pre_init.c.obj (.text)
+                  0008292a    00000001                       : startup.c.obj (.text)
+
+.econst    0    00090000    0000005c     
+                  00090000    0000003b     HM10_BLE.obj (.econst:.string)
+                  0009003b    00000001     --HOLE-- [fill = 0]
+                  0009003c    00000020     BiomSensor_BLE.obj (.econst:.string)
+
+.ebss.1    1    0000a800    000000fe     UNINITIALIZED
+                  0000a800    000000c9     BiomSensor_BLE.obj (.ebss:_xb_EDA)
+                  0000a8c9    00000001     HM10_BLE.obj (.ebss)
+                  0000a8ca    0000002a     BiomSensor_BLE.obj (.ebss)
+                  0000a8f4    00000006     rts2800_fpu32.lib : exit.c.obj (.ebss)
+                  0000a8fa    00000002                       : _lock.c.obj (.ebss:__lock)
+                  0000a8fc    00000002                       : _lock.c.obj (.ebss:__unlock)
+
+.ebss.2    1    0000a900    000000e3     UNINITIALIZED
+                  0000a900    000000c9     BiomSensor_BLE.obj (.ebss:_xb_PPG)
+                  0000a9c9    0000001a     BiomSensor_BLE.obj (.ebss:_SCI_RxData$9)
+
+.ebss.3    1    0000aa00    00000065     UNINITIALIZED
+                  0000aa00    00000065     BiomSensor_BLE.obj (.ebss:_coef_FIR_EDA)
+
+.ebss.4    1    0000aa80    00000065     UNINITIALIZED
+                  0000aa80    00000065     BiomSensor_BLE.obj (.ebss:_coef_FIR_PPG)
+
+MODULE SUMMARY
+
+       Module               code   initialized data   uninitialized data
+       ------               ----   ----------------   ------------------
+    .\
+       BiomSensor_BLE.obj   815    295                672               
+       Biom_AS7026GG.obj    684    0                  0                 
+       HM10_BLE.obj         205    63                 1                 
+       IEEE_I2C.obj         54     0                  0                 
+       FIR.obj              42     0                  0                 
+    +--+--------------------+------+------------------+--------------------+
+       Total:               1800   358                673               
+                                                                        
+    C:\ti\ccs910\ccs\tools\compiler\ti-cgt-c2000_18.12.4.LTS\lib\rts2800_fpu32.lib
+       boot28.asm.obj       86     0                  0                 
+       exit.c.obj           41     14                 6                 
+       cpy_tbl.c.obj        36     0                  0                 
+       memcpy.c.obj         29     0                  0                 
+       args_main.c.obj      25     0                  0                 
+       _lock.c.obj          9      10                 4                 
+       strstr.c.obj         22     0                  0                 
+       pre_init.c.obj       2      0                  0                 
+       startup.c.obj        1      0                  0                 
+    +--+--------------------+------+------------------+--------------------+
+       Total:               251    24                 10                
+                                                                        
+       Stack:               0      0                  512               
+    +--+--------------------+------+------------------+--------------------+
+       Grand Total:         2051   382                1195              
+
+
+GLOBAL DATA SYMBOLS: SORTED BY DATA PAGE
+
+address     data page           name
+--------    ----------------    ----
+00000400      10 (00000400)     __stack
+
+0000a800     2a0 (0000a800)     _xb_EDA
+
+0000a8ca     2a3 (0000a8c0)     _SCI_State
+0000a8cb     2a3 (0000a8c0)     _SCI_RxAvail
+0000a8cc     2a3 (0000a8c0)     _SCI_TxAvail
+0000a8cd     2a3 (0000a8c0)     _SCI_Data
+0000a8ce     2a3 (0000a8c0)     _SCI_Mode
+0000a8d6     2a3 (0000a8c0)     _SCI_StartPt
+0000a8d8     2a3 (0000a8c0)     _SCI_EndPt
+0000a8e0     2a3 (0000a8c0)     _Biom1
+0000a8f4     2a3 (0000a8c0)     ___TI_enable_exit_profile_output
+0000a8f6     2a3 (0000a8c0)     ___TI_cleanup_ptr
+0000a8f8     2a3 (0000a8c0)     ___TI_dtors_ptr
+0000a8fa     2a3 (0000a8c0)     __lock
+0000a8fc     2a3 (0000a8c0)     __unlock
+
+0000a900     2a4 (0000a900)     _xb_PPG
+
+0000aa00     2a8 (0000aa00)     _coef_FIR_EDA
+
+0000aa80     2aa (0000aa80)     _coef_FIR_PPG
+
+
+GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
+
+page  address   name                            
+----  -------   ----                            
+abs   ffffffff  .text                           
+0     00082886  C$$EXIT                         
+1     0000a8e0  _Biom1                          
+0     0008235a  _Biom_Calibration               
+0     0008232d  _Biom_Config                    
+0     00082759  _Clean_Reg                      
+0     00082765  _ComandoAT                      
+0     000822be  _Config_ADC                     
+0     00082266  _Config_EAF                     
+0     00082299  _Config_ECG                     
+0     000822e3  _Config_FIFO                    
+0     000822fd  _Config_GPIOs                   
+0     0008268f  _Config_I2CA                    
+0     00082128  _Config_LEDs                    
+0     00082260  _Config_LTF                     
+0     00082225  _Config_OFE                     
+0     00082174  _Config_PD                      
+0     000826b3  _Config_PIE                     
+0     00082667  _Config_SCIB                    
+0     000821a8  _Config_SEQ                     
+0     0008218e  _Config_TIA                     
+0     0008262a  _Config_puertos                 
+0     00082612  _FIR_EDA                        
+0     0008261e  _FIR_PPG                        
+0     00082777  _HM10_Config                    
+0     00082850  _I2C_Read_Byte                  
+0     00082826  _I2C_StartWR                    
+0     00082855  _I2C_Stop                       
+0     00082846  _I2C_Write_Byte                 
+0     000823d4  _Inter_GPIO22                   
+0     00082417  _Inter_I2CA                     
+0     0008257e  _Inter_SCIBRX                   
+0     00082539  _Inter_SCIBTX                   
+0     00008000  _RamfuncsLoadEnd                
+abs   00000000  _RamfuncsLoadSize               
+0     00008000  _RamfuncsLoadStart              
+0     00008000  _RamfuncsRunEnd                 
+abs   00000000  _RamfuncsRunSize                
+0     00008000  _RamfuncsRunStart               
+0     0008274f  _SCIB_Read                      
+0     0008271b  _SCIB_WData                     
+0     00082703  _SCIB_WText                     
+1     0000a8cd  _SCI_Data                       
+1     0000a8d8  _SCI_EndPt                      
+1     0000a8ce  _SCI_Mode                       
+1     0000a8cb  _SCI_RxAvail                    
+1     0000a8d6  _SCI_StartPt                    
+1     0000a8ca  _SCI_State                      
+1     0000a8cc  _SCI_TxAvail                    
+1     00000600  __STACK_END                     
+abs   00000200  __STACK_SIZE                    
+1     0000a8f6  ___TI_cleanup_ptr               
+1     0000a8f8  ___TI_dtors_ptr                 
+1     0000a8f4  ___TI_enable_exit_profile_output
+abs   ffffffff  ___TI_pprof_out_hndl            
+abs   ffffffff  ___TI_prof_data_size            
+abs   ffffffff  ___TI_prof_data_start           
+abs   ffffffff  ___binit__                      
+abs   ffffffff  ___c_args__                     
+0     00082000  ___cinit__                      
+abs   ffffffff  ___etext__                      
+abs   ffffffff  ___pinit__                      
+abs   ffffffff  ___text__                       
+0     000828f0  __args_main                     
+1     0000a8fa  __lock                          
+0     00082927  __nop                           
+0     00082923  __register_lock                 
+0     0008291f  __register_unlock               
+1     00000400  __stack                         
+0     0008292a  __system_post_cinit             
+0     00082928  __system_pre_init               
+1     0000a8fc  __unlock                        
+0     00082886  _abort                          
+0     000827d0  _c_int00                        
+1     0000aa00  _coef_FIR_EDA                   
+1     0000aa80  _coef_FIR_PPG                   
+0     0008287d  _conv                           
+0     000828af  _copy_in                        
+0     00082888  _exit                           
+0     0008285d  _firFilter                      
+0     000826d0  _main                           
+0     000828d3  _memcpy                         
+0     00082909  _strstr                         
+1     0000a800  _xb_EDA                         
+1     0000a900  _xb_PPG                         
+abs   ffffffff  binit                           
+0     00082000  cinit                           
+abs   ffffffff  etext                           
+abs   ffffffff  pinit                           
+
+
+GLOBAL SYMBOLS: SORTED BY Symbol Address 
+
+page  address   name                            
+----  -------   ----                            
+0     00008000  _RamfuncsLoadEnd                
+0     00008000  _RamfuncsLoadStart              
+0     00008000  _RamfuncsRunEnd                 
+0     00008000  _RamfuncsRunStart               
+0     00082000  ___cinit__                      
+0     00082000  cinit                           
+0     00082128  _Config_LEDs                    
+0     00082174  _Config_PD                      
+0     0008218e  _Config_TIA                     
+0     000821a8  _Config_SEQ                     
+0     00082225  _Config_OFE                     
+0     00082260  _Config_LTF                     
+0     00082266  _Config_EAF                     
+0     00082299  _Config_ECG                     
+0     000822be  _Config_ADC                     
+0     000822e3  _Config_FIFO                    
+0     000822fd  _Config_GPIOs                   
+0     0008232d  _Biom_Config                    
+0     0008235a  _Biom_Calibration               
+0     000823d4  _Inter_GPIO22                   
+0     00082417  _Inter_I2CA                     
+0     00082539  _Inter_SCIBTX                   
+0     0008257e  _Inter_SCIBRX                   
+0     00082612  _FIR_EDA                        
+0     0008261e  _FIR_PPG                        
+0     0008262a  _Config_puertos                 
+0     00082667  _Config_SCIB                    
+0     0008268f  _Config_I2CA                    
+0     000826b3  _Config_PIE                     
+0     000826d0  _main                           
+0     00082703  _SCIB_WText                     
+0     0008271b  _SCIB_WData                     
+0     0008274f  _SCIB_Read                      
+0     00082759  _Clean_Reg                      
+0     00082765  _ComandoAT                      
+0     00082777  _HM10_Config                    
+0     000827d0  _c_int00                        
+0     00082826  _I2C_StartWR                    
+0     00082846  _I2C_Write_Byte                 
+0     00082850  _I2C_Read_Byte                  
+0     00082855  _I2C_Stop                       
+0     0008285d  _firFilter                      
+0     0008287d  _conv                           
+0     00082886  C$$EXIT                         
+0     00082886  _abort                          
+0     00082888  _exit                           
+0     000828af  _copy_in                        
+0     000828d3  _memcpy                         
+0     000828f0  __args_main                     
+0     00082909  _strstr                         
+0     0008291f  __register_unlock               
+0     00082923  __register_lock                 
+0     00082927  __nop                           
+0     00082928  __system_pre_init               
+0     0008292a  __system_post_cinit             
+1     00000400  __stack                         
+1     00000600  __STACK_END                     
+1     0000a800  _xb_EDA                         
+1     0000a8ca  _SCI_State                      
+1     0000a8cb  _SCI_RxAvail                    
+1     0000a8cc  _SCI_TxAvail                    
+1     0000a8cd  _SCI_Data                       
+1     0000a8ce  _SCI_Mode                       
+1     0000a8d6  _SCI_StartPt                    
+1     0000a8d8  _SCI_EndPt                      
+1     0000a8e0  _Biom1                          
+1     0000a8f4  ___TI_enable_exit_profile_output
+1     0000a8f6  ___TI_cleanup_ptr               
+1     0000a8f8  ___TI_dtors_ptr                 
+1     0000a8fa  __lock                          
+1     0000a8fc  __unlock                        
+1     0000a900  _xb_PPG                         
+1     0000aa00  _coef_FIR_EDA                   
+1     0000aa80  _coef_FIR_PPG                   
+abs   00000000  _RamfuncsLoadSize               
+abs   00000000  _RamfuncsRunSize                
+abs   00000200  __STACK_SIZE                    
+abs   ffffffff  .text                           
+abs   ffffffff  ___TI_pprof_out_hndl            
+abs   ffffffff  ___TI_prof_data_size            
+abs   ffffffff  ___TI_prof_data_start           
+abs   ffffffff  ___binit__                      
+abs   ffffffff  ___c_args__                     
+abs   ffffffff  ___etext__                      
+abs   ffffffff  ___pinit__                      
+abs   ffffffff  ___text__                       
+abs   ffffffff  binit                           
+abs   ffffffff  etext                           
+abs   ffffffff  pinit                           
+
+[89 symbols]

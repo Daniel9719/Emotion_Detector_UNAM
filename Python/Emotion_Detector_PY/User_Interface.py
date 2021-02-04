@@ -19,7 +19,7 @@ from pandas import DataFrame, read_csv
 from tkinter import filedialog
 
 #Import functions from EMDC
-from EMDC import train
+from ML.EMDC import train
 
 def declarar_widgets(rf_coms, root, loop):
     #Variables for connection and measure buttons

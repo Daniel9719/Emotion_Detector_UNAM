@@ -5,8 +5,11 @@ Created on Sat Oct 10 15:28:50 2020
 @author: Samuel Osorio Gutiérrez
 """
 
-import FLD,SFFS,LDA
-from util import accuracy,normalization
+# import FLD,SFFS,LDA
+import ML.FLD as FLD
+import ML.SFFS as SFFS
+import ML.LDA as LDA
+from ML.util import accuracy
 from time import time
 import random
 import numpy as np

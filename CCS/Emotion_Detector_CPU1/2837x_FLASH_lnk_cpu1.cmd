@@ -97,7 +97,7 @@ SECTIONS
 						 
    /* Allocate uninitalized data sections: */
    .stack              : > RAMM1        PAGE = 1
-   .ebss               : >> RAMGS0 | RAMGS1       PAGE = 1
+   .ebss               : >> RAMGS0 | RAMGS1 | RAMGS2 | RAMGS3 | RAMGS4 | RAMGS5        PAGE = 1
    .esysmem            : > RAMLS5       PAGE = 1
 
    /* Initalized sections go in Flash */
@@ -114,6 +114,8 @@ SECTIONS
     /* CPU1 & CPU2 SECTIONS */
     CPU1_TO_CPU2	   : > CPU1TOCPU2RAM,    PAGE = 1
     CPU2_TO_CPU1	   : > CPU2TOCPU1RAM,    PAGE = 1
+
+    ASM_VARS		   : > RAMLS0,		     PAGE = 0
 
    /* The following section definitions are required when using the IPC API Drivers */ 
     GROUP : > CPU1TOCPU2RAM, PAGE = 1 

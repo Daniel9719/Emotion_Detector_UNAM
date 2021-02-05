@@ -154,9 +154,8 @@ class RF_COMS:
         await self.BLE_Data_Tx("EM_DET_UNAM")
     
     async def Send_Config(self):
-        Data = ( (self.No_Emotions<<24) | 0x41<<16 
-               | (self.Config<<8)       | 0x40      )
-        await self.BLE_Data_Tx(Data, length=4)
+        Data = (self.Config<<8) | 0x40      
+        await self.BLE_Data_Tx(Data, length=2)
 
     async def Send_Clasif_Parameters(self):
         # Sending Chars_Asig Matrix
@@ -166,7 +165,7 @@ class RF_COMS:
                   | (self.Chars_Asig[i][2]<<32)  
                   | (self.Chars_Asig[i][1]<<24)  
                   | (self.Chars_Asig[i][0]<<16)  
-                  | (self.CC_Config<<8)          | 0x42 )
+                  | (self.CC_Config<<8)          | 0x41 )
             await self.BLE_Data_Tx(Data, length=6)
         
         # Sending FLD_W Matrix
@@ -178,7 +177,7 @@ class RF_COMS:
                           | ( int(self.FLD_W[i][2][j,0])<<32)
                           | ( int(self.FLD_W[i][1][j,0])<<24)
                           | ( int(self.FLD_W[i][0][j,0])<<16)
-                          | ( int(self.FLD_W_Config<<8))     | 0x47 )
+                          | ( int(self.FLD_W_Config<<8))     | 0x46 )
                     await self.BLE_Data_Tx(Data, length=6)
                 else:
                     Data = ( (0<<40) 
@@ -196,7 +195,7 @@ class RF_COMS:
                       | ( int(self.Mean_Vect[i][2][j,0])<<32)  
                       | ( int(self.Mean_Vect[i][1][j,0])<<24)  
                       | ( int(self.Mean_Vect[i][0][j,0])<<16)  
-                      | ( int(self.Vect_Config<<8))          | 0x4C )
+                      | ( int(self.Vect_Config<<8))          | 0x4B )
                 await self.BLE_Data_Tx(Data, length=6)
 
         # Sending Pik_Vect Matrix
@@ -207,7 +206,7 @@ class RF_COMS:
                       | ( int(self.Pik_Vect[i][2][j,0])<<32)  
                       | ( int(self.Pik_Vect[i][1][j,0])<<24)  
                       | ( int(self.Pik_Vect[i][0][j,0])<<16)  
-                      | ( int(self.Vect_Config<<8))          | 0x4C )
+                      | ( int(self.Vect_Config<<8))          | 0x4B )
                 await self.BLE_Data_Tx(Data, length=6)
 
         # Sending Cov_S_Inv Matrix
@@ -217,7 +216,7 @@ class RF_COMS:
                   | ( int(self.Cov_S_Inv[i][2][0,0])<<32)
                   | ( int(self.Cov_S_Inv[i][1][0,0])<<24)
                   | ( int(self.Cov_S_Inv[i][0][0,0])<<16)
-                  | ( int(self.Vect_Config<<8))          | 0x4C )
+                  | ( int(self.Vect_Config<<8))          | 0x4B )
             await self.BLE_Data_Tx(Data, length=6)
 
     async def Send_Start_Measurement(self):
@@ -229,7 +228,7 @@ class RF_COMS:
         
     def Rx_Menu(self, Addr: int, Data: int):
         print(f"Addr={hex(Addr)}   Data:{hex(Data)}")
-        if Addr == 0x11:
+        if Addr == 0x10:
             self.Emotion = Data & 0x7
             if self.Emotion == 7:       #Neutral
                 self.emo_df.loc[self.emo_index]=['1','0','0']
@@ -243,7 +242,7 @@ class RF_COMS:
                 self.emo_df.loc[self.emo_index]=['0','1','1']  
             self.emo_index += 1
             self.emo_df.to_csv("Emotions.csv", index=False)
-        elif Addr == 0x12:
+        elif Addr == 0x11:
             self.index = Data & 0x1F
             if Data & 0x20:
                 self.Auto = True
@@ -260,46 +259,46 @@ class RF_COMS:
             elif self.index == 5:
                 self.str = 'SD1/SD2'
             elif self.index == 6:
-                self.str = 'SD1'
-            elif self.index == 7:
-                self.str = 'SD2'
-            elif self.index == 8:
-                self.str = 'NumSCR'
-            elif self.index == 9:
-                self.str = 'AmpSCR'
-            elif self.index == 10:
-                self.str = 'mTL'
-            elif self.index == 11:
-                self.str = 'sdAmpl'
-            elif self.index == 12:
-                self.str = 'ctl25'
-            elif self.index == 13:
-                self.str = 'ctl50'
-            elif self.index == 14:
-                self.str = 'ctl75'
-            elif self.index == 15:
-                self.str = 'ctl90'
-            elif self.index == 16:
                 self.str = 'LF/HF'
-            elif self.index == 17:
+            elif self.index == 7:
                 self.str = 'VLF'
-            elif self.index == 18:
+            elif self.index == 8:
                 self.str = 'PRV_LF'
-            elif self.index == 19:
+            elif self.index == 9:
                 self.str = 'PRV_HF'
+            elif self.index == 10:
+                self.str = 'SD1'
+            elif self.index == 11:
+                self.str = 'SD2'
+            elif self.index == 12:
+                self.str = 'NumSCR'
+            elif self.index == 13:
+                self.str = 'AmpSCR'
+            elif self.index == 14:
+                self.str = 'mTL'
+            elif self.index == 15:
+                self.str = 'sdAmpl'
+            elif self.index == 16:
+                self.str = 'ctl25'
+            elif self.index == 17:
+                self.str = 'ctl50'
+            elif self.index == 18:
+                self.str = 'ctl75'
+            elif self.index == 19:
+                self.str = 'ctl90'
             elif self.index == 20:
                 self.str = 'EDA_LF'
             elif self.index == 21:
                 self.str = 'EDA_HF'
                 self.feat_index += 1
                 
-        elif Addr == 0x13:
+        elif Addr == 0x12:
             self.DataQ16 = (self.DataQ16 & 0xFFFFFF00)|Data;
-        elif Addr == 0x14:
+        elif Addr == 0x13:
             self.DataQ16 = (self.DataQ16 & 0xFFFF00FF)|(Data<<8)
-        elif Addr == 0x15:
+        elif Addr == 0x14:
             self.DataQ16 = (self.DataQ16 & 0xFF00FFFF)|(Data<<16)
-        elif Addr == 0x16:
+        elif Addr == 0x15:
             Q16 = 65536
             self.DataQ16 = (self.DataQ16 & 0x00FFFFFF)|(Data<<24)
             self.Chars_Val[self.index] = float(self.DataQ16)/Q16

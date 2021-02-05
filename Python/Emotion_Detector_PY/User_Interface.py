@@ -243,7 +243,7 @@ def medir(rf_coms, loop):
                enviar_parametros_clasific_btn['state'] = tk.DISABLED
                toggle_medir = 0
                #Activa bit 5 de configuración (Iniciar medición)
-               rf_coms.Config |= 0xA0 
+               rf_coms.Config |= 0x30 
                
             else:
                medir_btn['text']="Iniciar medición"
@@ -251,7 +251,7 @@ def medir(rf_coms, loop):
                enviar_parametros_config_btn['state'] = tk.ACTIVE
                toggle_medir = 1
                #Desactiva bit 5 de configuración (Detener medición)
-               rf_coms.Config &= 0x5F 
+               rf_coms.Config &= 0xCF 
                
             #Send Config register to start measurement
             loop.create_task(rf_coms.Send_Start_Measurement(), name="Task4")

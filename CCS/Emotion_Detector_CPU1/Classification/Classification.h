@@ -4,6 +4,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+//--------------------------------------------------------------------
+//%%%%%%%%%%%%%%%%%%%%    EMDC FUNCTION    %%%%%%%%%%%%%%%%%%%%
+//float* features: Pointer to extracted features
+//--------------------------------------------------------------------
 
 uint16_t EMDC(float* features);
 

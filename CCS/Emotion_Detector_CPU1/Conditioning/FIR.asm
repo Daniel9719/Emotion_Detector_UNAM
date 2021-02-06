@@ -1,5 +1,5 @@
           .global _firFilter,_conv
-Qi         .set    14
+Qi         .set    15
 
 xbf       .word   0        ;Buffer´s last memory allocation
 
@@ -22,7 +22,7 @@ CONV2
           BANZ CONV2, AR5--   ;AR5=0?
 
           ADDL ACC,P         ;ACC+=P
-          SFR ACC, #Qi        ;Q14*Q14=Q28>>14
+          SFR ACC, #Qi        ;Q15*Q15=Q30>>15
           MOV  T, *--XAR7	 ;XAR7->&xb-1
           MOVL XAR4,ACC      ;XAR4=ACC
           MOV AL,AR0

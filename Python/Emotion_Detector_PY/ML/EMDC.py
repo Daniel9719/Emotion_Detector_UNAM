@@ -19,7 +19,7 @@ np.random.seed(123)
 
 def train(features_csv,targets_csv):    
 
-    #Importación de características y clases
+    #Features and targets import
     data_features=pd.read_csv(features_csv)
     data_targets=pd.read_csv(targets_csv)
     train_len=int((len(data_features))*0.8)
@@ -38,7 +38,7 @@ def train(features_csv,targets_csv):
     keys_features=data_features.keys()
     keys_targets=data_targets.keys()
     
-    #Reordenamiento aleatorio de los datos
+    #Data's random arrangement
     total_data=[]
     for j in range (dim):
         total_data.append(data_features[keys_features[j]])
@@ -61,7 +61,7 @@ def train(features_csv,targets_csv):
         data_targets[keys_targets[i]]=total_data[j]
         i+=1
             
-    #Creación de conjuntos de prueba y entrenamiento
+    #Create training set and test set 
     for j in range (dim):
         for i in range(train_len):        
             features_train[i][j]=data_features[keys_features[j]][i]
@@ -81,16 +81,16 @@ def train(features_csv,targets_csv):
     targets_train=targets_train.astype(int)
     targets_test=targets_test.astype(int)
     
-    #Nivel de neutralidad
+    #Neutrality
     
     #SFS_1
-    t_inicial=time()
+    t_start=time()
     SFS_features_train_1, SFS_features_test_1,index_cod_1 =SFFS.SFFS_wrapper(features_train, features_test, targets_train[:,0], targets_test[:,0], pLDA=True)
     t_final=time()
     
-    print("\x1b[1;37m"+"\nTiempo de ejecución de SFFS_1 a "+ str(SFS_features_train_1.shape[1])+ " dimensiones: " + str((t_final-t_inicial)*1000) + " ms")
+    print("\x1b[1;37m"+"\nExecution time of SFFS_1 with "+ str(SFS_features_train_1.shape[1])+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
-    #Unión de conjunto de entrenamiento y conjunto de prueba
+    #Training set and test set union
     SFS_features_train_1=list(SFS_features_train_1)
     SFS_features_test_1=list(SFS_features_test_1)
     targets_train=list(targets_train)
@@ -105,23 +105,23 @@ def train(features_csv,targets_csv):
     targets_test=np.array(targets_test)
     
     #FLD_1
-    K_LDF=1
-    t_inicial=time()
-    matrix_W_1=FLD.train(SFS_features_temp,targets_temp[:,0],K_LDF, pLDA=True, plot=False, Terminal=False, Binary=True)
+    K_FLD=1
+    t_start=time()
+    matrix_W_1=FLD.train(SFS_features_temp,targets_temp[:,0],K_FLD, pLDA=True, plot=False, Terminal=False, Binary=True)
     t_final=time()
-    print("\nTiempo de ejecución de FLD_1 a "+ str(K_LDF)+ " dimensiones: " + str((t_final-t_inicial)*1000) + " ms")
+    print("\nExecution time of FLD_1 with "+ str(K_FLD)+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
-    new_features_train_1=np.matmul(SFS_features_temp,matrix_W_1)#reduccion de las características de entrada a través de la matriz de transformación
+    new_features_train_1=np.matmul(SFS_features_temp,matrix_W_1)
     
     #LDA_1
     print("\x1b[1;33m"+"\n*********************LDA_1*********************")
     
-    t_inicial=time()
+    t_start=time()
     S_inv_1,m_k_1,pi_k_1=LDA.train(new_features_train_1,targets_temp[:,0], pLDA=False, Terminal=False)
     t_final=time()
-    print("\x1b[1;37m"+"\nTiempo de entrenamiento: "  + str((t_final-t_inicial)*1000) + " ms")
+    print("\x1b[1;37m"+"\nTraining time: "  + str((t_final-t_start)*1000) + " ms")
 
-    #Desechar muestras de clase neutro
+    #Discard neutral samples
     features_train=list(features_train)
     features_test=list(features_test)
     targets_train=list(targets_train)
@@ -147,17 +147,16 @@ def train(features_csv,targets_csv):
     targets_train=np.array(targets_train)
     targets_test=np.array(targets_test)
     
-    #Nivel excitación
+    #Arousal level
     
     #SFS_2
-    t_inicial=time()
+    t_start=time()
     SFS_features_train_2, SFS_features_test_2,index_cod_2 =SFFS.SFFS_wrapper(features_train, features_test, targets_train[:,1], targets_test[:,1], pLDA=True)
     t_final=time()
     
-    print("\x1b[1;37m"+"\n\nTiempo de ejecución de SFFS_2 a "+ str(SFS_features_train_2.shape[1])+ " dimensiones: " + str((t_final-t_inicial)*1000) + " ms")
+    print("\x1b[1;37m"+"\n\nExecution time of SFFS_2 with "+ str(SFS_features_train_2.shape[1])+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
-
-    #Unión de conjunto de entrenamiento y conjunto de prueba
+    #Training set and test set union
     SFS_features_train_2=list(SFS_features_train_2)
     SFS_features_test_2=list(SFS_features_test_2)
     targets_train=list(targets_train)
@@ -170,173 +169,172 @@ def train(features_csv,targets_csv):
     targets_temp=np.array(targets_temp)
     targets_train=np.array(targets_train)
     targets_test=np.array(targets_test)
-    
-    
+      
     #FLD_2
-    K_LDF=1
-    t_inicial=time()
-    matrix_W_2=FLD.train(SFS_features_temp,targets_temp[:,1],K_LDF, pLDA=True, plot=False, Terminal=False, Binary=True)
+    K_FLD=1
+    t_start=time()
+    matrix_W_2=FLD.train(SFS_features_temp,targets_temp[:,1],K_FLD, pLDA=True, plot=False, Terminal=False, Binary=True)
     t_final=time()
-    print("\nTiempo de ejecución de FLD_2 a "+ str(K_LDF)+ " dimensiones: " + str((t_final-t_inicial)*1000) + " ms")
+    print("\nExecution time of FLD_2 with "+ str(K_FLD)+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
-    new_features_train_2=np.matmul(SFS_features_temp,matrix_W_2)#reduccion de las características de entrada a través de la matriz de transformación
+    new_features_train_2=np.matmul(SFS_features_temp,matrix_W_2)
   
     #LDA_2
     print("\x1b[1;33m"+"\n*********************LDA_2*********************")
     
-    t_inicial=time()
+    t_start=time()
     S_inv_2,m_k_2,pi_k_2=LDA.train(new_features_train_2,targets_temp[:,1], pLDA=False, Terminal=False)
     t_final=time()
-    print("\x1b[1;37m"+"\nTiempo de entrenamiento: "  + str((t_final-t_inicial)*1000) + " ms")
+    print("\x1b[1;37m"+"\nTraining time: "  + str((t_final-t_start)*1000) + " ms")
 
-    #Desechar muestras de clase excitación baja
-    
-    features_trainEB=list(features_train)
-    features_testEB=list(features_test)
-    targets_trainEB=list(targets_train)
-    targets_testEB=list(targets_test)
+    #Discard low arousal samples
+    features_trainHA=list(features_train)
+    features_testHA=list(features_test)
+    targets_trainHA=list(targets_train)
+    targets_testHA=list(targets_test)
     
     i=0
-    while i<len(targets_trainEB): 
-        if targets_trainEB[i][1]==1:
-            targets_trainEB.pop(i)
-            features_trainEB.pop(i)
+    while i<len(targets_trainHA): 
+        if targets_trainHA[i][1]==0:
+            targets_trainHA.pop(i)
+            features_trainHA.pop(i)
             i-=1
         i+=1
     i=0
-    while i<len(targets_testEB):
-        if targets_testEB[i][1]==1:
-            targets_testEB.pop(i)
-            features_testEB.pop(i)
+    while i<len(targets_testHA):
+        if targets_testHA[i][1]==0:
+            targets_testHA.pop(i)
+            features_testHA.pop(i)
             i-=1
         i+=1
     
-    features_trainEB=np.array(features_trainEB)
-    features_testEB=np.array(features_testEB)
-    targets_trainEB=np.array(targets_trainEB)
-    targets_testEB=np.array(targets_testEB)
+    features_trainHA=np.array(features_trainHA)
+    features_testHA=np.array(features_testHA)
+    targets_trainHA=np.array(targets_trainHA)
+    targets_testHA=np.array(targets_testHA)
     
-    #Nivel valencia EB
+    #Valence level (high arousal)
     
     #SFS_3
-    t_inicial=time()
-    SFS_features_train_3, SFS_features_test_3,index_cod_3 =SFFS.SFFS_wrapper(features_trainEB, features_testEB, targets_trainEB[:,2], targets_testEB[:,2], pLDA=True)
+    t_start=time()
+    SFS_features_train_3, SFS_features_test_3,index_cod_3 =SFFS.SFFS_wrapper(features_trainHA, features_testHA, targets_trainHA[:,2], targets_testHA[:,2], pLDA=True)
     t_final=time()
     
-    print("\x1b[1;37m"+"\n\nTiempo de ejecución de SFFS_3 a "+ str(SFS_features_train_3.shape[1])+ " dimensiones: " + str((t_final-t_inicial)*1000) + " ms")
+    print("\x1b[1;37m"+"\n\nExecution time of SFFS_3 with "+ str(SFS_features_train_3.shape[1])+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
-    #Unión de conjunto de entrenamiento y conjunto de prueba
+    #Training set and test set union
     SFS_features_train_3=list(SFS_features_train_3)
     SFS_features_test_3=list(SFS_features_test_3)
-    targets_trainEB=list(targets_trainEB)
-    targets_testEB=list(targets_testEB)
+    targets_trainHA=list(targets_trainHA)
+    targets_testHA=list(targets_testHA)
     
     SFS_features_temp= SFS_features_train_3+SFS_features_test_3
-    targets_temp=targets_trainEB+targets_testEB
+    targets_temp=targets_trainHA+targets_testHA
     
     SFS_features_temp=np.array(SFS_features_temp)
     targets_temp=np.array(targets_temp)
        
     #FLD_3
-    K_LDF=1
-    t_inicial=time()
-    matrix_W_3=FLD.train(SFS_features_temp,targets_temp[:,2],K_LDF, pLDA=True, plot=False, Terminal=False, Binary=True)
+    K_FLD=1
+    t_start=time()
+    matrix_W_3=FLD.train(SFS_features_temp,targets_temp[:,2],K_FLD, pLDA=True, plot=False, Terminal=False, Binary=True)
     t_final=time()
-    print("\nTiempo de ejecución de FLD_3 a "+ str(K_LDF)+ " dimensiones: " + str((t_final-t_inicial)*1000) + " ms")
+    print("\nExecution time of FLD_3 with "+ str(K_FLD)+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
-    new_features_train_3=np.matmul(SFS_features_temp,matrix_W_3)#reduccion de las características de entrada a través de la matriz de transformación
-   
+    new_features_train_3=np.matmul(SFS_features_temp,matrix_W_3)
+    
     #LDA_3
     print("\x1b[1;33m"+"\n*********************LDA_3*********************")
     
-    t_inicial=time()
+    t_start=time()
     S_inv_3,m_k_3,pi_k_3=LDA.train(new_features_train_3,targets_temp[:,2], pLDA=False, Terminal=False)
     t_final=time()
-    print("\x1b[1;37m"+"\nTiempo de entrenamiento: "  + str((t_final-t_inicial)*1000) + " ms")
+    print("\x1b[1;37m"+"\nTraining time: "  + str((t_final-t_start)*1000) + " ms")
     
-    #Desechar muestras de clase excitación alta
-    
-    features_trainEA=list(features_train)
-    features_testEA=list(features_test)
-    targets_trainEA=list(targets_train)
-    targets_testEA=list(targets_test)
+    #Discard high arousal samples    
+    features_trainLA=list(features_train)
+    features_testLA=list(features_test)
+    targets_trainLA=list(targets_train)
+    targets_testLA=list(targets_test)
     
     i=0
-    while i<len(targets_trainEA): 
-        if targets_trainEA[i][1]==0:
-            targets_trainEA.pop(i)
-            features_trainEA.pop(i)
+    while i<len(targets_trainLA): 
+        if targets_trainLA[i][1]==1:
+            targets_trainLA.pop(i)
+            features_trainLA.pop(i)
             i-=1
         i+=1
     i=0
-    while i<len(targets_testEA):
-        if targets_testEA[i][1]==0:
-            targets_testEA.pop(i)
-            features_testEA.pop(i)
+    while i<len(targets_testLA):
+        if targets_testLA[i][1]==1:
+            targets_testLA.pop(i)
+            features_testLA.pop(i)
             i-=1
         i+=1
     
-    features_trainEA=np.array(features_trainEA)
-    features_testEA=np.array(features_testEA)
-    targets_trainEA=np.array(targets_trainEA)
-    targets_testEA=np.array(targets_testEA)
+    features_trainLA=np.array(features_trainLA)
+    features_testLA=np.array(features_testLA)
+    targets_trainLA=np.array(targets_trainLA)
+    targets_testLA=np.array(targets_testLA)
     
-    #Nivel valencia EA
+    #Valence level (low arousal)
     
     #SFS_4
-    t_inicial=time()
-    SFS_features_train_4, SFS_features_test_4,index_cod_4 =SFFS.SFFS_wrapper(features_trainEA, features_testEA, targets_trainEA[:,2], targets_testEA[:,2], pLDA=True)
+    t_start=time()
+    SFS_features_train_4, SFS_features_test_4,index_cod_4 =SFFS.SFFS_wrapper(features_trainLA, features_testLA, targets_trainLA[:,2], targets_testLA[:,2], pLDA=True)
     t_final=time()
     
-    print("\x1b[1;37m"+"\n\nTiempo de ejecución de SFFS_4 a "+ str(SFS_features_train_4.shape[1])+ " dimensiones: " + str((t_final-t_inicial)*1000) + " ms")
+    print("\x1b[1;37m"+"\n\nExecution time of SFFS_4 with "+ str(SFS_features_train_4.shape[1])+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
-    #Unión de conjunto de entrenamiento y conjunto de prueba
+    #Training set and test set union
     SFS_features_train_4=list(SFS_features_train_4)
     SFS_features_test_4=list(SFS_features_test_4)
-    targets_trainEA=list(targets_trainEA)
-    targets_testEA=list(targets_testEA)
+    targets_trainLA=list(targets_trainLA)
+    targets_testLA=list(targets_testLA)
     
     SFS_features_temp= SFS_features_train_4+SFS_features_test_4
-    targets_temp=targets_trainEA+targets_testEA
+    targets_temp=targets_trainLA+targets_testLA
     
     SFS_features_temp=np.array(SFS_features_temp)
     targets_temp=np.array(targets_temp)
        
     #FLD_4
-    K_LDF=1
-    t_inicial=time()
-    matrix_W_4=FLD.train(SFS_features_temp,targets_temp[:,2],K_LDF, pLDA=True, plot=False, Terminal=False, Binary=True)
+    K_FLD=1
+    t_start=time()
+    matrix_W_4=FLD.train(SFS_features_temp,targets_temp[:,2],K_FLD, pLDA=True, plot=False, Terminal=False, Binary=True)
     t_final=time()
-    print("\nTiempo de ejecución de FLD_4 a "+ str(K_LDF)+ " dimensiones: " + str((t_final-t_inicial)*1000) + " ms")
+    print("\nExecution time of FLD_4 with "+ str(K_FLD)+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
-    new_features_train_4=np.matmul(SFS_features_temp,matrix_W_4)#reduccion de las características de entrada a través de la matriz de transformación   
+    new_features_train_4=np.matmul(SFS_features_temp,matrix_W_4)
+   
     #LDA_4
     print("\x1b[1;33m"+"\n*********************LDA_4*********************")
     
-    t_inicial=time()
+    t_start=time()
     S_inv_4,m_k_4,pi_k_4=LDA.train(new_features_train_4,targets_temp[:,2], pLDA=False, Terminal=False)
     t_final=time()
-    print("\x1b[1;37m"+"\nTiempo de entrenamiento: "  + str((t_final-t_inicial)*1000) + " ms")
+    print("\x1b[1;37m"+"\nTraining time: "  + str((t_final-t_start)*1000) + " ms")
 
-    del dim,i,j,k, keys_features, keys_targets, random_set, samples, t_final, t_inicial, targets_len, test_len, total_data, train_len,SFS_features_temp, targets_temp
-    
-    #Conversión de pik a ln(pik)
-    pi_k_1=np.log(pi_k_1)
-    pi_k_2=np.log(pi_k_2)
-    pi_k_3=np.log(pi_k_3)
-    pi_k_4=np.log(pi_k_4)
+
+    del dim,i,j,k, keys_features, keys_targets, random_set, samples, t_final, t_start, targets_len, test_len, total_data, train_len,SFS_features_temp, targets_temp
     
     print(f"W1={matrix_W_1} \n W2={matrix_W_2} \n W3={matrix_W_3} \n W4={matrix_W_4}")
     print(f"mk1={m_k_1} \n mk2={m_k_2} \n mk3={m_k_3} \n mk4={m_k_4}")
     print(f"pik1={pi_k_1} \n pik2={pi_k_2} \n pik3={pi_k_3} \n pik4={pi_k_4}")
     print(f"S1={S_inv_1} \n S2={S_inv_2} \n S3={S_inv_3} \n S4={S_inv_4}")
-
-    #recopilación de parámetros
+    
+    #pik to ln(pik)
+    pi_k_1=np.log(pi_k_1)
+    pi_k_2=np.log(pi_k_2)
+    pi_k_3=np.log(pi_k_3)
+    pi_k_4=np.log(pi_k_4)
+    
+    #Collection of parameters
     #SFFS
     list_SFFS=[index_cod_1,index_cod_2,index_cod_3,index_cod_4]
     
     Q=16
-    #LDF
+    #FLD
     matrix_W_1=matrix_W_1*2**Q
     matrix_W_1=np.int32(matrix_W_1)
     list_W_1=[]
@@ -594,7 +592,7 @@ def train(features_csv,targets_csv):
     
 def train_and_test(features_csv,targets_csv):    
 
-    #Importación de características y clases
+    #Features and targets import
     data_features=pd.read_csv(features_csv)
     data_targets=pd.read_csv(targets_csv)
     train_len=int((len(data_features))*0.8)
@@ -613,7 +611,7 @@ def train_and_test(features_csv,targets_csv):
     keys_features=data_features.keys()
     keys_targets=data_targets.keys()
     
-    #Reordenamiento aleatorio de los datos
+    #Data's random arrangement
     total_data=[]
     for j in range (dim):
         total_data.append(data_features[keys_features[j]])
@@ -636,7 +634,7 @@ def train_and_test(features_csv,targets_csv):
         data_targets[keys_targets[i]]=total_data[j]
         i+=1
             
-    #Creación de conjuntos de prueba y entrenamiento
+    #Create training set and test set 
     for j in range (dim):
         for i in range(train_len):        
             features_train[i][j]=data_features[keys_features[j]][i]
@@ -656,43 +654,43 @@ def train_and_test(features_csv,targets_csv):
     targets_train=targets_train.astype(int)
     targets_test=targets_test.astype(int)
     
-    #Nivel de neutralidad
+    #Neutrality
     
     #SFS_1
-    t_inicial=time()
+    t_start=time()
     SFS_features_train_1, SFS_features_test_1,index_cod_1 =SFFS.SFFS_wrapper(features_train, features_test, targets_train[:,0], targets_test[:,0], pLDA=True)
     t_final=time()
     
-    print("\x1b[1;37m"+"\nTiempo de ejecución de SFFS_1 a "+ str(SFS_features_train_1.shape[1])+ " dimensiones: " + str((t_final-t_inicial)*1000) + " ms")
+    print("\x1b[1;37m"+"\nExecution time of SFFS_1 with "+ str(SFS_features_train_1.shape[1])+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
     #FLD_1
-    K_LDF=1
-    t_inicial=time()
-    matrix_W_1=FLD.train(SFS_features_train_1,targets_train[:,0],K_LDF, pLDA=True, plot=True, Terminal=False, Binary=True)
+    K_FLD=1
+    t_start=time()
+    matrix_W_1=FLD.train(SFS_features_train_1,targets_train[:,0],K_FLD, pLDA=True, plot=True, Terminal=False, Binary=True)
     t_final=time()
-    print("\nTiempo de ejecución de FLD_1 a "+ str(K_LDF)+ " dimensiones: " + str((t_final-t_inicial)*1000) + " ms")
+    print("\nExecution time of FLD_1 with "+ str(K_FLD)+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
-    new_features_train_1=np.matmul(SFS_features_train_1,matrix_W_1)#reduccion de las características de entrada a través de la matriz de transformación
-    new_features_test_1=np.matmul(SFS_features_test_1,matrix_W_1)#reduccion de las características de entrada a través de la matriz de transformación
+    new_features_train_1=np.matmul(SFS_features_train_1,matrix_W_1)
+    new_features_test_1=np.matmul(SFS_features_test_1,matrix_W_1)
     
     #LDA_1
     print("\x1b[1;33m"+"\n*********************LDA_1*********************")
     
-    t_inicial=time()
+    t_start=time()
     S_inv_1,m_k_1,pi_k_1=LDA.train(new_features_train_1,targets_train[:,0], pLDA=False, Terminal=False)
     t_final=time()
-    print("\x1b[1;37m"+"\nTiempo de entrenamiento: "  + str((t_final-t_inicial)*1000) + " ms")
+    print("\x1b[1;37m"+"\nTraining time: "  + str((t_final-t_start)*1000) + " ms")
     prediction=LDA.classification(S_inv_1,m_k_1,pi_k_1,new_features_train_1)
     acc=accuracy(prediction,targets_train[:,0])
-    print("\nExactitud en el conjunto de entrenamiento: " + str(acc*100) + " %")
-    t_inicial=time()
+    print("\nTraining set accuracy: " + str(acc*100) + " %")
+    t_start=time()
     prediction=LDA.classification(S_inv_1,m_k_1,pi_k_1,new_features_test_1)
     t_final=time()
     acc=accuracy(prediction,targets_test[:,0])
-    print("\nExactitud en el conjunto de prueba: " + str(acc*100) + " %")
-    print("\nTiempo de clasificación (una muestra): " + str((t_final-t_inicial)*1000/new_features_test_1.shape[0]) + " ms")
+    print("\nTest set accuracy: " + str(acc*100) + " %")
+    print("\nClassification time (one sample): " + str((t_final-t_start)*1000/new_features_test_1.shape[0]) + " ms")
     
-    #Desechar muestras de clase neutro
+    #Discard neutral samples
     features_train=list(features_train)
     features_test=list(features_test)
     targets_train=list(targets_train)
@@ -718,172 +716,170 @@ def train_and_test(features_csv,targets_csv):
     targets_train=np.array(targets_train)
     targets_test=np.array(targets_test)
     
-    #Nivel excitación
+    #Arousal level
     
     #SFS_2
-    t_inicial=time()
+    t_start=time()
     SFS_features_train_2, SFS_features_test_2,index_cod_2 =SFFS.SFFS_wrapper(features_train, features_test, targets_train[:,1], targets_test[:,1], pLDA=True)
     t_final=time()
     
-    print("\x1b[1;37m"+"\n\nTiempo de ejecución de SFFS_2 a "+ str(SFS_features_train_2.shape[1])+ " dimensiones: " + str((t_final-t_inicial)*1000) + " ms")
+    print("\x1b[1;37m"+"\n\nExecution time of SFFS_2 with "+ str(SFS_features_train_2.shape[1])+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
     #FLD_2
-    K_LDF=1
-    t_inicial=time()
-    matrix_W_2=FLD.train(SFS_features_train_2,targets_train[:,1],K_LDF, pLDA=True, plot=True, Terminal=False, Binary=True)
+    K_FLD=1
+    t_start=time()
+    matrix_W_2=FLD.train(SFS_features_train_2,targets_train[:,1],K_FLD, pLDA=True, plot=True, Terminal=False, Binary=True)
     t_final=time()
-    print("\nTiempo de ejecución de FLD_2 a "+ str(K_LDF)+ " dimensiones: " + str((t_final-t_inicial)*1000) + " ms")
+    print("\nExecution time of FLD_2 with "+ str(K_FLD)+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
-    new_features_train_2=np.matmul(SFS_features_train_2,matrix_W_2)#reduccion de las características de entrada a través de la matriz de transformación
-    new_features_test_2=np.matmul(SFS_features_test_2,matrix_W_2)#reduccion de las características de entrada a través de la matriz de transformación
+    new_features_train_2=np.matmul(SFS_features_train_2,matrix_W_2)
+    new_features_test_2=np.matmul(SFS_features_test_2,matrix_W_2)
     
     #LDA_2
     print("\x1b[1;33m"+"\n*********************LDA_2*********************")
     
-    t_inicial=time()
+    t_start=time()
     S_inv_2,m_k_2,pi_k_2=LDA.train(new_features_train_2,targets_train[:,1], pLDA=False, Terminal=False)
     t_final=time()
-    print("\x1b[1;37m"+"\nTiempo de entrenamiento: "  + str((t_final-t_inicial)*1000) + " ms")
+    print("\x1b[1;37m"+"\nTraining time: "  + str((t_final-t_start)*1000) + " ms")
     prediction=LDA.classification(S_inv_2,m_k_2,pi_k_2,new_features_train_2)
     acc=accuracy(prediction,targets_train[:,1])
-    print("\nExactitud en el conjunto de entrenamiento: " + str(acc*100) + " %")
-    t_inicial=time()
+    print("\nTraining set accuracy: " + str(acc*100) + " %")
+    t_start=time()
     prediction=LDA.classification(S_inv_2,m_k_2,pi_k_2,new_features_test_2)
     t_final=time()
     acc=accuracy(prediction,targets_test[:,1])
-    print("\nExactitud en el conjunto de prueba: " + str(acc*100) + " %")
-    print("\nTiempo de clasificación (una muestra): " + str((t_final-t_inicial)*1000/new_features_test_2.shape[0]) + " ms")
+    print("\nTest set accuracy: " + str(acc*100) + " %")
+    print("\nClassification time (one sample): " + str((t_final-t_start)*1000/new_features_test_2.shape[0]) + " ms")
     
-    #Desechar muestras de clase excitación baja
+    #Discard low arousal samples
     
-    features_trainEB=list(features_train)
-    features_testEB=list(features_test)
-    targets_trainEB=list(targets_train)
-    targets_testEB=list(targets_test)
+    features_trainHA=list(features_train)
+    features_testHA=list(features_test)
+    targets_trainHA=list(targets_train)
+    targets_testHA=list(targets_test)
     
     i=0
-    while i<len(targets_trainEB): 
-        if targets_trainEB[i][1]==1:
-            targets_trainEB.pop(i)
-            features_trainEB.pop(i)
+    while i<len(targets_trainHA): 
+        if targets_trainHA[i][1]==0:
+            targets_trainHA.pop(i)
+            features_trainHA.pop(i)
             i-=1
         i+=1
     i=0
-    while i<len(targets_testEB):
-        if targets_testEB[i][1]==1:
-            targets_testEB.pop(i)
-            features_testEB.pop(i)
+    while i<len(targets_testHA):
+        if targets_testHA[i][1]==0:
+            targets_testHA.pop(i)
+            features_testHA.pop(i)
             i-=1
         i+=1
     
-    features_trainEB=np.array(features_trainEB)
-    features_testEB=np.array(features_testEB)
-    targets_trainEB=np.array(targets_trainEB)
-    targets_testEB=np.array(targets_testEB)
+    features_trainHA=np.array(features_trainHA)
+    features_testHA=np.array(features_testHA)
+    targets_trainHA=np.array(targets_trainHA)
+    targets_testHA=np.array(targets_testHA)
     
-    #Nivel valencia EB
+    #Valence level (high arousal)
     
     #SFS_3
-    t_inicial=time()
-    SFS_features_train_3, SFS_features_test_3,index_cod_3 =SFFS.SFFS_wrapper(features_trainEB, features_testEB, targets_trainEB[:,2], targets_testEB[:,2], pLDA=True)
+    t_start=time()
+    SFS_features_train_3, SFS_features_test_3,index_cod_3 =SFFS.SFFS_wrapper(features_trainHA, features_testHA, targets_trainHA[:,2], targets_testHA[:,2], pLDA=True)
     t_final=time()
     
-    print("\x1b[1;37m"+"\n\nTiempo de ejecución de SFFS_3 a "+ str(SFS_features_train_3.shape[1])+ " dimensiones: " + str((t_final-t_inicial)*1000) + " ms")
+    print("\x1b[1;37m"+"\n\nExecution time of SFFS_3 with "+ str(SFS_features_train_3.shape[1])+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
     #FLD_3
-    K_LDF=1
-    t_inicial=time()
-    matrix_W_3=FLD.train(SFS_features_train_3,targets_trainEB[:,2],K_LDF, pLDA=True, plot=True, Terminal=False, Binary=True)
+    K_FLD=1
+    t_start=time()
+    matrix_W_3=FLD.train(SFS_features_train_3,targets_trainHA[:,2],K_FLD, pLDA=True, plot=True, Terminal=False, Binary=True)
     t_final=time()
-    print("\nTiempo de ejecución de FLD_3 a "+ str(K_LDF)+ " dimensiones: " + str((t_final-t_inicial)*1000) + " ms")
+    print("\nExecution time of FLD_3 with "+ str(K_FLD)+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
-    new_features_train_3=np.matmul(SFS_features_train_3,matrix_W_3)#reduccion de las características de entrada a través de la matriz de transformación
-    new_features_test_3=np.matmul(SFS_features_test_3,matrix_W_3)#reduccion de las características de entrada a través de la matriz de transformación
+    new_features_train_3=np.matmul(SFS_features_train_3,matrix_W_3)
+    new_features_test_3=np.matmul(SFS_features_test_3,matrix_W_3)
     
     #LDA_3
     print("\x1b[1;33m"+"\n*********************LDA_3*********************")
     
-    t_inicial=time()
-    S_inv_3,m_k_3,pi_k_3=LDA.train(new_features_train_3,targets_trainEB[:,2], pLDA=False, Terminal=False)
+    t_start=time()
+    S_inv_3,m_k_3,pi_k_3=LDA.train(new_features_train_3,targets_trainHA[:,2], pLDA=False, Terminal=False)
     t_final=time()
-    print("\x1b[1;37m"+"\nTiempo de entrenamiento: "  + str((t_final-t_inicial)*1000) + " ms")
+    print("\x1b[1;37m"+"\nTraining time: "  + str((t_final-t_start)*1000) + " ms")
     prediction=LDA.classification(S_inv_3,m_k_3,pi_k_3,new_features_train_3)
-    acc=accuracy(prediction,targets_trainEB[:,2])
-    print("\nExactitud en el conjunto de entrenamiento: " + str(acc*100) + " %")
-    t_inicial=time()
+    acc=accuracy(prediction,targets_trainHA[:,2])
+    print("\nTraining set accuracy: " + str(acc*100) + " %")
+    t_start=time()
     prediction=LDA.classification(S_inv_3,m_k_3,pi_k_3,new_features_test_3)
     t_final=time()
-    acc=accuracy(prediction,targets_testEB[:,2])
-    print("\nExactitud en el conjunto de prueba: " + str(acc*100) + " %")
-    print("\nTiempo de clasificación (una muestra): " + str((t_final-t_inicial)*1000/new_features_test_3.shape[0]) + " ms")
+    acc=accuracy(prediction,targets_testHA[:,2])
+    print("\nTest set accuracy: " + str(acc*100) + " %")
+    print("\nClassification time (one sample): " + str((t_final-t_start)*1000/new_features_test_3.shape[0]) + " ms")
     
+    #Discard high arousal samples
     
-    #Desechar muestras de clase excitación alta
-    
-    features_trainEA=list(features_train)
-    features_testEA=list(features_test)
-    targets_trainEA=list(targets_train)
-    targets_testEA=list(targets_test)
+    features_trainLA=list(features_train)
+    features_testLA=list(features_test)
+    targets_trainLA=list(targets_train)
+    targets_testLA=list(targets_test)
     
     i=0
-    while i<len(targets_trainEA): 
-        if targets_trainEA[i][1]==0:
-            targets_trainEA.pop(i)
-            features_trainEA.pop(i)
+    while i<len(targets_trainLA): 
+        if targets_trainLA[i][1]==1:
+            targets_trainLA.pop(i)
+            features_trainLA.pop(i)
             i-=1
         i+=1
     i=0
-    while i<len(targets_testEA):
-        if targets_testEA[i][1]==0:
-            targets_testEA.pop(i)
-            features_testEA.pop(i)
+    while i<len(targets_testLA):
+        if targets_testLA[i][1]==1:
+            targets_testLA.pop(i)
+            features_testLA.pop(i)
             i-=1
         i+=1
     
-    features_trainEA=np.array(features_trainEA)
-    features_testEA=np.array(features_testEA)
-    targets_trainEA=np.array(targets_trainEA)
-    targets_testEA=np.array(targets_testEA)
+    features_trainLA=np.array(features_trainLA)
+    features_testLA=np.array(features_testLA)
+    targets_trainLA=np.array(targets_trainLA)
+    targets_testLA=np.array(targets_testLA)
     
-    #Nivel valencia EA
-    
+    ##Valence level (low arousal)    
     #SFS_4
-    t_inicial=time()
-    SFS_features_train_4, SFS_features_test_4,index_cod_4 =SFFS.SFFS_wrapper(features_trainEA, features_testEA, targets_trainEA[:,2], targets_testEA[:,2], pLDA=True)
+    t_start=time()
+    SFS_features_train_4, SFS_features_test_4,index_cod_4 =SFFS.SFFS_wrapper(features_trainLA, features_testLA, targets_trainLA[:,2], targets_testLA[:,2], pLDA=True)
     t_final=time()
     
-    print("\x1b[1;37m"+"\n\nTiempo de ejecución de SFFS_4 a "+ str(SFS_features_train_4.shape[1])+ " dimensiones: " + str((t_final-t_inicial)*1000) + " ms")
+    print("\x1b[1;37m"+"\n\nExecution time of SFFS_4 with "+ str(SFS_features_train_4.shape[1])+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
     #FLD_4
-    K_LDF=1
-    t_inicial=time()
-    matrix_W_4=FLD.train(SFS_features_train_4,targets_trainEA[:,2],K_LDF, pLDA=True, plot=True, Terminal=False, Binary=True)
+    K_FLD=1
+    t_start=time()
+    matrix_W_4=FLD.train(SFS_features_train_4,targets_trainLA[:,2],K_FLD, pLDA=True, plot=True, Terminal=False, Binary=True)
     t_final=time()
-    print("\nTiempo de ejecución de FLD_4 a "+ str(K_LDF)+ " dimensiones: " + str((t_final-t_inicial)*1000) + " ms")
+    print("\nExecution time of FLD_4 with "+ str(K_FLD)+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
-    new_features_train_4=np.matmul(SFS_features_train_4,matrix_W_4)#reduccion de las características de entrada a través de la matriz de transformación
-    new_features_test_4=np.matmul(SFS_features_test_4,matrix_W_4)#reduccion de las características de entrada a través de la matriz de transformación
+    new_features_train_4=np.matmul(SFS_features_train_4,matrix_W_4)
+    new_features_test_4=np.matmul(SFS_features_test_4,matrix_W_4)
     
     #LDA_4
     print("\x1b[1;33m"+"\n*********************LDA_4*********************")
     
-    t_inicial=time()
-    S_inv_4,m_k_4,pi_k_4=LDA.train(new_features_train_4,targets_trainEA[:,2], pLDA=False, Terminal=False)
+    t_start=time()
+    S_inv_4,m_k_4,pi_k_4=LDA.train(new_features_train_4,targets_trainLA[:,2], pLDA=False, Terminal=False)
     t_final=time()
-    print("\x1b[1;37m"+"\nTiempo de entrenamiento: "  + str((t_final-t_inicial)*1000) + " ms")
+    print("\x1b[1;37m"+"\nTraining time: "  + str((t_final-t_start)*1000) + " ms")
     prediction=LDA.classification(S_inv_4,m_k_4,pi_k_4,new_features_train_4)
-    acc=accuracy(prediction,targets_trainEA[:,2])
-    print("\nExactitud en el conjunto de entrenamiento: " + str(acc*100) + " %")
-    t_inicial=time()
+    acc=accuracy(prediction,targets_trainLA[:,2])
+    print("\nTraining set accuracy: " + str(acc*100) + " %")
+    t_start=time()
     prediction=LDA.classification(S_inv_4,m_k_4,pi_k_4,new_features_test_4)
     t_final=time()
-    acc=accuracy(prediction,targets_testEA[:,2])
-    print("\nExactitud en el conjunto de prueba: " + str(acc*100) + " %")
-    print("\nTiempo de clasificación (una muestra): " + str((t_final-t_inicial)*1000/new_features_test_4.shape[0]) + " ms")
+    acc=accuracy(prediction,targets_testLA[:,2])
+    print("\nTest set accuracy: " + str(acc*100) + " %")
+    print("\nClassification time (one sample): " + str((t_final-t_start)*1000/new_features_test_4.shape[0]) + " ms")
     
-    del acc,dim,i,j,k, keys_features, keys_targets, prediction, random_set, samples, t_final, t_inicial, targets_len, test_len, total_data, train_len
+    del acc,dim,i,j,k, keys_features, keys_targets, prediction, random_set, samples, t_final, t_start, targets_len, test_len, total_data, train_len
     
-    #Conversión de pik a ln(pik)    
+    #pik to ln(pik) 
     pi_k_1=np.log(pi_k_1)
     pi_k_2=np.log(pi_k_2)
     pi_k_3=np.log(pi_k_3)
@@ -893,7 +889,8 @@ def train_and_test(features_csv,targets_csv):
     print(f"mk1={m_k_1} \n mk2={m_k_2} \n mk3={m_k_3} \n mk4={m_k_4}")
     print(f"pik1={pi_k_1} \n pik2={pi_k_2} \n pik3={pi_k_3} \n pik4={pi_k_4}")
     print(f"S1={S_inv_1} \n S2={S_inv_2} \n S3={S_inv_3} \n S4={S_inv_4}")
-    #recopilación de parámetros
+    
+    #Collection of parameters
     #SFFS
     list_SFFS=[index_cod_1,index_cod_2,index_cod_3,index_cod_4]
     
@@ -1156,6 +1153,6 @@ def train_and_test(features_csv,targets_csv):
     return list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv
 
 if __name__ == "__main__":
-    features_csv="SAMfeatures.csv"
+    features_csv="features.csv"
     targets_csv="targets.csv" 
-    list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv=train_and_test(features_csv,targets_csv)
+    list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv=train_and_test(features_csv,targets_csv)    

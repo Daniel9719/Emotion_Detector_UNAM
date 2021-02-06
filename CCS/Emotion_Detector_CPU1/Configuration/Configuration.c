@@ -37,12 +37,12 @@ uint16_t RGB_En=1;
 uint16_t PS_Select=2;
 
 volatile uint16_t* Emotion_Pt;
-float* FLD_W_Pt=&AUX_FLD_W[0][0];
-float* MeanVect_Pt=AUX_MeanVect;
-float* ApriVect_Pt=AUX_ApriVect;
-float* Cov_S_Pt=AUX_Cov_S;
+volatile float* FLD_W_Pt=&AUX_FLD_W[0][0];
+volatile float* MeanVect_Pt=AUX_MeanVect;
+volatile float* ApriVect_Pt=AUX_ApriVect;
+volatile float* Cov_S_Pt=AUX_Cov_S;
 
-volatile struct Features_Asignation Feat_Asig = {
+struct Features_Asignation Feat_Asig = {
     {0xFFF, 0xFFF, 0xFFF, 0xFFF},
     {0x3FF, 0x3FF, 0x3FF, 0x3FF}
 };
@@ -74,7 +74,7 @@ void Write_Emotion(void){
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%%%%%%%   SENDING FEATURES   %%%%%%%%%%%%%%%%%%%%%%
-// uint16_t Number: Assignation of the variable to send via UART
+// uint16_t Number: Assignation of the feature to send via UART
 //  0x00: pNN50         0x08: PRV_LF        0x10: ctl25
 //  0x01: NN50          0x09: PRV_HF        0x11: ctl50
 //  0x02: RRmed         0x0A: SD1           0x12: ctl75
@@ -84,24 +84,15 @@ void Write_Emotion(void){
 //  0x06: LF/HF         0x0E: mTL
 //  0x07: VLF           0x0F: sdAmpl
 //--------------------------------------------------------------------
-void Send_Features(uint16_t Number){
-    static uint16_t FirstChar=1;
+void Send_Feature(uint16_t Number){
     if(AutoTx){
-        if(FirstChar){                                 //Only enter if you start writing the first characteristic
-            if(Number<0x16){
-                if(Modality==0){
-                    VariablesMap(0x11,Number);      //Selecting the Vector to transmit in Variables Map
-                    VariablesMap(0x92,0);           //Requesting a reading from Vector data in Variables Map
-                    VariablesMap(0x93,0);
-                    VariablesMap(0x94,0);
-                    VariablesMap(0x95,0);
-                }
-                if(Number==0x00){
-                    FirstChar=0;
-                }
-                if(Number==0x16){
-                    FirstChar=1;
-                }
+        if(Number<0x16){
+            if(Modality==0){
+                VariablesMap(0x11,Number);      //Selecting the Vector to transmit in Variables Map
+                VariablesMap(0x92,0);           //Requesting a reading from Vector data in Variables Map
+                VariablesMap(0x93,0);
+                VariablesMap(0x94,0);
+                VariablesMap(0x95,0);
             }
         }
     }
@@ -124,7 +115,7 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
     uint16_t Buffer=0;
     uint16_t Address=Var_Addr&0x1F;
 
-    if(Var_Addr&0x80){                  //If it's a reading request
+    if(Var_Addr&0x80){           //If it's a reading request
         if(Address<=0x15){
             while(!SCI_TxAvail){}
             SCIB_WData(Address);

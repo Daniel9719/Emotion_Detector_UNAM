@@ -6,11 +6,7 @@
 
 //%%%%%%%%%%%%%%%%%%    SCI_UART VARIABLES    %%%%%%%%%%%%%%%%%%
 extern int SCI_State;
-extern bool SCI_TxAvail;
 extern volatile bool SCI_RxAvail;
-extern uint16_t* SCI_StartPt;
-extern uint16_t* SCI_EndPt;
-extern uint16_t SCI_Data;
 extern uint16_t SCI_Mode;                             //(0) AT Mode   (1) Connection Mode  (2) Standby Mode
 
 //%%%%%%%%%%%%%%%%%%    CONFIGURATION VARIABLES    %%%%%%%%%%%%%%%%%%
@@ -56,7 +52,7 @@ __interrupt void Inter_I2CA (void){
     static char Conmut=1;
     static uint16_t i=0, j=0;
     //-------Calibration variables---------//
-    static uint16_t Clb_Windw=0, Offset=10, Current=0;          ///HACER CALIB MODE GLOBAL
+    static uint16_t Clb_Windw=0, Offset=10, Current=0;
     static int32_t Clb_Max=0, Clb_Min=16383;
 
     if(Conmut){
@@ -76,8 +72,8 @@ __interrupt void Inter_I2CA (void){
         //EAF EDA
         Biom1.int_EDA=(I2C_Read_Byte())>>2;
         Biom1.int_EDA|=((I2C_Read_Byte())<<6);
-        if(Clb_Mode==1){                           //Range Check
-            Clb_Max=__max(Clb_Max,Biom1.int_EDA);      //PPG Signal Pregain or PPG Signal After OFE1
+        if(Clb_Mode==1){                            //Range Check
+            Clb_Max=__max(Clb_Max,Biom1.int_EDA);   //PPG Signal Pregain or PPG Signal After OFE1
             Clb_Min=__min(Clb_Min,Biom1.int_EDA);
         }
         if(Clb_Mode==0){
@@ -148,19 +144,6 @@ __interrupt void Inter_I2CA (void){
 }
 
 //--------------------------------------------------------------------
-//%%%%%%%%%%%%%%%%%%%%%%   SCIB TX INTERRUPT    %%%%%%%%%%%%%%%%%%%%%%
-//--------------------------------------------------------------------
-__interrupt void Inter_SCIBTX (void){
-    SCIB_WLongData();
-    if(SCI_StartPt==SCI_EndPt){
-        SCIB_FFTX_R&=~0x20;                 //TXFFIENA: Disable Inter Tx FIFO
-        SCI_TxAvail=true;
-    }
-    SCIB_FFTX_R|=0x40;                      //RXFFINTCLR: Clean RXFFIL interrupt
-    PIE_ACK_R|=0x100;                       //Clean Group 9 interrupt flag
-}
-
-//--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%%%    INTERRUPCIÓN SCIB RX    %%%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 __interrupt void Inter_SCIBRX (void){
@@ -202,7 +185,7 @@ __interrupt void Inter_SCIBRX (void){
                     Config_Addr++;
                     goto VarsMap;
                 }
-                else if(SCI_RxData[0]&0x80){                     //If it's a reading request
+                else if(SCI_RxData[0]&0x80){                //If it's a reading request
                     goto VarsMap;
                 }
                 else{
@@ -213,7 +196,7 @@ __interrupt void Inter_SCIBRX (void){
 VarsMap:
                 VariablesMap(SCI_RxData[0],SCI_RxData[1]);  //Write to Variables Map
                 if((SCI_RxData[0]&0x40)==0){
-                    RxType=true;                       //Switch to Text RxType
+                    RxType=true;                            //Switch to Text RxType
                     Clean_Reg(SCI_RxData);
                 }
                 FirstByte=0;
@@ -222,7 +205,7 @@ VarsMap:
             FirstByte^=1;
         }
     }
-    PIE_ACK_R|=0x100;                                     //Clean flag interrupt from Group 9
+    PIE_ACK_R|=0x100;                                       //Clean flag interrupt from Group 9
 }
 
 //--------------------------------------------------------------------
@@ -233,67 +216,67 @@ VarsMap:
 //                 XINT3: GPIO 67      XINT2: GPIO22
 //--------------------------------------------------------------------
 void Config_Ports(void){
-    GPIO_PORTD_GMUX1_R|=0x0;                //GPIO 104-105 a Grupo 0
-    GPIO_PORTD_MUX1_R|=0x50000;             //GPIO 104-105 Mux 2 (I2C)
-    GPIO_PORTD_ODR_R|=0x300;                //GPIO 104-105 con ODR
-    GPIO_PORTD_QSEL1_R|=0xF0000;            //GPIO 104-105 Async
+    GPIO_PORTD_GMUX1_R|=0x0;                 //GPIO 104-105 a Grupo 0
+    GPIO_PORTD_MUX1_R|=0x50000;              //GPIO 104-105 Mux 2 (I2C)
+    GPIO_PORTD_ODR_R|=0x300;                 //GPIO 104-105 con ODR
+    GPIO_PORTD_QSEL1_R|=0xF0000;             //GPIO 104-105 Async
 
-    GPIO_PORTA_GMUX1_R|=0x0;                //GPIO 0-2 a Grupo 0
-    GPIO_PORTA_MUX1_R|=0x0;                 //GPIO 0-2 Mux 0 (GPIO)
-    GPIO_PORTA_DIR_R|=0x7;                  //GPIO 0-2 Output
+    GPIO_PORTA_GMUX1_R|=0x0;                 //GPIO 0-2 a Grupo 0
+    GPIO_PORTA_MUX1_R|=0x0;                  //GPIO 0-2 Mux 0 (GPIO)
+    GPIO_PORTA_DIR_R|=0x7;                   //GPIO 0-2 Output
 
-    GPIO_PORTC_GMUX1_R=0x0;                 //GPIO 67 a Grupo 0
-    GPIO_PORTC_MUX1_R|=0x0;                 //GPIO 67 Mux 0 (GPIO)
-    GPIO_PORTC_DIR_R|=0x0;                  //GPIO 67 Input
-    GPIO_PORTC_PUD_R&=~0x8;                 //GPIO 67 Enable Pull up resistor
+    GPIO_PORTC_GMUX1_R=0x0;                  //GPIO 67 a Grupo 0
+    GPIO_PORTC_MUX1_R|=0x0;                  //GPIO 67 Mux 0 (GPIO)
+    GPIO_PORTC_DIR_R|=0x0;                   //GPIO 67 Input
+    GPIO_PORTC_PUD_R&=~0x8;                  //GPIO 67 Enable Pull up resistor
 
-    GPIO_PORTA_GMUX1_R=0x0;                 //GPIO 22 a Grupo 0
-    GPIO_PORTA_MUX1_R|=0x0;                 //GPIO 22 Mux 0 (GPIO)
-    GPIO_PORTA_DIR_R|=0x0;                  //GPIO 22 Input
+    GPIO_PORTA_GMUX1_R=0x0;                  //GPIO 22 a Grupo 0
+    GPIO_PORTA_MUX1_R|=0x0;                  //GPIO 22 Mux 0 (GPIO)
+    GPIO_PORTA_DIR_R|=0x0;                   //GPIO 22 Input
 
-    GPIO_PORTA_DIR_R|=0x4000;               //GPIO 18 Salida
-    GPIO_PORTA_GMUX2_R|=0x0;                //GPIO 18-19 a Grupo 0
-    GPIO_PORTA_MUX2_R|=0xA0;                //GPIO 18-19 Mux 2 (SCIB)
-    GPIO_PORTA_QSEL2_R|=0xF0;               //GPIO 18-19 Async
+    GPIO_PORTA_DIR_R|=0x4000;                //GPIO 18 Salida
+    GPIO_PORTA_GMUX2_R|=0x0;                 //GPIO 18-19 a Grupo 0
+    GPIO_PORTA_MUX2_R|=0xA0;                 //GPIO 18-19 Mux 2 (SCIB)
+    GPIO_PORTA_QSEL2_R|=0xF0;                //GPIO 18-19 Async
 
-    XINT2CR_R|=0x1;                         //Interrupt on falling edge & Enable XINT2
-    XBAR_IN_SEL5_R|=22;                     //Conect Input XBAR5 to GPIO22 for destiny XINT2
+    XINT2CR_R|=0x1;                          //Interrupt on falling edge & Enable XINT2
+    XBAR_IN_SEL5_R|=22;                      //Conect Input XBAR5 to GPIO22 for destiny XINT2
 }
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%    CONFIGURATION SCI (UART)    %%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 void Config_SCIB(void){
-    CLKCFG_LOSPCP_R=0x0;                    //LSPCLK=SYSCLK/1
-    CPUSYS_PCLKCR7_R|=0x2;                  //Hab reloj SCIB
+    CLKCFG_LOSPCP_R=0x0;                     //LSPCLK=SYSCLK/1
+    CPUSYS_PCLKCR7_R|=0x2;                   //Hab reloj SCIB
 
-    SCIB_CCR_R=0x7;                         //Longitud de los datos a 8 bits
+    SCIB_CCR_R=0x7;                          //Longitud de los datos a 8 bits
     SCIB_HBAUD_R=0;
-//    SCIB_LBAUD_R=129;                     //BRR=129 para tasa de 9615
-    SCIB_LBAUD_R=10;                        //BRR=10
-                                            //SCI_Freq=LSPCLK/((BRR+1)*8)=113636
-    SCIB_FFTX_R=0xE001;                     //SCIFFEN: Hab FIFOs    TXFFIL: Nivel de inter a <1 Byte
-    SCIB_FFRX_R=0x2021;                     //RXFFIENA: Hab interrupción Rx FIFO   RXFFIL(10): Nivel de inter a >1 Byte
-    SCIB_CTL1_R&=~0x20;                     //SWRESET: Reset para limpiar interrupción ERROR (BRKDT)
-    SCIB_CTL1_R=0x23;                       //SWRESET: Reset
-                                            //TXENA: Hab Tx SCI  RXENA: HAb Rx SCI
+//    SCIB_LBAUD_R=129;                      //BRR=129 para tasa de 9615
+    SCIB_LBAUD_R=10;                         //BRR=10
+                                             //SCI_Freq=LSPCLK/((BRR+1)*8)=113636
+    SCIB_FFTX_R=0xE001;                      //SCIFFEN: Hab FIFOs    TXFFIL: Nivel de inter a <1 Byte
+    SCIB_FFRX_R=0x2021;                      //RXFFIENA: Hab interrupción Rx FIFO   RXFFIL(10): Nivel de inter a >1 Byte
+    SCIB_CTL1_R&=~0x20;                      //SWRESET: Reset para limpiar interrupción ERROR (BRKDT)
+    SCIB_CTL1_R=0x23;                        //SWRESET: Reset
+                                             //TXENA: Hab Tx SCI  RXENA: HAb Rx SCI
 }
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%%%    CONFIGURATION I2CA    %%%%%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 void Config_I2CA(void){
-    CPUSYS_PCLKCR9_R|=0x1;                  //Hab reloj I2CA
-    I2CA_PSC_R=0;                           //PSC=0  d=7    I2C_Clk=SysClk/(I2CPSC+1)
-    I2CA_CLKL_R=0x8;                        //ICCL=8        SCL_freq=I2C_Clk/[(ICCL+d)+(ICCH+d)]
-    I2CA_CLKH_R=0x3;                        //ICCH=3
-    I2CA_FFTX_R=0x6000;                     //Hab FIFOs Rx y Tx, y Hab FIFO Tx
-    I2CA_FFRX_R=0x2022;                     //RXFFRST: Hab FIFO Rx
-                                            //RXFFIENA: Hab interrupciones
-                                            //RXFFIL: 2 (Nivel 2 FIFO)
+    CPUSYS_PCLKCR9_R|=0x1;                   //Hab reloj I2CA
+    I2CA_PSC_R=0;                            //PSC=0  d=7    I2C_Clk=SysClk/(I2CPSC+1)
+    I2CA_CLKL_R=0x8;                         //ICCL=8        SCL_freq=I2C_Clk/[(ICCL+d)+(ICCH+d)]
+    I2CA_CLKH_R=0x3;                         //ICCH=3
+    I2CA_FFTX_R=0x6000;                      //Hab FIFOs Rx y Tx, y Hab FIFO Tx
+    I2CA_FFRX_R=0x2022;                      //RXFFRST: Hab FIFO Rx
+                                             //RXFFIENA: Hab interrupciones
+                                             //RXFFIL: 2 (Nivel 2 FIFO)
 
-    I2CA_MDR_R=0x20;                        //IRS: Hab módulo I2C
-    while(I2CA_STR_R&0x1000){};             //Mientras el controlador esté ocupado BUSBSY
+    I2CA_MDR_R=0x20;                         //IRS: Hab módulo I2C
+    while(I2CA_STR_R&0x1000){};              //Mientras el controlador esté ocupado BUSBSY
 }
 
 //--------------------------------------------------------------------
@@ -301,21 +284,21 @@ void Config_I2CA(void){
 //--------------------------------------------------------------------
 void Config_DMA(void){
     //BURST:Column     TRANSFER:Row    Makes 4 cycles per word
-    CPUSYS_PCLKCR0_R|=0x4;                  //Enable DMA Clock
-    CPUSYS_SECMSEL_R=0x4;                   //PF2SEL:Puente conectado al DMA                    DOUBT!!!!
-    DMA_DEBUGCTRL_R|=0x8000;                //FREE: DMA corre durante un emulation halt
+    CPUSYS_PCLKCR0_R|=0x4;                   //Enable DMA Clock
+    CPUSYS_SECMSEL_R=0x4;                    //PF2SEL:Puente conectado al DMA                    DOUBT!!!!
+    DMA_DEBUGCTRL_R|=0x8000;                 //FREE: DMA corre durante un emulation halt
 
     //CHANNEL 2 (Cubic Spline [Gauss])
-    DMA_CH2_MODE_R=0x4500;                  //DATASIZE: 32 bits of transfer (1)
-                                            //ONESHOT: Channel performs an entire transfer
-                                            //PERINTE: Enable pheripheral event trigger
-                                            //PERINTSEL: No peripheral (0)
-    DMA_CH2_BURSTSIZE_R=0;                  //Burst Size=0+1=1 words per burst
-    DMA_CH2_SRCBURSTSTEP_R=1;               //Source Step=1 word
-    DMA_CH2_DSTBUSRTSTEP_R|=1;              //Destination Step=1 word
+    DMA_CH2_MODE_R=0x4500;                   //DATASIZE: 32 bits of transfer (1)
+                                             //ONESHOT: Channel performs an entire transfer
+                                             //PERINTE: Enable pheripheral event trigger
+                                             //PERINTSEL: No peripheral (0)
+    DMA_CH2_BURSTSIZE_R=0;                   //Burst Size=0+1=1 words per burst
+    DMA_CH2_SRCBURSTSTEP_R=1;                //Source Step=1 word
+    DMA_CH2_DSTBUSRTSTEP_R|=1;               //Destination Step=1 word
 
-    DMA_CH2_SRCTRANSFERSTEP_R=1;            //Source Step=1 word
-    DMA_CH2_DSTTRANSFERSTEP_R|=1;           //Destination Step=1 word
+    DMA_CH2_SRCTRANSFERSTEP_R=1;             //Source Step=1 word
+    DMA_CH2_DSTTRANSFERSTEP_R|=1;            //Destination Step=1 word
 
     DMA_CH2_DSTBEGADDRSHADOW_R=(uint32_t)(&Gauss[0]);
     DMA_CH2_DSTADDRESHADOW_R=(uint32_t)(&Gauss[0]);
@@ -325,16 +308,16 @@ void Config_DMA(void){
                                              //PERINTCLR: Limpia bandera PERINTFLG
 
     //CHANNEL 3 (Cubic Spline [d])
-    DMA_CH3_MODE_R=0x4500;                  //DATASIZE: 32 bits of transfer (1)
-                                            //ONESHOT: Channel performs an entire transfer
-                                            //PERINTE: Enable pheripheral event trigger
-                                            //PERINTSEL: No peripheral (0)
-    DMA_CH3_BURSTSIZE_R=0;                  //Burst Size=0+1=1 words per burst
-    DMA_CH3_SRCBURSTSTEP_R=1;               //Source Step=1 word
-    DMA_CH3_DSTBUSRTSTEP_R|=1;              //Destination Step=1 word
+    DMA_CH3_MODE_R=0x4500;                   //DATASIZE: 32 bits of transfer (1)
+                                             //ONESHOT: Channel performs an entire transfer
+                                             //PERINTE: Enable pheripheral event trigger
+                                             //PERINTSEL: No peripheral (0)
+    DMA_CH3_BURSTSIZE_R=0;                   //Burst Size=0+1=1 words per burst
+    DMA_CH3_SRCBURSTSTEP_R=1;                //Source Step=1 word
+    DMA_CH3_DSTBUSRTSTEP_R|=1;               //Destination Step=1 word
 
-    DMA_CH3_SRCTRANSFERSTEP_R=1;            //Source Step=1 word
-    DMA_CH3_DSTTRANSFERSTEP_R|=1;           //Destination Step=1 word
+    DMA_CH3_SRCTRANSFERSTEP_R=1;             //Source Step=1 word
+    DMA_CH3_DSTTRANSFERSTEP_R|=1;            //Destination Step=1 word
 
     DMA_CH3_DSTBEGADDRSHADOW_R=(uint32_t)(&d[0]);
     DMA_CH3_DSTADDRESHADOW_R=(uint32_t)(&d[0]);
@@ -344,16 +327,16 @@ void Config_DMA(void){
                                              //PERINTCLR: Limpia bandera PERINTFLG
 
     //CHANNEL 4 (Cubic Spline [S])
-    DMA_CH4_MODE_R=0x4500;                  //DATASIZE: 32 bits of transfer (1)
-                                            //ONESHOT: Channel performs an entire transfer
-                                            //PERINTE: Enable pheripheral event trigger
-                                            //PERINTSEL: No peripheral (0)
-    DMA_CH4_BURSTSIZE_R=0;                  //Burst Size=0+1=1 words per burst
-    DMA_CH4_SRCBURSTSTEP_R=1;               //Source Step=1 word
-    DMA_CH4_DSTBUSRTSTEP_R|=1;              //Destination Step=1 word
+    DMA_CH4_MODE_R=0x4500;                   //DATASIZE: 32 bits of transfer (1)
+                                             //ONESHOT: Channel performs an entire transfer
+                                             //PERINTE: Enable pheripheral event trigger
+                                             //PERINTSEL: No peripheral (0)
+    DMA_CH4_BURSTSIZE_R=0;                   //Burst Size=0+1=1 words per burst
+    DMA_CH4_SRCBURSTSTEP_R=1;                //Source Step=1 word
+    DMA_CH4_DSTBUSRTSTEP_R|=1;               //Destination Step=1 word
 
-    DMA_CH4_SRCTRANSFERSTEP_R=1;            //Source Step=1 word
-    DMA_CH4_DSTTRANSFERSTEP_R|=1;           //Destination Step=1 word
+    DMA_CH4_SRCTRANSFERSTEP_R=1;             //Source Step=1 word
+    DMA_CH4_DSTTRANSFERSTEP_R|=1;            //Destination Step=1 word
 
     DMA_CH4_DSTBEGADDRSHADOW_R=(uint32_t)(&S[1]);
     DMA_CH4_DSTADDRESHADOW_R=(uint32_t)(&S[1]);
@@ -363,16 +346,16 @@ void Config_DMA(void){
                                              //PERINTCLR: Limpia bandera PERINTFLG
 
     //CHANNEL 5 (PRV_h)
-    DMA_CH5_MODE_R=0x4500;                  //DATASIZE: 32 bits of transfer (1)
-                                            //ONESHOT: Channel performs an entire transfer
-                                            //PERINTE: Enable pheripheral event trigger
-                                            //PERINTSEL: No peripheral (0)
-    DMA_CH5_BURSTSIZE_R=0;                  //Burst Size=0+1=1 words per burst
-    DMA_CH5_SRCBURSTSTEP_R=1;               //Source Step=1 word
-    DMA_CH5_DSTBUSRTSTEP_R|=1;              //Destination Step=1 word
+    DMA_CH5_MODE_R=0x4500;                   //DATASIZE: 32 bits of transfer (1)
+                                             //ONESHOT: Channel performs an entire transfer
+                                             //PERINTE: Enable pheripheral event trigger
+                                             //PERINTSEL: No peripheral (0)
+    DMA_CH5_BURSTSIZE_R=0;                   //Burst Size=0+1=1 words per burst
+    DMA_CH5_SRCBURSTSTEP_R=1;                //Source Step=1 word
+    DMA_CH5_DSTBUSRTSTEP_R|=1;               //Destination Step=1 word
 
-    DMA_CH5_SRCTRANSFERSTEP_R=1;            //Source Step=1 word
-    DMA_CH5_DSTTRANSFERSTEP_R|=1;           //Destination Step=1 word
+    DMA_CH5_SRCTRANSFERSTEP_R=1;             //Source Step=1 word
+    DMA_CH5_DSTTRANSFERSTEP_R|=1;            //Destination Step=1 word
 
 //    DMA_CH5_DSTBEGADDRSHADOW_R=(uint32_t)(&PRV_h[0]);
 //    DMA_CH5_DSTADDRESHADOW_R=(uint32_t)(&PRV_h[0]);
@@ -382,16 +365,16 @@ void Config_DMA(void){
                                              //PERINTCLR: Limpia bandera PERINTFLG
 
     //CHANNEL 6 (PRV_y)
-    DMA_CH6_MODE_R=0x4500;                  //DATASIZE: 32 bits of transfer (1)
-                                            //ONESHOT: Channel performs an entire transfer
-                                            //PERINTE: Enable pheripheral event trigger
-                                            //PERINTSEL: No peripheral (0)
-    DMA_CH6_BURSTSIZE_R=0;                  //Burst Size=0+1=1 words per burst
-    DMA_CH6_SRCBURSTSTEP_R=1;               //Source Step=1 word
-    DMA_CH6_DSTBUSRTSTEP_R|=1;              //Destination Step=1 word
+    DMA_CH6_MODE_R=0x4500;                   //DATASIZE: 32 bits of transfer (1)
+                                             //ONESHOT: Channel performs an entire transfer
+                                             //PERINTE: Enable pheripheral event trigger
+                                             //PERINTSEL: No peripheral (0)
+    DMA_CH6_BURSTSIZE_R=0;                   //Burst Size=0+1=1 words per burst
+    DMA_CH6_SRCBURSTSTEP_R=1;                //Source Step=1 word
+    DMA_CH6_DSTBUSRTSTEP_R|=1;               //Destination Step=1 word
 
-    DMA_CH6_SRCTRANSFERSTEP_R=1;            //Source Step=1 word
-    DMA_CH6_DSTTRANSFERSTEP_R|=1;           //Destination Step=1 word
+    DMA_CH6_SRCTRANSFERSTEP_R=1;             //Source Step=1 word
+    DMA_CH6_DSTTRANSFERSTEP_R|=1;            //Destination Step=1 word
 
 //    DMA_CH6_DSTBEGADDRSHADOW_R=(uint32_t)(&PRV_y[0]);
 //    DMA_CH6_DSTADDRESHADOW_R=(uint32_t)(&PRV_y[0]);

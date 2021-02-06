@@ -3,9 +3,6 @@
 volatile int SCI_State=0;
 volatile bool SCI_RxAvail=true;
 bool SCI_TxAvail=true;
-uint16_t* SCI_StartPt;
-uint16_t* SCI_EndPt;
-uint16_t SCI_Data;
 uint16_t SCI_Mode=0;                             //(0) AT Mode   (1) Connection Mode  (2) Standby Mode
 
 //--------------------------------------------------------------------
@@ -26,25 +23,6 @@ void SCIB_WData(uint16_t SCI_TxData){                   //It always sends 2 byte
     //While the TxFIFO is not full
     while((SCIB_FFTX_R&0x1F00)==0x1000){}
     SCIB_TXBUF_R=SCI_TxData&0xFF;                       //Writing to TXBUF the data pointed with SCI_StartPt and points foward
-}
-
-//--------------------------------------------------------------------
-//%%%%%%%%%%%%%%%%%    WRITING LONG DATA TO SCIB    %%%%%%%%%%%%%%%%%%
-//--------------------------------------------------------------------
-void SCIB_WLongData(void){          //It always sends 2 bytes of data
-    static uint16_t LSB=1;
-    //While there's still data in pointer and the TxFIFO is not full
-    while((SCI_StartPt!=SCI_EndPt)&&((SCIB_FFTX_R&0x1F00)!=0x1000)){
-        SCIB_TXBUF_R=SCI_Data;              //Writing to TXBUF the data pointed with SCI_StartPt and points foward
-        if(LSB){                //If it sent the low Byte of the data
-            SCI_Data=(*SCI_StartPt)>>8;
-        }
-        else{                   //If it sent the upper Byte of the Data
-            SCI_StartPt++;
-            SCI_Data=*SCI_StartPt;
-        }
-        LSB^=1;
-    }
 }
 
 //--------------------------------------------------------------------

@@ -8,8 +8,8 @@
 #include <Freq_Extraction/Cubic_Spline.h>
 
 extern float absf(float);
-extern volatile uint16_t CS_UpN, CS_LowN, CS_OVLP;
-extern volatile float CS_LowAcum, CS_UpAcum, CS_UpLim, CS_LowLim; //Quizas Low Lim Const
+volatile uint16_t CS_UpN=0, CS_LowN=0, CS_OVLP=0;
+volatile float CS_LowAcum=0, CS_UpAcum=0, CS_UpLim=256.0, CS_LowLim=64.0;
 
 //float h[N-1];
 float Gauss[N-2];
@@ -78,7 +78,7 @@ float* Cubic_Spline(float* h, float* Y){
 
     //Estimation of global parameters for the Overlapping (CS_OVLP) process
     i=CS_LowAcum==0?0:1;
-    while(CS_LowAcum<CS_LowLim){            //Analizar segunda secuencia
+    while(CS_LowAcum<CS_LowLim){
         CS_LowAcum+=h[i];
         i++;
     }
@@ -89,7 +89,7 @@ float* Cubic_Spline(float* h, float* Y){
     DMA_Channels_Config(CS_OVLP, CS_UpN);
     CS_LowN=CS_UpN;
 
-    CS_UpLim=15.0;              //Quizas poner en otro lado
+    CS_UpLim=64.0;              //Quizas poner en otro lado
 
     return &CubSpl[0];
 }

@@ -17,10 +17,8 @@
 //%%%%%%%%%%%%%%%%%    COMMUNICATIONS FUNCTIONS   %%%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 __interrupt void Inter_XINT2 (void);
-__interrupt void Inter_XINT3 (void);
 __interrupt void Inter_I2CA (void);
 __interrupt void Inter_SCIBRX (void);
-__interrupt void Inter_SCIBTX (void);
 void Config_Ports(void);
 void Config_SCIB(void);
 void Config_I2CA(void);

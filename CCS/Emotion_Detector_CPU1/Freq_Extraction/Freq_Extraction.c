@@ -22,11 +22,7 @@ void Freq_Extraction(float* InputX, float* InputY, uint16_t Type){ //Takes 1.133
     float  Aux1=0, Aux2=0, Aux3=0;
     float* Ptr=InputY;
 
-    EALLOW;
-    DMA_CH1_CONTROL_R|=0x8;                 //PERINTFRC:Force peripheral event from CH1 (Clean PSD)
-    EDIS;
-
-    if(Type){                           //If Input==PRV
+    if(Type){                               //If Input==PRV
         Ptr=Cubic_Spline(InputX, InputY);
         EALLOW;
         DMA_CH2_CONTROL_R|=0x8;             //PERINTFRC:Force peripheral event from CH2 (OVLP Gauss)
@@ -34,9 +30,9 @@ void Freq_Extraction(float* InputX, float* InputY, uint16_t Type){ //Takes 1.133
         DMA_CH4_CONTROL_R|=0x8;             //PERINTFRC:Force peripheral event from CH4 (OVLP S)
         EDIS;
     }
-    if(Type){                           //If Input==PRV
-        Ptr = PSD_Periodogram(Ptr);               //freq_res=1/(Ts*NFFT)
-        for(i=1;i<101;i++){              //Resolution=8[Hz]/2048
+    if(Type){                               //If Input==PRV
+        Ptr = PSD_Periodogram(Ptr);         //freq_res=1/(Ts*NFFT)
+        for(i=1;i<101;i++){                 //Resolution=8[Hz]/2048
             if(i<11){
                 Aux1+=Ptr[i];
             }
@@ -47,14 +43,14 @@ void Freq_Extraction(float* InputX, float* InputY, uint16_t Type){ //Takes 1.133
                     Aux3+=Ptr[i];
                 }
         }
-        Feat_Val.PRV_VLF=Aux1/10;      //VLF: 0.0039062 - 0.0390625
-        Feat_Val.PRV_LF=Aux2/28;       // LF: 0.0429687 - 0.1484375
-        Feat_Val.PRV_HF=Aux3/62;       // HF: 0.1523437 - 0.3906250
+        Feat_Val.PRV_VLF=Aux1/10;           //VLF: 0.0039062 - 0.0390625
+        Feat_Val.PRV_LF=Aux2/28;            // LF: 0.0429687 - 0.1484375
+        Feat_Val.PRV_HF=Aux3/62;            // HF: 0.1523437 - 0.3906250
         Feat_Val.PRV_LF_HF=Feat_Val.PRV_LF/Feat_Val.PRV_HF;
     }
-    else{                               //If Input==EDA
-        Ptr = PSD_Periodogram(Ptr);               //freq_res=1/(Ts*NFFT)
-        for(i=3;i<33;i++){             //Resolution=32[Hz]/2048
+    else{                                   //If Input==EDA
+        Ptr = PSD_Periodogram(Ptr);         //freq_res=1/(Ts*NFFT)
+        for(i=3;i<33;i++){                  //Resolution=32[Hz]/2048
             if(i<11){
                 Aux1+=Ptr[i];
             }
@@ -62,7 +58,7 @@ void Freq_Extraction(float* InputX, float* InputY, uint16_t Type){ //Takes 1.133
                 Aux2+=Ptr[i];
             }
         }
-        Feat_Val.EDA_LF=Aux1/8;       // LF: 0.046875 - 0.15625
-        Feat_Val.EDA_HF=Aux2/22;      // HF: 0.171875 - 0.5
+        Feat_Val.EDA_LF=Aux1/8;             // LF: 0.046875 - 0.15625
+        Feat_Val.EDA_HF=Aux2/22;            // HF: 0.171875 - 0.5
     }
 }

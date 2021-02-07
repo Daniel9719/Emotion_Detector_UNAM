@@ -8,19 +8,19 @@ import numpy as np
 
 def accuracy(prediction, targets):
     """
-    Calcula la exactitud de la clasificación con un conjunto de prueba
+    Accuracy of test set
 
     Parameters
     ----------
     prediction : array
-        Vector con las clases predichas
+        Predicted targets vectors 
     targets : array
-        Vector con las clases verdaderas
+        Targets vectors of test set
 
     Returns
     -------
     float
-        Exactitud de 0 a 1
+        Acurracy [0,1]
     """
     return (prediction == targets).mean()
 

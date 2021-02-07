@@ -3,7 +3,6 @@ from typing import Any
 import nest_asyncio
 import matplotlib.pyplot as plt
 import numpy as np
-import csv
 
 from bleak import BleakClient
 
@@ -61,14 +60,6 @@ class Connection:
                 )
             else:
                 print("Failed to connect to HM10")
-            """
-            while True:
-                if not self.connected:
-                    print("Out of while loop")
-                    break
-                await asyncio.sleep(10.0)
-            # Task1.set_result()
-            """
             print("Out of connect!!")
         except Exception as e:
             print("Exception ocurred!!")
@@ -95,7 +86,6 @@ class Connection:
                     self.lenghtEDA=0
                 self.EDA[self.lenghtEDA]=data2
                 self.lenghtEDA=self.lenghtEDA+1
-                # PPG_EDA_file.writerow({'PPG':self.PPG[self.lenghtPPG-1], 'EDA':self.EDA[self.lenghtEDA-1]})
 
             # print(f"Recieved: {data2}")
             data=data>>16
@@ -129,32 +119,26 @@ async def BLE_Data_Tx(connection: Connection, TxData):
     else:
         print ('ERROR BLE_Data_Tx: Device not connected')
         
-async def plotting(connection: Connection):
-    t = range(Window_Size)
-    print("Inside PLotting")
-    # fig, (ax1, ax2) = plt.subplots(nrows=2,ncols=1)
+async def plotting(connection, t):
     while True:
-        # plt.cla()    matplotlib.artist
-        fig, (ax1, ax2) = plt.subplots(nrows=2,ncols=1)
-        ax1.plot(t,connection.PPG, label='PPG')
-        ax2.plot(t,connection.EDA, label='EDA')
-        ax1.legend()
-        ax2.legend()
-        ax2.set_xlabel('Muestras')
-        # ax1.stale()
-        # ax2.stale()
-        plt.pause(0.1)
-        # plt.grid(True)
-        # plt.show()
-        # print("Plotting")
-        await asyncio.sleep(0.1)
+        try:
+            fig, (ax1, ax2) = plt.subplots(nrows=2,ncols=1)
+            ax1.plot(t,connection.PPG, label='PPG')
+            ax2.plot(t,connection.EDA, label='EDA')
+            ax1.legend()
+            ax2.legend()
+            plt.show()
+            await asyncio.sleep(0.1)
+        except KeyboardInterrupt:
+            print("User stopped loop 1.")
+            for task in asyncio.all_tasks():
+                task.cancel()
+            loop.stop()
 
-async def main(loop):
-    while True:
-        Task1 = loop.create_task(connection.manager(), name="Task1")
-        Task2 = loop.create_task(plotting(connection), name="Task2")
-        future, pending = await asyncio.wait([Task1, Task2],return_when="ALL_COMPLETED")
-        # print(f"Futuro: {future}    Pending:{pending}")
+async def main(loop, connection):
+    await connection.manager()
+    t = range(Window_Size)
+    loop.create_task(plotting(connection,t), name="Task2")
 
 #############
 # App Main
@@ -167,24 +151,21 @@ if __name__ == "__main__":
     # Create the event loop.
     loop = asyncio.get_event_loop()
     loop.set_debug(True)
-    with open('PPG_EDA_Data.csv','w',newline='') as NewFile:
-        header_names = ['PPG','EDA']
-        PPG_EDA_file = csv.DictWriter(NewFile, fieldnames=header_names)
-        PPG_EDA_file.writeheader()
         
     connection = Connection(
          loop, read_characteristic, write_characteristic
     )
-    plt.style.use('seaborn')
+    
+    plt.style.use('seaborn')    
     try:
-        loop.run_until_complete(main(loop))
-        print("First loop finished")
+        Task1 = loop.create_task(main(loop, connection), name="Task1")
+        loop.run_forever()
     except KeyboardInterrupt:
+        print("User stopped loop 2.")
+        for task in asyncio.all_tasks():
+            task.cancel()
         print("User stopped program.")
     finally:
         print("Disconnecting...")
-        # loop.stop()
         loop.run_until_complete(connection.cleanup())
         loop.stop()
-        plt.show()
-        # loop.close()

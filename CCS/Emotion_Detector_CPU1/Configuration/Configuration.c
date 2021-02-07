@@ -5,17 +5,10 @@
 #define Q16 65536
 
 //-----------------------------------//
- float AUX_FLD_W[4][22];
-float AUX_MeanVect[8];
-float AUX_ApriVect[8];
-float AUX_Cov_S[4];
-
-//volatile uint16_t* Emotion=&AUX_Emotion;
-//float* MeanVect_Pt=AUX_MeanVect;
-//float* Cov_S_Pt=AUX_ApriVect;
-//float* Cov_S=AUX_Cov_S;
-//float* FLD_W=&AUX_FLD_W[0][0];
-//volatile float* Feat_Val2_Pt=&AUX_Feat_Val2_Pt.PRV_LF_HF;
+extern volatile float MeanVect[8];
+extern volatile float ApriVect[8];
+extern volatile float Cov_S[4];
+extern volatile float FLD_W[4][22];
 //-----------------------------------//
 
 //%%%%%%%%%%%%%%%%%%%    CONFIGURATION VARIABLES    %%%%%%%%%%%%%%%%%%
@@ -26,11 +19,11 @@ uint16_t Modality=0;
 uint16_t RGB_En=1;
 uint16_t PS_Select=2;
 
-volatile uint16_t* Emotion_Pt;
-volatile float* FLD_W_Pt=&AUX_FLD_W[0][0];
-volatile float* MeanVect_Pt=AUX_MeanVect;
-volatile float* ApriVect_Pt=AUX_ApriVect;
-volatile float* Cov_S_Pt=AUX_Cov_S;
+volatile uint16_t Emotion;
+volatile float* FLD_W_Pt=&FLD_W[0][0];
+volatile float* MeanVect_Pt=MeanVect;
+volatile float* ApriVect_Pt=ApriVect;
+volatile float* Cov_S_Pt=Cov_S;
 
 struct Features_Asignation Feat_Asig = {
     {0xFFF, 0xFFF, 0xFFF, 0xFFF},
@@ -55,8 +48,8 @@ extern uint16_t SCI_Data;
 void Write_Emotion(void){
     if(RGB_En){
         GPIO_PORTA_CLEAR_R|=0x7;                //Turn off LED RGB
-        if(~*Emotion_Pt){
-            GPIO_PORTA_SET_R|=*Emotion_Pt;      //Turn on LED RGB to respective color according to Emotion
+        if(~Emotion){
+            GPIO_PORTA_SET_R|=Emotion;      //Turn on LED RGB to respective color according to Emotion
         }
     }
     VariablesMap(0x90,0);
@@ -170,7 +163,7 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
                     SCIB_WData(DataQ16>>24);
                     break;
                 case 0x10:       //-------------------EMOTION-------------------//
-                    SCIB_WData(*Emotion_Pt);
+                    SCIB_WData(Emotion);
                     break;
                 case 0x11:       //----------------CHARACT CONFIG---------------//
                     Buffer=Feat_Row;

@@ -44,8 +44,8 @@ struct Features_Value{
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%    CONFIGURATION FUNCTIONS   %%%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
-void Emotion_Write(void);
-void TxVars(uint16_t Number);
+void Write_Emotion(void);
+void Send_Feature(uint16_t Number);
 void VariablesMap(uint16_t REG_ADDR, uint16_t Data);
 
 #endif /* CONFIGURATION_H_ */

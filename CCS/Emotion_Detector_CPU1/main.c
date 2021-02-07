@@ -6,6 +6,7 @@
 
 #include "Configuration/Configuration.h"
 #include "Communications/Communications.h"
+#include "Classification/Classification.h"
 #include "Freq_Extraction/Freq_Extraction.h"
 #include "Communications/Biom_AS7026GG.h"
 #include "Communications/SCI_UART.h"
@@ -14,6 +15,10 @@ extern uint16_t volatile SCI_Mode;                             //(0) AT Mode   (
 float* ptPRV_h;
 float* ptPRV_y;
 float* ptEDA;
+
+extern uint16_t Emotion;
+extern struct Features_Value Feat_Val;
+extern volatile uint16_t Modality;
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%%%%    CONFIGURATION PIE    %%%%%%%%%%%%%%%%%%%%%%
@@ -51,7 +56,11 @@ void main(void){
     Biom_Config();
     while(SCI_Mode!=2);                     //While the BLE device isn't connected
     while(1){
-        Freq_Extraction(ptPRV_h,ptPRV_y,PRVSig);
-        Freq_Extraction(0,ptEDA,EDASig);
+//        Freq_Extraction(ptPRV_h,ptPRV_y,PRVSig);
+//        Freq_Extraction(0,ptEDA,EDASig);
+        if(Modality){
+            Emotion=EMDC(&Feat_Val.pNN50);
+            Write_Emotion();
+        }
     }
 }

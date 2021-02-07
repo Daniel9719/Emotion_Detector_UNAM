@@ -3,6 +3,7 @@
 #include "Communications/SCI_UART.h"
 #include "Communications/Biom_AS7026GG.h"
 #include "Configuration/Configuration.h"
+#include "Conditioning/FIR_filter.h"
 
 //%%%%%%%%%%%%%%%%%%    SCI_UART VARIABLES    %%%%%%%%%%%%%%%%%%
 extern int SCI_State;
@@ -64,8 +65,7 @@ __interrupt void Inter_I2CA (void){
             Clb_Min=__min(Clb_Min,Biom1.LED_V);
         }
         if(Clb_Mode==0){
-//            PPG[i]=(float)(FIR_PPG(Biom1.LED_V));
-            PPG[i]=(float)(Biom1.LED_V);
+            PPG[i]=FIR_PPG(Biom1.LED_V);
         }
     }
     else{
@@ -79,12 +79,11 @@ __interrupt void Inter_I2CA (void){
         if(Clb_Mode==0){
             k++;
             if(k%4==0){
-//            EDA[j]=(float)(FIR_EDA(Biom1.int_EDA));
-                EDA[j]=(float)(Biom1.int_EDA);
+            EDA[j]=FIR_EDA(Biom1.int_EDA);
                 j=j<2048? j+1:0;
                 k=0;
             }
-            i=i<384? i+1:0;
+            i=i<383? i+1:0;
         }
     }
 //--------------CALIBRATION---------------//

@@ -6,105 +6,105 @@ Created on Wed Oct  7 13:36:09 2020
 import numpy as np
 from matplotlib import pyplot as plt
 
-def indexClass(targets_train):
+def indexTarget(targets_train):
     """
-    Realiza la identificacion de los indices correspondientes a cada clase dentro de los datos de entrenamiento
+    Identification of each target 
 
     Parameters
     ----------
     targets_train : array
-        vector que contiene las clases dentro del conjunto de entrenamiento
+        Array with targets vectors (training)
 
     Returns
     -------
     C : int
-        indica el numero máximo de clases dentro del conjunto de entrenamiento
+        Number of targets
     OmegaC : list of list
-        lista de listas que contiene los indices correspondientes a cada clase del conjunto de entrenamiento
+        List of list with index of vectors with same target
     """
-    C=max(targets_train) #se obtiene el máximo número de clases
+    C=max(targets_train) 
     N=targets_train.shape[0]
     OmegaC=[]
-    for c in range(C+1): #se busca cada clase dentro del arreglo para agregar sus indices a una lista
+    for c in range(C+1): 
         listC=[]
         for n in range (N):
                 if targets_train[n] == c:
                     listC.append(n)
-        OmegaC.append(listC)  #se crea una lista con las listas de indices de cada clase
+        OmegaC.append(listC)  
     return C,OmegaC 
 
 def average(features_train,C,OmegaC):
     """
-    Realiza el promedio de todos los vectores en cada clase, así como el promedio total
+    Mean of features vectors
 
     Parameters
     ----------
     features_train : array
-        Matriz que contiene los vectores de características de entrenamiento
+        Array with features vectors (training)
     C : int
-        Número total de clases
+        Number of targets
     OmegaC : List of list
-        Contiene los indices de los vectores correspondientes a cada clase
+        List of list with index of vectors with same target
 
     Returns
     -------
     mc : array
-        Matriz que contiene las medias de todos los vectores de características en cada clase
+        Means of features vectors with same target
     m : array
-        Vector que contiene la media total de todos los vectores de caacteristicas
+        Mean of all features vectors
     D : int
-        Dimensiones de los vectores de características
+        Dimension of features vectors
     """
-    D=features_train.shape[1] #dimension de los vectores de caracteristicas
-    mc=np.zeros([C+1,D]) #se crea una matriz de ceros que contiene el promedio de las caracteristicas en cada clase
-    m=np.zeros(D,)#vector que contendrá el promedio total de las caracteristicas
-    for c in range(C+1):#se saca el promedio de cada clase
+    D=features_train.shape[1] 
+    mc=np.zeros([C+1,D])
+    m=np.zeros(D,)
+    for c in range(C+1):
         avg=np.zeros(D,)
-        for n in range (len(OmegaC[c])): #se hace un corrimiento por los indices de dicha clase
-            avg+=features_train[OmegaC[c][n],:]#se suman los vectores que tengan dichos indices
+        for n in range (len(OmegaC[c])):
+            avg+=features_train[OmegaC[c][n],:]
         avg/=len(OmegaC[c])
-        mc[c,:]=avg #se guarda en la matriz el promedio de la clase
+        mc[c,:]=avg 
         m+=avg
-    m/=(C+1)#promedio total
+    m/=(C+1)
     return mc,m,D
 
 def covariance (features_train,C,OmegaC,D,mc,m):
     """
-    Realiza la matriz de covarianza entre calses y dentro de cada clase
+    Within-class and between-class ovariance matrix 
 
     Parameters
     ----------
     features_train : array
-        Matriz que contiene los vectores de características de entrenamiento
+        Array with features vectors (training)
     C : int
-        Número total de clases
+        Number of targets
     OmegaC : List of list
-        Contiene los indices de los vectores correspondientes a cada clase
+        List of list with index of vectors with same target
     D : int
-        Dimensiones de los vectores de características
+        Dimension of features vectors
     mc : array
-        Matriz que contiene las medias de todos los vectores de características en cada clase
+        Means of features vectors with same target
     m : array
-        Vector que contiene la media total de todos los vectores de caacteristicas
+        Mean of all features vectors
 
     Returns
     -------
     Sw : array
-        Matriz de covarianza dentro de cada clase
+        within-class covariance matrix 
     Sb : array
-        Matriz de covarianza entre clases
+         between-class ovariance matrix 
     """
-    Sw=np.zeros([D,D]) #matriz de covarianza dentro de cada clase
-    for c in range(C+1):#se saca la covarianza de cada clase
+    Sw=np.zeros([D,D]) 
+    for c in range(C+1):
         Sc=np.zeros([D,D])
-        for index in range (len(OmegaC[c])): #se hace un corrimiento por los indices de dicha clase
+        for index in range (len(OmegaC[c])):
             x=features_train[OmegaC[c][index],:]
             a = (x-mc[c,:])
             a = a.reshape((-1, 1))
             Sc+=np.matmul(a,np.transpose(a))
-        Sw+=Sc #se suman todas las matrices de covarianza dentro de cada clase
-    Sb=np.zeros([D,D])#matriz de covarianza entre clases
-    for c in range(C+1):#se saca la covarianza entre clases
+        Sw+=Sc
+    Sb=np.zeros([D,D])
+    for c in range(C+1):
         a = (mc[c,:]-m)
         a = a.reshape((-1, 1))
         Sb+=len(OmegaC[c])*np.matmul(a,np.transpose(a))    
@@ -112,29 +112,29 @@ def covariance (features_train,C,OmegaC,D,mc,m):
 
 def pseudoinverseLDA(Sw,Sb,D):
     """
-    Se obtiene la matriz pseudoinversa en caso de que no exista la inversa
+    Pseudoinverse matrix of Sw and Sb
 
     Parameters
     ----------
     Sw : array
-        Matriz de covarianza dentro de cada clase
+        within-class covariance matrix 
     Sb : array
-        Matriz de covarianza entre clases
+         between-class ovariance matrix 
     D : int
-        Dimensiones de los vectores de características
+        Dimension of features vectors
 
     Returns
     -------
     Swpseudo : array
-        Matriz pseudoinversa de Sw
+        Sw pseudoinverse matrix
     Sbpseudo : array
-        Matriz pseudoinversa de Sb
+        Sb pseudoinverse matrix
     """
     uSw, sSw, vhSw=np.linalg.svd(Sw)
     uSb, sSb, vhSb=np.linalg.svd(Sb)
     idensSw=np.zeros([D,D])
     idensSb=np.zeros([D,D])
-    for i in range(D):#se genera una matriz identidad
+    for i in range(D):
         idensSw[i][i]=sSw[i]
         idensSb[i][i]=sSb[i]
     invsSw=np.linalg.inv(idensSw)
@@ -146,24 +146,24 @@ def pseudoinverseLDA(Sw,Sb,D):
     
 def eigen(Sw,Sb,D,pLDA):
     """
-    se obtienen los valores y vectores propios para generar un nuevo espacio
+    Eigen values and eigen vectors
     Parameters
     ----------
     Sw : array
-        Matriz de covarianza dentro de cada clase
+        within-class covariance matrix 
     Sb : array
-        Matriz de covarianza entre clases
+         between-class ovariance matrix 
     D : int
-        Dimensiones de los vectores de características
-    pLDA : bool
-        Indica si se hará una matriz inversa o pseudoinversa
+        Dimension of features vectors
+    pLDA: bool
+        Boolean that activates pseudoinverse function
 
     Returns
     -------
     val_p : array
-        Vector de valores propios
+        Eigen values
     vect_p : array
-        Matriz con los vectores propios  
+        Eigen vectors
     """
     if pLDA:
         Swpseudo,Sbpseudo=pseudoinverseLDA(Sw,Sb,D)
@@ -176,29 +176,29 @@ def eigen(Sw,Sb,D,pLDA):
 
 def reductionMatrix(val_p,vect_p,K,D):
     """
-    Generación de la matriz de reducción dimensional W
+    Reduction matrix W
 
     Parameters
     ----------
     val_p : array
-        Vector de valores propios
+        Eigen values
     vect_p : array
-        Matriz con los vectores propios
+        Eigen vectors
     K : int
-        Dimensión a la que se quiere reducir K<=min(C,D)-1
+        New dimension of features vectors K<=min(C,D)-1
     D : int
-        Dimensiones de los vectores de características
+        Dimension of features vectors
 
     Returns
     -------
     W : array
-        Matriz de reducción
+        Reduction Matrix
     """
-    listIndex=[] #se crea una lista con los indices de los valores propios mas grandes
-    val_p=list(val_p) #se convierte el vector en lista
-    val_p_aux=list(val_p) #se convierte el vector en lista
-    W=np.zeros([D,K]) #se crea la matriz de transformación para la reducción del espacio
-    for i in range(K):#se busca el valor máximo, se guarda su indice, se elimina de la lista y se guarda el vector correspondiente 
+    listIndex=[] 
+    val_p=list(val_p) 
+    val_p_aux=list(val_p) 
+    W=np.zeros([D,K]) 
+    for i in range(K):
         maxValue=max(val_p,key=abs)
         index=val_p.index(maxValue)
         val_p.pop(index)
@@ -209,29 +209,29 @@ def reductionMatrix(val_p,vect_p,K,D):
 
 def train(features_train,targets_train,K, pLDA=False, plot=False, Terminal=False, Binary=False):
     """
-    Se realiza paso a paso el algoritmo con el objetivo de obtener la matriz de transformacion
+    Train of FLD
 
     Parameters
     ----------
     features_train : array
-        Matriz que contiene los vectores de características de entrenamiento
+        Array with features vectors (training)
     targets_train : array
-        vector que contiene las clases dentro del conjunto de entrenamiento
+        Array with targets vectors (training)  
     K : int
-        Dimensión a la que se quiere reducir K<=min(C,D)-1
+        New dimension of features vectors K<=min(C,D)-1
     pLDA : bool, optional
-        Indica si harás una matriz inversa o pseudoinversa durante el entrenamiento. The default is False.
+        Boolean that activates pseudoinverse function. The default is False.
     plot : bool, optional
         Indica si se graficara el resultado 2D. The default is False.
     Terminal : bool, optional
-        Indica si quieres mostrar información en la terminal. The default is False.
+        Enable algorithm information. The default is False.
 
     Returns
     -------
     W : array
-        Matriz de reducción
+        Reduction Matrix
     """
-    C,OmegaC=indexClass(targets_train)
+    C,OmegaC=indexTarget(targets_train)
     mc,m,D=average(features_train,C,OmegaC)
     Sw,Sb= covariance(features_train,C,OmegaC,D,mc,m)
     
@@ -244,31 +244,31 @@ def train(features_train,targets_train,K, pLDA=False, plot=False, Terminal=False
         W=reductionMatrix(val_p,vect_p,K,D)
     
     if Terminal:
-        print("Valores propios: ")
+        print("Eigen values: ")
         print(val_p)
-        print("\nVectores propios: ")
+        print("\nEigen vectors: ")
         print(vect_p)
-        print("\nMatriz de transformación W: ")
+        print("\nReduction Matrix W: ")
         print(W)
         
     if plot:
-        new_features_train=np.matmul(features_train,W)#reduccion de las características de entrada a través de la matriz de transformación
-        plot2D(features_train,new_features_train,C,OmegaC) #graficacion de caracteristicas originales y transformadas
+        new_features_train=np.matmul(features_train,W)
+        plot2D(features_train,new_features_train,C,OmegaC)
     return W
 
 def plot2D(features_train,new_features_train,C,OmegaC):
     """
-    Recibe el espacio original y el espacio nuevo y los grafica
+    Graph of new features space
         Parameters
     ----------
     features_train : array
-        Matriz que contiene los vectores de características de entrenamiento
-    OmegaC : list of list
-        lista de listas que contiene los indices correspondientes a cada clase del conjunto de entrenamiento
+        Array with features vectors (training)
+    OmegaC : List of list
+        List of list with index of vectors with same target
     C : int
-        indica el numero máximo de clases dentro del conjunto de entrenamiento
+        Number of targets
     new_features_train : array
-        Matriz de caracteristicas reducidas
+        New features space
     """
     fig, axs=plt.subplots(1,2,False,False)
     for c in range(C+1):

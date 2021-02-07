@@ -6,50 +6,50 @@ Created on Fri Oct  9 17:37:49 2020
 """
 import numpy as np
 
-def indexClass(targets_train):
+def indexTargets(targets_train):
     """
-    Realiza la identificacion de los indices correspondientes a cada clase dentro de los datos de entrenamiento
+    Identification of each target 
 
     Parameters
     ----------
     targets_train : array
-        vector que contiene las clases dentro del conjunto de entrenamiento
+        Array with targets vectors (training)
 
     Returns
     -------
-    K : int
-        indica el numero máximo de clases dentro del conjunto de entrenamiento
+    C : int
+        Number of targets
     OmegaK : list of list
-        lista de listas que contiene los indices correspondientes a cada clase del conjunto de entrenamiento
+        List of list with index of vectors with same target
     """
-    K=max(targets_train) #se obtiene el maximo numero de clases
+    K=max(targets_train)
     N=targets_train.shape[0]
     OmegaK=[]
-    for c in range(K+1): #se busca cada clase dentro del arreglo para agregar sus indices a una lista
+    for c in range(K+1): 
         listK=[]
         for n in range (N):
                 if targets_train[n] == c:
                     listK.append(n)
-        OmegaK.append(listK)  #se crea una lista con las listas de indices de cada clase
+        OmegaK.append(listK)
     return K,N, OmegaK
 
 def Apriori(features_train, K, OmegaK):
     """
-    Devuelve la probabilidad a priori
+    A priori probabilities
 
     Parameters
     ----------
     features_train : array
-        Matriz con vectores de características de entrenamiento
+        Array with features vectors (training)
     K : int
-        Número de clases
-    OmegaK : list of list
-        lista de listas con los indices de los vectores de cada clase
+        Number of targets
+    OmegaK : List of list
+        List of list with index of vectors with same target
 
     Returns
     -------
     pi_k : array
-        Vector con la probabilidad a priori para cada clase
+        Vector with a priori probabilities of each target
     """
     N=features_train.shape[0]
     pi_k=np.zeros(K+1)
@@ -61,56 +61,55 @@ def Apriori(features_train, K, OmegaK):
 
 def average(features_train,K,OmegaK):
     """
-    Realiza el promedio de todos los vectores en cada clase, así como el promedio total
+    Mean of features vectors
 
     Parameters
     ----------
     features_train : array
-        Matriz que contiene los vectores de características de entrenamiento
+        Array with features vectors (training)
     K : int
-        Número total de clases
+        Number of targets
     OmegaK : List of list
-        Contiene los indices de los vectores correspondientes a cada clase
+        List of list with index of vectors with same target
 
     Returns
     -------
-    mk : array
-        Matriz que contiene las medias de todos los vectores de características en cada clase
-
+    m_k : array
+        Means of features vectors with same target
     D : int
-        Dimensiones de los vectores de características
+        Dimension of features vectors
     """
-    D=features_train.shape[1] #dimension de los vectores de caracteristicas
-    mk=np.zeros([K+1,D]) #se crea una matriz de ceros que contiene el promedio de las caracteristicas en cada clase
-    for k in range(K+1):#se saca el promedio de cada clase
+    D=features_train.shape[1]
+    m_k=np.zeros([K+1,D])
+    for k in range(K+1):
         avg=np.zeros(D,)
-        for n in range (len(OmegaK[k])): #se hace un corrimiento por los indices de dicha clase
+        for n in range (len(OmegaK[k])):
             x=features_train[OmegaK[k][n],:]
-            avg+=x #se suman los vectores que tengan dichos indices
+            avg+=x 
         avg/=len(OmegaK[k])
-        mk[k,:]=avg #se guarda en la matriz el promedio de la clase
-    return mk,D
+        m_k[k,:]=avg 
+    return m_k,D
 
 def pseudoinverseLDA(S,D):
     """
-    Se obtiene la matriz pseudoinversa en caso de que no exista la inversa
+    Pseudoinverse matrix generation
 
     Parameters
     ----------
     S : array
-        Matriz de covarianza 
+        Covariance matrix
     D : int
-        Dimensiones de los vectores de características
+        Dimension of features vectors
 
     Returns
     -------
     Spseudo : array
-        Matriz pseudoinversa de S
+        Pseudoinverse matrix of S
 
     """
     uS, sS, vhS=np.linalg.svd(S)
     idensS=np.zeros([D,D])
-    for i in range(D):#se genera una matriz identidad
+    for i in range(D):
         idensS[i][i]=sS[i]
     invsS=np.linalg.inv(idensS)
     Spseudo=np.matmul(np.matmul(uS,invsS),vhS)
@@ -118,37 +117,37 @@ def pseudoinverseLDA(S,D):
 
 def covariance (features_train,K,OmegaK,D,m_k, N, pLDA):
     """
-    Realiza la matriz de covarianza promedio
+    Covariance matrix
 
     Parameters
     ----------
     features_train : array
-        Matriz que contiene los vectores de características de entrenamiento
+        Array with features vectors (training)
     K : int
-        Número total de clases
+        Number of targets
     OmegaK : List of list
-        Contiene los indices de los vectores correspondientes a cada clase
+        List of list with index of vectors with same target
     D : int
-        Dimensiones de los vectores de características
+        Dimension of features vectors
     m_k : array
-        Matriz que contiene las medias de todos los vectores de características en cada clase
+        Means of features vectors with same target
     pLDA : bool
-        Indica si se hará la matriz inversa o pseudoinversa
+        Boolean that activates pseudoinverse function.
 
     Returns
     -------
     S_inv : array
-        Matriz de covarianza promedio inversa
+        Inverse covariance matrix 
     """
-    S=np.zeros([D,D]) #matriz de covarianza promedio
-    for k in range(K+1):#se saca la covarianza de cada clase
+    S=np.zeros([D,D]) 
+    for k in range(K+1):
         Sk=np.zeros([D,D])
-        for index in range (len(OmegaK[k])): #se hace un corrimiento por los indices de dicha clase
+        for index in range (len(OmegaK[k])):
             x=features_train[OmegaK[k][index],:]
             a = (x-m_k[k,:])
             a = a.reshape((-1, 1))
             Sk+=np.matmul(a,np.transpose(a))
-        S+=Sk #se guarda la matriz de covarianza de la respectiva clase
+        S+=Sk 
     S/=(N-K)
     if pLDA:
         S_inv=pseudoinverseLDA(S,D)
@@ -159,23 +158,23 @@ def covariance (features_train,K,OmegaK,D,m_k, N, pLDA):
 
 def classification(S_inv,m_k,pi_k,features_entry):
     """
-    Se realiza la clasificación con los parámetros estimados en el entrenamiento
+    Classification of features vectors
 
     Parameters
     ----------
     S_inv : array
-        Matriz de covarianza inversa
+        Inverse covariance matrix 
     m_k : array
-        Matriz con los vectores de medias en cada clase
+        Means of features vectors with same target
     pi_k : array
-        Vector con los valores de la probabilidad a priori en cada clase
+        Vector with a priori probabilities of each target
     features_entry : array
-        Matriz con vectores de características a clasificar
+        Array with features vectors
 
     Returns
     -------
     prediction : array
-        Vector con las clases estimadas
+        Arrar with predicted targets
     """
     K=pi_k.shape[0]
     N=features_entry.shape[0]
@@ -190,58 +189,31 @@ def classification(S_inv,m_k,pi_k,features_entry):
         prediction[n]=delta.index(maxValue)
     return prediction
 
-def sphere(S):
-    """
-    Realizar una operación para que la matriz de covarianza sea una matriz identidad (no funciona si S tiene valores negativos)
-
-    Parameters
-    ----------
-    S : array
-        Matriz de covarianza
-
-    Returns
-    -------
-    idenU : array
-        Matriz identidad con los valores propios
-    D : array
-        Matriz con los vectores propios
-
-    """
-    U,D=np.linalg.eig(S)
-    dim=U.shape[0]
-    idenU=np.zeros([dim,dim])
-    for i in range(dim):#se genera una matriz identidad
-        idenU[i][i]=U[i]
-    print(D)
-    D=np.sqrt(D)
-    print(D)
-    return idenU,D
-
 def train(features_train,targets_train, pLDA=False, Terminal=False):
     """
-    Realizar el entrenamiento del algoritmos
+    Train of LDA
 
     Parameters
     ----------
     features_train : array
-        Matriz con vectores de entrenamiento
+        Array with features vectors (training)
     targets_train : array
-        Vector de clases
+        Array with targets vectors (training)
     pLDA : bool, optional
-        Indica si harás una matriz inversa o pseudoinversa durante el entrenamiento. The default is False.
+        Boolean that activates pseudoinverse function. The default is False.
     Terminal : bool, optional
-        Indica si quieres mostrar información en la terminal. The default is False.
+        Enable algorithm information. The default is False.
 
     Returns
     -------
     S_inv : array
-        Matriz de covarianza inversa.
+        Inverse covariance matrix 
     m_k : array
-        Matriz con las medias de los vectores en cada clase
+        Means of features vectors with same target
     pi_k : array
-        Vector con las probabilidades a priori
+        Vector with a priori probabilities of each target
     """
-    K,N,OmegaK=indexClass(targets_train)
+    K,N,OmegaK=indexTargets(targets_train)
     pi_k=Apriori(features_train, K, OmegaK)
     m_k,D=average(features_train,K,OmegaK)
     S_inv=covariance (features_train,K,OmegaK,D,m_k, N, pLDA)
@@ -256,19 +228,19 @@ def train(features_train,targets_train, pLDA=False, Terminal=False):
 
 def accuracy(prediction, targets):
     """
-    Calcula la exactitud de la clasificación con un conjunto de prueba
+    Accuracy of test set
 
     Parameters
     ----------
     prediction : array
-        Vector con las clases predichas
+        Predicted targets vectors 
     targets : array
-        Vector con las clases verdaderas
+        Targets vectors of test set
 
     Returns
     -------
     float
-        Exactitud de 0 a 1
+        Acurracy [0,1]
     """
     return (prediction == targets).mean()
     

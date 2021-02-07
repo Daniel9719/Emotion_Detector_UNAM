@@ -1,10 +1,33 @@
 eclipse.preferences.version=1
+<<<<<<< HEAD
+encoding//Debug/Char_Extraction/subdir_rules.mk=UTF-8
+encoding//Debug/Char_Extraction/subdir_vars.mk=UTF-8
+encoding//Debug/Communications/subdir_rules.mk=UTF-8
+encoding//Debug/Communications/subdir_vars.mk=UTF-8
+encoding//Debug/Configuration/subdir_rules.mk=UTF-8
+encoding//Debug/Configuration/subdir_vars.mk=UTF-8
+encoding//Debug/Freq_Extraction/subdir_rules.mk=UTF-8
+encoding//Debug/Freq_Extraction/subdir_vars.mk=UTF-8
+=======
 encoding//Debug/Classification/subdir_rules.mk=UTF-8
 encoding//Debug/Classification/subdir_vars.mk=UTF-8
 encoding//Debug/Conditioning/subdir_rules.mk=UTF-8
 encoding//Debug/Conditioning/subdir_vars.mk=UTF-8
+>>>>>>> master
 encoding//Debug/makefile=UTF-8
 encoding//Debug/objects.mk=UTF-8
 encoding//Debug/sources.mk=UTF-8
 encoding//Debug/subdir_rules.mk=UTF-8
 encoding//Debug/subdir_vars.mk=UTF-8
+<<<<<<< HEAD
+encoding//Release/Communications/subdir_rules.mk=UTF-8
+encoding//Release/Communications/subdir_vars.mk=UTF-8
+encoding//Release/Configuration/subdir_rules.mk=UTF-8
+encoding//Release/Configuration/subdir_vars.mk=UTF-8
+encoding//Release/makefile=UTF-8
+encoding//Release/objects.mk=UTF-8
+encoding//Release/sources.mk=UTF-8
+encoding//Release/subdir_rules.mk=UTF-8
+encoding//Release/subdir_vars.mk=UTF-8
+=======
+>>>>>>> master

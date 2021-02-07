@@ -6,7 +6,7 @@ extern struct Features_Asignation Feat_Asig;
 
 //%%%%%%%%%%%%%%%%%%    CLASSIFICATION VARIABLES    %%%%%%%%%%%%%%%%%%
 
-uint16_t* Sel_SF=&Feat_Asig.PRV[0];
+uint16_t* Asig_car=&Feat_Asig.PRV[0];
 volatile float MeanVect[8];
 volatile float ApriVect[8];
 volatile float Cov_S[4];
@@ -76,8 +76,8 @@ uint16_t EMDC(float *features){
     uint32_t temp;
 
     for(i=0;i<4;i++){
-        index[i]|=Sel_SF[i*2];
-        temp=Sel_SF[i*2+1];
+        index[i]|=Asig_car[i];
+        temp=Asig_car[i+4];
         temp=temp<<12;
         index[i]|=temp;
     }

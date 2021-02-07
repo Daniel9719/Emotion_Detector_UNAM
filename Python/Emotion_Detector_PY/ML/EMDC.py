@@ -317,17 +317,17 @@ def train(features_csv,targets_csv):
 
 
     del dim,i,j,k, keys_features, keys_targets, random_set, samples, t_final, t_start, targets_len, test_len, total_data, train_len,SFS_features_temp, targets_temp
-    
-    print(f"W1={matrix_W_1} \n W2={matrix_W_2} \n W3={matrix_W_3} \n W4={matrix_W_4}")
-    print(f"mk1={m_k_1} \n mk2={m_k_2} \n mk3={m_k_3} \n mk4={m_k_4}")
-    print(f"pik1={pi_k_1} \n pik2={pi_k_2} \n pik3={pi_k_3} \n pik4={pi_k_4}")
-    print(f"S1={S_inv_1} \n S2={S_inv_2} \n S3={S_inv_3} \n S4={S_inv_4}")
-    
+       
     #pik to ln(pik)
     pi_k_1=np.log(pi_k_1)
     pi_k_2=np.log(pi_k_2)
     pi_k_3=np.log(pi_k_3)
     pi_k_4=np.log(pi_k_4)
+    
+    print(f"W1={matrix_W_1} \n W2={matrix_W_2} \n W3={matrix_W_3} \n W4={matrix_W_4}")
+    print(f"mk1={m_k_1} \n mk2={m_k_2} \n mk3={m_k_3} \n mk4={m_k_4}")
+    print(f"pik1={pi_k_1} \n pik2={pi_k_2} \n pik3={pi_k_3} \n pik4={pi_k_4}")
+    print(f"S1={S_inv_1} \n S2={S_inv_2} \n S3={S_inv_3} \n S4={S_inv_4}")
     
     #Collection of parameters
     #SFFS

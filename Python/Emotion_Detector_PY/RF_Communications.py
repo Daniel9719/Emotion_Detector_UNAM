@@ -186,7 +186,7 @@ class RF_COMS:
                           | (0<<32) 
                           | (0<<24) 
                           | (0<<16) 
-                          | (self.FLD_W_Config<<8)   | 0x47 )
+                          | (self.FLD_W_Config<<8)   | 0x46 )
                     await self.BLE_Data_Tx(Data, length=6)
                     
         # Sending Mean_Vect Matrix

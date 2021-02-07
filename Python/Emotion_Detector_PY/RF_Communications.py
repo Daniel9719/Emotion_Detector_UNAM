@@ -166,6 +166,7 @@ class RF_COMS:
                   | (self.Chars_Asig[i][1]<<24)  
                   | (self.Chars_Asig[i][0]<<16)  
                   | (self.CC_Config<<8)          | 0x41 )
+
             await self.BLE_Data_Tx(Data, length=6)
         
         # Sending FLD_W Matrix
@@ -178,6 +179,7 @@ class RF_COMS:
                           | ( int(self.FLD_W[i][1][j,0])<<24)
                           | ( int(self.FLD_W[i][0][j,0])<<16)
                           | ( int(self.FLD_W_Config<<8))     | 0x46 )
+
                     await self.BLE_Data_Tx(Data, length=6)
                 else:
                     Data = ( (0<<40) 
@@ -196,6 +198,7 @@ class RF_COMS:
                       | ( int(self.Mean_Vect[i][1][j,0])<<24)  
                       | ( int(self.Mean_Vect[i][0][j,0])<<16)  
                       | ( int(self.Vect_Config<<8))          | 0x4B )
+
                 await self.BLE_Data_Tx(Data, length=6)
 
         # Sending Pik_Vect Matrix
@@ -207,6 +210,7 @@ class RF_COMS:
                       | ( int(self.Pik_Vect[i][1][j,0])<<24)  
                       | ( int(self.Pik_Vect[i][0][j,0])<<16)  
                       | ( int(self.Vect_Config<<8))          | 0x4B )
+
                 await self.BLE_Data_Tx(Data, length=6)
 
         # Sending Cov_S_Inv Matrix
@@ -217,6 +221,7 @@ class RF_COMS:
                   | ( int(self.Cov_S_Inv[i][1][0,0])<<24)
                   | ( int(self.Cov_S_Inv[i][0][0,0])<<16)
                   | ( int(self.Vect_Config<<8))          | 0x4B )
+
             await self.BLE_Data_Tx(Data, length=6)
 
     async def Send_Start_Measurement(self):
@@ -229,6 +234,7 @@ class RF_COMS:
     def Rx_Menu(self, Addr: int, Data: int):
         print(f"Addr={hex(Addr)}   Data:{hex(Data)}")
         if Addr == 0x10:
+
             self.Emotion = Data & 0x7
             if self.Emotion == 7:       #Neutral
                 self.emo_df.loc[self.emo_index]=['1','0','0']
@@ -243,6 +249,7 @@ class RF_COMS:
             self.emo_index += 1
             self.emo_df.to_csv("Emotions.csv", index=False)
         elif Addr == 0x11:
+
             self.index = Data & 0x1F
             if Data & 0x20:
                 self.Auto = True

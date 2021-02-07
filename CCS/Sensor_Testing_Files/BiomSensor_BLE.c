@@ -45,7 +45,7 @@ __interrupt void Inter_I2CA (void){
     static char Conmut=1;
     //-------Calibration variables---------//
     static uint16_t Clb_Windw=0, Clb_Mode=1, Offset=10, Current=0;
-    static int32_t Clb_Max=0, Clb_Min=16383;
+    static int32_t Clb_Max=0, Clb_Min=16383, Clb_Ampl=0;
 
     if(Conmut){
         //OFE1 LED VERDE o LED IR
@@ -82,26 +82,31 @@ __interrupt void Inter_I2CA (void){
                     Clb_Mode=2;                     //Move to Amplitude check
                 }
                 else{
-                    if(Clb_Max>12288){
-                        Offset++;
+                    if(Offset<256){
+                        if(Clb_Max>12288){
+                            Offset++;
+                        }
+                        if(Clb_Min<5120){
+                            Offset--;
+                        }
+                        Biom_Calibration(Clb_Mode,Offset);
                     }
-                    if(Clb_Min<5120){
-                        Offset--;
+                    else{
+                        Clb_Mode=0;                 //End of calibration
                     }
-                    Biom_Calibration(Clb_Mode,Offset);
                 }
             }
             else{                                   //Amplitude Check
-                Clb_Max=Clb_Max-Clb_Min;            //Amplitude
-                if(Clb_Max<3500 && Clb_Max>1500){
+                Clb_Ampl=Clb_Max-Clb_Min;            //Amplitude
+                if(Clb_Ampl<3500 && Clb_Ampl>1200){
                     Clb_Mode=0;                     //End of calibration
                 }
                 else{
-                    if(Current<17 && Current>0){                 //Max 50 [mA]
-                        if(Clb_Max<1500){
+                    if(Current<17){                 //Max 50 [mA]
+                        if(Clb_Ampl<1500){
                             Current++;
                         }
-                        if(Clb_Max>3500){
+                        if(Clb_Ampl>3500){
                             Current--;
                         }
                         Biom_Calibration(Clb_Mode,Current);

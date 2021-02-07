@@ -1,5 +1,5 @@
           .global _firFilter,_conv
-Qi         .set    14
+Qi         .set    15
 
 xbf       .word   0        ;Ultima localidad del buffer
 
@@ -38,6 +38,7 @@ _conv  ;XAR4->y
 	      I16TOF32 R0H, *XAR4 ;R0H=y
 	      NOP
 	      NOP
-	      MOVF32 R1H, #16384.0
+	      ;MOVF32 R1H, #16384.0
+  	      MOVF32 R1H, #32768.0
 	      DIVF32 R0H, R0H, R1H ;R0H=R0H/pow(2,Q)
 	      LRETR

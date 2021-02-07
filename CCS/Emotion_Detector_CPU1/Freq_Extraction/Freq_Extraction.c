@@ -50,7 +50,7 @@ void Freq_Extraction(float* InputX, float* InputY, uint16_t Type){ //Takes 1.133
     }
     else{                                   //If Input==EDA
         Ptr = PSD_Periodogram(Ptr);         //freq_res=1/(Ts*NFFT)
-        for(i=3;i<33;i++){                  //Resolution=32[Hz]/2048
+        for(i=3;i<135;i++){                  //Resolution=32[Hz]/2048
             if(i<11){
                 Aux1+=Ptr[i];
             }
@@ -58,7 +58,7 @@ void Freq_Extraction(float* InputX, float* InputY, uint16_t Type){ //Takes 1.133
                 Aux2+=Ptr[i];
             }
         }
-        Feat_Val.EDA_LF=Aux1/8;             // LF: 0.046875 - 0.15625
-        Feat_Val.EDA_HF=Aux2/22;            // HF: 0.171875 - 0.5
+//        Feat_Val.EDA_LF=Aux1/8;             // LF: 0.046875 - 0.15625
+        Feat_Val.EDA_HF=Aux2/125;            // HF: 0.171875 - 2.1
     }
 }

@@ -5,20 +5,10 @@
 #define Q16 65536
 
 //-----------------------------------//
-//uint16_t AUX_Emotion;
-float AUX_FLD_W[4][22];
+ float AUX_FLD_W[4][22];
 float AUX_MeanVect[8];
 float AUX_ApriVect[8];
 float AUX_Cov_S[4];
-//struct Features_Value2{
-//    float PRV_LF_HF;
-//    float PRV_VLF;
-//    float PRV_LF;
-//    float PRV_HF;
-//    float EDA_LF;
-//    float EDA_HF;
-//};
-//struct Features_Value2 AUX_Feat_Val2_Pt;
 
 //volatile uint16_t* Emotion=&AUX_Emotion;
 //float* MeanVect_Pt=AUX_MeanVect;

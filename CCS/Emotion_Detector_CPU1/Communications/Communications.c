@@ -50,10 +50,10 @@ __interrupt void Inter_XINT2 (void){
 //--------------------------------------------------------------------
 __interrupt void Inter_I2CA (void){
     static char Conmut=1;
-    static uint16_t i=0, j=0;
+    static uint16_t i=0, j=0, k=0;
     //-------Calibration variables---------//
     static uint16_t Clb_Windw=0, Offset=10, Current=0;
-    static int32_t Clb_Max=0, Clb_Min=16383;
+    static int32_t Clb_Max=0, Clb_Min=16383, Clb_Ampl=0;
 
     if(Conmut){
         //OFE1 LED VERDE o LED IR
@@ -77,10 +77,12 @@ __interrupt void Inter_I2CA (void){
             Clb_Min=__min(Clb_Min,Biom1.int_EDA);
         }
         if(Clb_Mode==0){
-            if((i+1)%4==0){
+            k++;
+            if(k%4==0){
 //            EDA[j]=(float)(FIR_EDA(Biom1.int_EDA));
                 EDA[j]=(float)(Biom1.int_EDA);
                 j=j<2048? j+1:0;
+                k=0;
             }
             i=i<384? i+1:0;
         }
@@ -94,7 +96,7 @@ __interrupt void Inter_I2CA (void){
                     Clb_Mode=2;                     //Move to Amplitude check
                 }
                 else{
-                    if(Offset<256 && Offset>0){
+                    if(Offset<256){
                         if(Clb_Max>12288){
                             Offset++;
                         }
@@ -109,16 +111,16 @@ __interrupt void Inter_I2CA (void){
                 }
             }
             else{                                   //Amplitude Check
-                Clb_Max=Clb_Max-Clb_Min;            //Amplitude
-                if(Clb_Max<3500 && Clb_Max>1500){
+                Clb_Ampl=Clb_Max-Clb_Min;            //Amplitude
+                if(Clb_Ampl<3500 && Clb_Ampl>1200){
                     Clb_Mode=0;                     //End of calibration
                 }
                 else{
-                    if(Current<17 && Current>0){    //Max 50 [mA] & Min 7.5 [mA]
-                        if(Clb_Max<1500){
+                    if(Current<17){    //Max 50 [mA] & Min 7.5 [mA]
+                        if(Clb_Ampl<1500){
                             Current++;
                         }
-                        if(Clb_Max>3500){
+                        if(Clb_Ampl>3500){
                             Current--;
                         }
                         Biom_Calibration(Clb_Mode,Current);

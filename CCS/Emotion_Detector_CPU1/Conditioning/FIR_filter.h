@@ -15,8 +15,8 @@ extern "C" {
 //int16_t x: Sample of PPG or EDA
 //--------------------------------------------------------------------
 
-float FIR_EDA(int16_t x);
-float FIR_PPG(int16_t x);
+int16_t FIR_EDA(int16_t x);
+int16_t FIR_PPG(int16_t x);
 
 #ifdef __cplusplus
 }

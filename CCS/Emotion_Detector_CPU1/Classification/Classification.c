@@ -70,7 +70,6 @@ uint16_t LDA(volatile float* MeanVect, volatile float* ApriVect, volatile float*
 //--------------------------------------------------------------------
 
 uint16_t EMDC(float *features){
-    //level 0: 0 NN, 1 N, level 1: 0 LA 1 HA, level 2 and 3: 0 NV 1 PV
     uint16_t prediction_1, prediction_2, prediction_3, prediction_4, i;
     uint32_t index[4]={0,0,0,0};
     uint32_t temp;
@@ -81,35 +80,46 @@ uint16_t EMDC(float *features){
         temp=temp<<12;
         index[i]|=temp;
     }
-
     float x;
+    //--------------------------------------------------------------------
+    //%%%%%%%%%%%%%%%%%%%%    LEVEL 1 (Neutrality)   %%%%%%%%%%%%%%%%%%%%
+    //--------------------------------------------------------------------
     x=FLD(features, FLD_W[0],index[0]);
-    prediction_1=LDA(MeanVect,ApriVect,Cov_S, x, 0);  //Neutrality
-    if(prediction_1==1){ //N
-        return 0x80;
+    prediction_1=LDA(MeanVect,ApriVect,Cov_S, x, 0);
+    if(prediction_1==1){ //Neutral
+        return 7;
     }
-    else{//NN
+    else{//Not neutral
+        //--------------------------------------------------------------------
+        //%%%%%%%%%%%%%%%%%%%%    LEVEL 2 (Arousal)   %%%%%%%%%%%%%%%%%%%%
+        //--------------------------------------------------------------------
         x=FLD(features, FLD_W[1],index[1]);
-        prediction_2=LDA(MeanVect,ApriVect,Cov_S, x, 1); //Arousal
+        prediction_2=LDA(MeanVect,ApriVect,Cov_S, x, 1);
     }
-    if(prediction_2==1){ //HA
+    if(prediction_2==1){ //High Arousal
+        //-------------------------------------------------------------------------------
+        //%%%%%%%%%%%%%%%%%%%%    LEVEL 3 (Valence (High Arousal))   %%%%%%%%%%%%%%%%%%%%
+        //-------------------------------------------------------------------------------
         x=FLD(features, FLD_W[2],index[2]);
-        prediction_3=LDA(MeanVect,ApriVect,Cov_S, x, 2); //Valence (HA)
-        if(prediction_3==1){ //PV HA
-            return 0x40;
+        prediction_3=LDA(MeanVect,ApriVect,Cov_S, x, 2);
+        if(prediction_3==1){ //Positive Valence (High Arousal)
+            return 6;
         }
-        else{ //NV HA
-            return 0x10;
+        else{ //Negative Valence (High Arousal)
+            return 4;
         }
      }
-     else{ //LA
+     else{
+         //------------------------------------------------------------------------------
+         //%%%%%%%%%%%%%%%%%%%%    LEVEL 4 (Valence (Low Arousal))   %%%%%%%%%%%%%%%%%%%%
+         //------------------------------------------------------------------------------
         x=FLD(features, FLD_W[3],index[3]);
-        prediction_4=LDA(MeanVect,ApriVect,Cov_S, x, 3); //Valence (LA)
-        if(prediction_4==1){ //PV LA
-            return 0x4;
+        prediction_4=LDA(MeanVect,ApriVect,Cov_S, x, 3);
+        if(prediction_4==1){ //Positive Valence (Low Arousal)
+            return 2;
         }
-        else{ //NV LA
-            return 0x2;
+        else{ //Negative Valence (Low Arousal)
+            return 1;
         }
       }
 }

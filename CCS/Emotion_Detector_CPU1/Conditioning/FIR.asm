@@ -1,4 +1,4 @@
-          .global _firFilter,_conv
+          .global _firFilter
 Qi         .set    15
 
 xbf       .word   0        ;Buffer´s last memory allocation
@@ -33,11 +33,3 @@ REPT
           BANZ REPT, AR5--   ;AR5=0?
           MOVL ACC,XAR4      ;ACC=XAR4
           LRETR              ;Return to C program
-
-_conv  ;XAR4->y
-	      I16TOF32 R0H, *XAR4 ;R0H=y
-	      NOP
-	      NOP
-	      MOVF32 R1H, #16384.0
-	      DIVF32 R0H, R0H, R1H ;R0H=R0H/pow(2,Q)
-	      LRETR

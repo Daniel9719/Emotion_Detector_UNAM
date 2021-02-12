@@ -4,12 +4,11 @@
 
 #define Q16 65536
 
-//-----------------------------------//
-extern volatile float MeanVect[8];
-extern volatile float ApriVect[8];
-extern volatile float Cov_S[4];
-extern volatile float FLD_W[4][22];
-//-----------------------------------//
+//%%%%%%%%%%%%%%%%%%%    CLASSIFICATION VARIABLES    %%%%%%%%%%%%%%%%%%
+extern float MeanVect[8];
+extern float ApriVect[8];
+extern float Cov_S[4];
+extern float FLD_W[4][22];
 
 //%%%%%%%%%%%%%%%%%%%    CONFIGURATION VARIABLES    %%%%%%%%%%%%%%%%%%
 volatile uint16_t Clb_Mode=0;
@@ -44,15 +43,18 @@ extern uint16_t SCI_Data;
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%%     EMOTION RELATED ACTIONS    %%%%%%%%%%%%%%%%%
+//  0x1: HA-PV         0x4: HA-NV        0x7: Neutral
+//  0x2: LA-NV         0x5: Error
+//  0x3: Calibration   0x6: HA-PV
 //--------------------------------------------------------------------
 void Write_Emotion(void){
     if(RGB_En){
         GPIO_PORTA_CLEAR_R|=0x7;                //Turn off LED RGB
-        if(~Emotion){
-            GPIO_PORTA_SET_R|=Emotion;      //Turn on LED RGB to respective color according to Emotion
-        }
+        GPIO_PORTA_SET_R|=Emotion;              //Turn on LED RGB to respective color according to Emotion
     }
-    VariablesMap(0x90,0);
+    if(AutoTx){
+        VariablesMap(0x90,0);
+    }
 }
 
 //--------------------------------------------------------------------
@@ -199,7 +201,7 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
                 AutoTx=(Data&0x40)>>6;
                 if(Clb_Mode){
                     GPIO_PORTA_CLEAR_R|=0x7;            //Turn off Cyan LED RGB for Calibration Mode
-                    GPIO_PORTA_SET_R|=0x7;              //Turn on Cyan LED RGB for Calibration Mode
+                    GPIO_PORTA_SET_R|=0x3;              //Turn on Cyan LED RGB for Calibration Mode
                     AS7026GG_ADC_Channel(0);
                 }
                 Measure=(Data&0x20)>>5;

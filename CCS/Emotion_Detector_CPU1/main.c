@@ -11,11 +11,16 @@
 #include "Communications/Biom_AS7026GG.h"
 #include "Communications/SCI_UART.h"
 
-extern uint16_t volatile SCI_Mode;                             //(0) AT Mode   (1) Connection Mode  (2) Standby Mode
+//%%%%%%%%%%%%%%%%%%    MAIN VARIABLES    %%%%%%%%%%%%%%%%%%
+volatile bool Main_Running=false;
 float* ptPRV_h;
 float* ptPRV_y;
 float* ptEDA;
 
+//%%%%%%%%%%%%%%%%%%    SCI_UART VARIABLES    %%%%%%%%%%%%%%%%%%
+extern uint16_t volatile SCI_Mode;                             //(0) AT Mode   (1) Connection Mode  (2) Standby Mode
+
+//%%%%%%%%%%%%%%%%%%    CONFIGURATION VARIABLES    %%%%%%%%%%%%%%%%%%
 extern uint16_t Emotion;
 extern struct Features_Value Feat_Val;
 extern volatile uint16_t Modality;
@@ -54,13 +59,22 @@ void main(void){
 
     HM10_Config();
     Biom_Config();
-    while(SCI_Mode!=2);                     //While the BLE device isn't connected
-    while(1){
+Disconnect:
+    while(SCI_Mode!=2){                     //While the BLE device isn't connected
+        CPUSYS_LPMCR_R&=0xFFFFFFFC;         //IDLE MODE
+        IDLE;
+    }
+    while(Main_Running==true){
+        funcion2()
 //        Freq_Extraction(ptPRV_h,ptPRV_y,PRVSig);
 //        Freq_Extraction(0,ptEDA,EDASig);
-        if(Modality){
+        if(Modality==1){
             Emotion=EMDC(&Feat_Val.pNN50);
             Write_Emotion();
+        }
+        Main_Running=false;
+        if(SCI_Mode!=2){
+            goto Disconnect;
         }
     }
 }

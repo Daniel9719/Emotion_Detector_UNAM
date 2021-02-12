@@ -1,9 +1,14 @@
+#include <driverlib/cpu.h>
+
 #include "Communications/Communications.h"
 #include "Communications/I2C.h"
 #include "Communications/SCI_UART.h"
 #include "Communications/Biom_AS7026GG.h"
 #include "Configuration/Configuration.h"
 #include "Conditioning/FIR_filter.h"
+
+//%%%%%%%%%%%%%%%%%%    MAIN VARIABLES    %%%%%%%%%%%%%%%%%%
+extern volatile bool Main_Running;
 
 //%%%%%%%%%%%%%%%%%%    SCI_UART VARIABLES    %%%%%%%%%%%%%%%%%%
 extern int SCI_State;
@@ -18,12 +23,14 @@ extern volatile uint16_t Clb_Mode;
 
 //%%%%%%%%%%%%%%%%%%    COMMUNICATIONS VARIABLES    %%%%%%%%%%%%%%%%%%
 struct Biometric_Sensor{
-    int16_t LED_V;
+    int16_t GR_LED;
     int16_t int_EDA;
 };
 struct Biometric_Sensor Biom1;
 
-float PPG[384];
+int16_t PPG;
+float PRV_h[853];
+float PRV_y[853];
 float EDA[2048];
 
 bool TxSwitch;
@@ -55,41 +62,50 @@ __interrupt void Inter_I2CA (void){
     //-------Calibration variables---------//
     static uint16_t Clb_Windw=0, Offset=10, Current=0;
     static int32_t Clb_Max=0, Clb_Min=16383, Clb_Ampl=0;
+    //-------Overlapping variables---------//
+    static uint16_t OVLP_State=0;
 
     if(Conmut){
-        //OFE1 LED VERDE o LED IR
-        Biom1.LED_V=(I2C_Read_Byte())>>2;
-        Biom1.LED_V|=((I2C_Read_Byte())<<6);
+        //OFE1 GREEN LED
+        Biom1.GR_LED=(I2C_Read_Byte())>>2;
+        Biom1.GR_LED|=((I2C_Read_Byte())<<6);       //PPG Signal After OFE1
         if(Clb_Mode==2){                            //Amplitude Check
-            Clb_Max=__max(Clb_Max,Biom1.LED_V);     //PPG Signal Pregain or PPG Signal After OFE1
-            Clb_Min=__min(Clb_Min,Biom1.LED_V);
+            Clb_Max=__max(Clb_Max,Biom1.GR_LED);    //PPG Signal After OFE1
+            Clb_Min=__min(Clb_Min,Biom1.GR_LED);
         }
         if(Clb_Mode==0){
-            PPG[i]=FIR_PPG(Biom1.LED_V);
+            PPG=FIR_PPG(Biom1.GR_LED);
+//            Valor=funcion1(PPG,PRV_h,PRV_y);            //Que pasa con ventaneo? segundo ciclo
+            if(Valor==true){
+
+            }
         }
     }
     else{
         //EAF EDA
         Biom1.int_EDA=(I2C_Read_Byte())>>2;
-        Biom1.int_EDA|=((I2C_Read_Byte())<<6);
+        Biom1.int_EDA|=((I2C_Read_Byte())<<6);      //PPG Signal Pregain or EDA Electrical Front End
         if(Clb_Mode==1){                            //Range Check
-            Clb_Max=__max(Clb_Max,Biom1.int_EDA);   //PPG Signal Pregain or PPG Signal After OFE1
+            Clb_Max=__max(Clb_Max,Biom1.int_EDA);   //PPG Signal Pregain
             Clb_Min=__min(Clb_Min,Biom1.int_EDA);
         }
         if(Clb_Mode==0){
             k++;
             if(k%4==0){
-            EDA[j]=FIR_EDA(Biom1.int_EDA);
-                j=j<2048? j+1:0;
+                EDA[j]=FIR_EDA(Biom1.int_EDA);
+                if(OVLP_State==1 && j==2047){                   //COMO HACERLE?!!!
+                    Main_Running=true;
+                }
+                j=j<2047? j+1:0;
                 k=0;
             }
-            i=i<383? i+1:0;
+            i=i<2? i+1:0;
         }
     }
 //--------------CALIBRATION---------------//
-    if(Clb_Mode){                                   //(0) End of calibration  (1) Range Check   (2) Amplitude Check
+    if(Clb_Mode!=0){                                //(0) End of calibration  (1) Range Check   (2) Amplitude Check
         Clb_Windw++;
-        if(Clb_Windw==768){                         //Wait for a window of data of 1.2[s]*5=6 [s]     128*6=768
+        if(Clb_Windw==768){                         //Wait for a window of data of 1.5[s]*2=3 [s]     256*3=768
             if(Clb_Mode==1){                        //Range Check
                 if(Clb_Max<12288 && Clb_Min>5120){
                     Clb_Mode=2;                     //Move to Amplitude check
@@ -110,13 +126,13 @@ __interrupt void Inter_I2CA (void){
                 }
             }
             else{                                   //Amplitude Check
-                Clb_Ampl=Clb_Max-Clb_Min;            //Amplitude
+                Clb_Ampl=Clb_Max-Clb_Min;           //Amplitude
                 if(Clb_Ampl<3500 && Clb_Ampl>1200){
                     Clb_Mode=0;                     //End of calibration
                 }
                 else{
                     if(Current<17){    //Max 50 [mA] & Min 7.5 [mA]
-                        if(Clb_Ampl<1500){
+                        if(Clb_Ampl<1200){
                             Current++;
                         }
                         if(Clb_Ampl>3500){
@@ -142,6 +158,10 @@ __interrupt void Inter_I2CA (void){
     Conmut^=1;
     I2CA_FFRX_R|=0x40;                              //RXFFINTCLR: Limpia bandera FIFO Rx
     PIE_ACK_R|=0x80;                                //Clean flag interrupt from Group 8
+    if(!Main_Running){
+        CPUSYS_LPMCR_R&=0xFFFFFFFC;                 //IDLE MODE
+        IDLE;
+    }
 }
 
 //--------------------------------------------------------------------
@@ -226,11 +246,6 @@ void Config_Ports(void){
     GPIO_PORTA_MUX1_R|=0x0;                  //GPIO 0-2 Mux 0 (GPIO)
     GPIO_PORTA_DIR_R|=0x7;                   //GPIO 0-2 Output
 
-    GPIO_PORTC_GMUX1_R=0x0;                  //GPIO 67 a Grupo 0
-    GPIO_PORTC_MUX1_R|=0x0;                  //GPIO 67 Mux 0 (GPIO)
-    GPIO_PORTC_DIR_R|=0x0;                   //GPIO 67 Input
-    GPIO_PORTC_PUD_R&=~0x8;                  //GPIO 67 Enable Pull up resistor
-
     GPIO_PORTA_GMUX1_R=0x0;                  //GPIO 22 a Grupo 0
     GPIO_PORTA_MUX1_R|=0x0;                  //GPIO 22 Mux 0 (GPIO)
     GPIO_PORTA_DIR_R|=0x0;                   //GPIO 22 Input
@@ -241,7 +256,7 @@ void Config_Ports(void){
     GPIO_PORTA_QSEL2_R|=0xF0;                //GPIO 18-19 Async
 
     XINT2CR_R|=0x1;                          //Interrupt on falling edge & Enable XINT2
-    XBAR_IN_SEL5_R|=22;                      //Conect Input XBAR5 to GPIO22 for destiny XINT2
+    XBAR_IN_SEL5_R|=22;                      //Connect Input XBAR5 to GPIO22 for destiny XINT2
 }
 
 //--------------------------------------------------------------------

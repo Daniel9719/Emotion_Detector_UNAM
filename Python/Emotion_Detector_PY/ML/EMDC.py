@@ -35,7 +35,7 @@ def train(features_csv,targets_csv):
     keys_features=data_features.keys()
     keys_targets=data_targets.keys()
     
-    #Data's random arrangement
+    #Random arrangement of data
     total_data=[]
     for j in range (dim):
         total_data.append(data_features[keys_features[j]])
@@ -611,7 +611,7 @@ def train_LOOCV(features_csv,targets_csv):
     keys_features=data_features.keys()
     keys_targets=data_targets.keys()
     
-    #Data's random arrangement
+    #Random arrangement of data
     total_data=[]
     for j in range (dim):
         total_data.append(data_features[keys_features[j]])

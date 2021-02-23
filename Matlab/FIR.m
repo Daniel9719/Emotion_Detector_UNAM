@@ -1,4 +1,3 @@
-%Creación de filtro FIR
 clearvars
 
 Fs_EDA = 32;     %Sampling frequency of EDA 32 Hz

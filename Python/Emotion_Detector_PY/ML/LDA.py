@@ -244,3 +244,33 @@ def accuracy(prediction, targets):
     """
     return (prediction == targets).mean()
     
+def LOOCV(features_train,targets_train,pLDA):
+    """
+    Train of LDA
+
+    Parameters
+    ----------
+    features_train : array
+        Array with features vectors (training)
+    targets_train : array
+        Array with targets vectors (training)
+    pLDA : bool, optional
+        Boolean that activates pseudoinverse function. The default is False.
+    Returns
+    -------
+    acc: float
+        Acurracy [0,1]
+    """
+    samples=features_train.shape[0]
+    acc=0
+    for i in range(samples):
+        temp_features_train=np.delete(features_train,i,axis=0)
+        temp_targets_train=np.delete(targets_train,i,axis=0)
+        sample_feature=features_train[i,:]
+        sample_target=targets_train[i]
+        sample_feature=sample_feature.reshape((1,-1))
+        S_inv,m_k,pi_k=train(temp_features_train,temp_targets_train, pLDA,Terminal=False)
+        prediction=classification(S_inv,m_k,pi_k, sample_feature)
+        acc+=accuracy(prediction,sample_target)
+    acc/=samples
+    return acc

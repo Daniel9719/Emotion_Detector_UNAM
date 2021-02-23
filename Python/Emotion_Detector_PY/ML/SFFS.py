@@ -160,4 +160,129 @@ def SFFS_wrapper(features_train, features_test, targets_train, targets_test, pLD
 
     return new_features_train, new_features_test,index_cod
 
+def SFFS_wrapper_LOOCV(features_train, targets_train, pLDA):
+    """
+    Sequential Forward Floating Selection (wrapper method)
+
+    Parameters
+    ----------
+    features_train : array
+        Array with features vectors (training)
+    targets_train : array
+        Array with targets vectors (training)    
+    pLDA: bool
+        Boolean that activates pLDA in LDA function
+        
+    Returns
+    -------
+    new_features_train: array
+        Array with selected features (training)
+    index_cod: list
+        List with coded index of selected features
+    """    
+    D=features_train.shape[1]
+    new_features_train=[]
+    featuresIndex=[*range(D)] 
+    IndexAdd=[] 
+    k=0
+    maxValue=0
+    while k<D: 
+        accs=[]
+        index_d=[]
+        for d in featuresIndex:  
+            new_features_train.append(features_train[:,d])
+            new_features_train=np.array(new_features_train)
+            if k==0:
+                new_features_train = new_features_train.reshape((-1, 1))
+            else:
+                new_features_train=np.transpose(new_features_train)
+            acc=LDA.LOOCV(new_features_train,targets_train,pLDA)
+            accs.append(acc)
+            index_d.append(d)
+            new_features_train=np.transpose(new_features_train) 
+            new_features_train=list(new_features_train)
+            new_features_train.pop(k)         
+        max_prev=maxValue
+        maxValue=max(accs)
+        if maxValue<max_prev:
+            break
+        index=accs.index(maxValue)
+        index=index_d[index]
+        IndexAdd.append(index) 
+        new_features_train.append(features_train[:,index])
+        featuresIndex.remove(index)
+        k+=1
+        while k>2:
+            D_new=len(new_features_train)
+            new_featuresIndex=[*range(D_new)] 
+            accs=[]
+            index_d=[]
+            for d in new_featuresIndex: 
+                d_new=IndexAdd[d]
+                new_features_train.pop(0)
+                new_features_train=np.array(new_features_train)
+                new_features_train=np.transpose(new_features_train)
+                acc=LDA.LOOCV(new_features_train,targets_train,pLDA)
+                accs.append(acc)
+                index_d.append(d_new)
+                new_features_train=np.transpose(new_features_train) 
+                new_features_train=list(new_features_train)
+                new_features_train.append(features_train[:,d_new])
+            maxValueRemove=max(accs)
+            if maxValueRemove<=maxValue:
+                break
+            maxValue=maxValueRemove
+            index_remv=accs.index(maxValueRemove)
+            index=index_d[index_remv]
+            featuresIndex.append(index) 
+            new_features_train.pop(index_remv)
+            IndexAdd.pop(index_remv)
+            k-=1
+    new_features_train=np.array(new_features_train)
+    new_features_train=np.transpose(new_features_train)
+    
+    #codification
+    #0-7 features
+    register_len=8
+    index_cod=[]
+    s=""
+    for d in range(register_len):
+        if d in IndexAdd:
+            s+="1"
+        else:
+            s+="0"
+    index_cod.append(int(s,2))
+    #8-11 features
+    s=""
+    for d in range(register_len,register_len+8):
+        if d>=register_len+4:
+            break
+        if d in IndexAdd:
+            s+="1"
+        else:
+            s+="0"
+    index_cod.append(int(s,2))
+    #12-19 features
+    s=""
+    register_len+=4
+    for d in range(register_len,register_len+8):
+        if d in IndexAdd:
+            s+="1"
+        else:
+            s+="0"
+    index_cod.append(int(s,2))
+    register_len+=8
+    #20-21 features
+    s=""
+    for d in range(register_len,register_len+8):
+        if d>=register_len+2:
+            break
+        if d in IndexAdd:
+            s+="1"
+        else:
+            s+="0"
+    index_cod.append(int(s,2))
+
+    return new_features_train, index_cod
+
 

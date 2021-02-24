@@ -19,7 +19,7 @@ from pandas import DataFrame, read_csv
 from tkinter import filedialog
 
 #Import functions from EMDC
-from ML.EMDC import train
+from ML.EMDC import EMDC
 
 def declarar_widgets(rf_coms, root, loop):
     #Variables for connection and measure buttons
@@ -52,7 +52,7 @@ def declarar_widgets(rf_coms, root, loop):
     #-------------------CONFIGURATION PARAMETERS------------------------#
     
     frame=tk.Frame(root, relief=tk.RAISED, bg='#2E5D94', bd=5)
-    frame.place(relx=0.03, rely=0.2, relwidth=0.5, relheight=0.4)
+    frame.place(relx=0.03, rely=0.2, relwidth=0.35, relheight=0.4)
 
     #Texto para indicar los parámetros de configuración
     param_config_l = tk.Label(frame, text="Configuración", font=("Times New Roman",15), fg= "#FFFFFF", bg='#2E5D94')
@@ -69,33 +69,6 @@ def declarar_widgets(rf_coms, root, loop):
     modoPrueba = tk.Radiobutton(frame, text = "Prueba", bg='#2E5D94', fg= "#FFFFFF", selectcolor="black", activebackground ='#2E5D94', variable = modo, value = "prueba", command = selec_modo)
     modoPrueba.place(relx = 0.05, rely = 0.35)
     
-    #Texto para indicar las señales fisiológicas seleccionadas
-    señales_texto = tk.Label(frame, text="Selección de señales fisiológicas", fg= "#FFFFFF", bg='#2E5D94')
-    señales_texto.place(relx = 0.05, rely = 0.6)
-    
-    #Variales for physiological signals (int type)
-    #One variable for each signal
-    global ppg
-    ppg = tk.IntVar()
-    
-    global eda
-    eda = tk.IntVar()
-    
-    #Por default ambas señales fisiológicas están activadas
-    #El usuario puede modificarlo en cualquier momento en el modo de entrenamiento
-    #Cuando se deselecciona, la variable adquiere el valor 0
-    ppg.set(1)
-    eda.set(1)
-    
-    #Checkbutton  for physiological signal selection
-    global ck_PPG
-    ck_PPG = tk.Checkbutton(frame, text="PPG", bg='#2E5D94', fg= "#FFFFFF", selectcolor="black", activebackground ='#2E5D94', variable = ppg)
-    ck_PPG.place(relx = 0.05, rely = 0.7)
-    
-    global ck_EDA
-    ck_EDA = tk.Checkbutton(frame, text="EDA", bg='#2E5D94', fg= "#FFFFFF", selectcolor="black", activebackground ='#2E5D94', variable = eda)
-    ck_EDA.place(relx = 0.05, rely = 0.85)
-    
     #Variable para la activación/desactivación del RGB (tipo entero)
     global rgb 
     rgb = tk.IntVar()
@@ -107,9 +80,7 @@ def declarar_widgets(rf_coms, root, loop):
     #Boton para enviar parámetros configuración
     global enviar_parametros_config_btn
     enviar_parametros_config_btn = tk.Button(frame, text="Enviar configuración", state = tk.DISABLED, command =  lambda: verif_config(rf_coms, loop))
-    enviar_parametros_config_btn.place(relx = 0.85, rely = 0.85, anchor = tk.CENTER)
-    
-    
+    enviar_parametros_config_btn.place(relx = 0.75, rely = 0.85, anchor = tk.CENTER)
     
     #-------------------BOTONES DE CONECTAR Y MEDIR------------------------#
     
@@ -130,7 +101,7 @@ def declarar_widgets(rf_coms, root, loop):
     #-------------------TRAINING------------------------#
     
     frame3=tk.Frame(root, relief=tk.RAISED, bg='#2E5D94', bd=5)
-    frame3.place(relx=0.55, rely=0.2, relwidth=0.4, relheight=0.4)
+    frame3.place(relx=0.4, rely=0.2, relwidth=0.5, relheight=0.4)
     
     #Texto frame entrenamiento
     entrena_l = tk.Label(frame3, text="Entrenamiento", font=("Times New Roman",15), fg= "#FFFFFF", bg='#2E5D94')
@@ -149,12 +120,31 @@ def declarar_widgets(rf_coms, root, loop):
     #Campo de selección donde se muestra la dirección del archivo con las características
     global nombre_archivo_caract
     nombre_archivo_caract=tk.Entry(frame3, width=60)
-    nombre_archivo_caract.place(relx = 0.25, rely = 0.16)
+    nombre_archivo_caract.place(relx = 0.25, rely = 0.16, relwidth=0.7)
     
     #Campo de selección donde se muestra la dirección del archivo con las clases
     global nombre_archivo_clases
     nombre_archivo_clases=tk.Entry(frame3, width=60)
-    nombre_archivo_clases.place(relx = 0.25, rely = 0.36)
+    nombre_archivo_clases.place(relx = 0.25, rely = 0.36, relwidth=0.7)
+    
+    #Texto selección tipo entrenamiento
+    Tipo_entrena_l = tk.Label(frame3, text="Tipo de entrenamiento", fg= "#FFFFFF", bg='#2E5D94')
+    Tipo_entrena_l.place(relx = 0.12, rely = 0.6, anchor=tk.CENTER)
+    
+    #Variable del tipo de entrenamiento
+    global Train
+    Train = tk.BooleanVar()
+    Train.set(tk.FALSE)
+    
+    #Opción para tipo de entrenamiento rápido
+    global Ent_rap
+    Ent_rap = tk.Radiobutton(frame3, text="Entrenamiento rápido", bg='#2E5D94', fg= "#FFFFFF", selectcolor="black", activebackground ='#2E5D94', variable = Train, value = tk.FALSE)
+    Ent_rap.place(relx = 0.02, rely = 0.67)
+    
+    #Opción para tipo de entrenamiento completo
+    global Entr_comp
+    Ent_comp = tk.Radiobutton(frame3, text = "Entrenamiento completo", bg='#2E5D94', fg= "#FFFFFF", selectcolor="black", activebackground ='#2E5D94', variable = Train, value = tk.TRUE)
+    Ent_comp.place(relx = 0.02, rely = 0.77)
     
     #Botón para entrenar 
     global entr_btn
@@ -231,100 +221,62 @@ def conectar(rf_coms, loop):
 #Función que se ejecuta al presionar el botón "Iniciar medición"
 def medir(rf_coms, loop):
     global toggle_medir
-    #Si se está en modo entrenamiento y no se ha seleccionado al menos una señal fisiológica
-    #entonces no se puede comenzar a medir 
-    if(ppg.get() == 0 and eda.get() == 0 and modo_texto['text']=="Modo entrenamiento"):
-            messagebox.showerror("Error", "Debe seleccionar al menos una señal fisiológica para comenzar a medir")
+
+    if toggle_medir == 1:
+       medir_btn['text']="Detener medición"
+       medir_btn['bg'] = "red"
+       enviar_parametros_config_btn['state'] = tk.DISABLED
+       enviar_parametros_clasific_btn['state'] = tk.DISABLED
+       toggle_medir = 0
+       #Activa bit 3 de configuración (Iniciar medición)
+       rf_coms.Config |= 0x08 
     else:
-            if toggle_medir == 1:
-               medir_btn['text']="Detener medición"
-               medir_btn['bg'] = "red"
-               enviar_parametros_config_btn['state'] = tk.DISABLED
-               enviar_parametros_clasific_btn['state'] = tk.DISABLED
-               toggle_medir = 0
-               #Activa bit 5 de configuración (Iniciar medición)
-               rf_coms.Config |= 0x30 
+       medir_btn['text']="Iniciar medición"
+       medir_btn['bg'] = "white"
+       enviar_parametros_config_btn['state'] = tk.ACTIVE
+       toggle_medir = 1
+       #Desactiva bit 3 de configuración (Detener medición)
+       rf_coms.Config &= 0xF7 
 
-               
-            else:
-               medir_btn['text']="Iniciar medición"
-               medir_btn['bg'] = "white"
-               enviar_parametros_config_btn['state'] = tk.ACTIVE
-               toggle_medir = 1
-               #Desactiva bit 5 de configuración (Detener medición)
-               rf_coms.Config &= 0xCF 
-
-               
-            #Send Config register to start measurement
-            loop.create_task(rf_coms.Send_Start_Measurement(), name="Task4")
+       
+    #Send Config register to start measurement
+    loop.create_task(rf_coms.Send_Start_Measurement(), name="Task4")
     
        
 #-------------------FUNCIONES DE CONFIGURACIÓN------------------------#   
 
 #Función que ejecuta cuando se selecciona un modo con un Radiobutton       
 def selec_modo():
-    #Si el modo selecciondo es prueba se deshabilita la selección
-    #de señales fisiológicas y el botón para mostrar el maniquí
+    #Si el modo selecciondo es prueba se deshabilita el botón para mostrar el 
+    #maniquí
     if modo.get() == "prueba":
-        ck_PPG['state'] = tk.DISABLED
-        ck_EDA['state'] = tk.DISABLED
         maniqui_btn['state'] = tk.DISABLED
-    #Si el modo seleccionado es entrenamiento se habilitan las señales fisiológicas
-    #y el maniquí
+    #Si el modo seleccionado es entrenamiento se habilitan el maniquí
     else:
-        ck_PPG['state'] = tk.ACTIVE
-        ck_EDA['state'] = tk.ACTIVE
         maniqui_btn['state'] = tk.ACTIVE
 
 #Función que se ejecuta al presionar el botón de "Enviar configuración"
 #Verifica que todos los datos ingresados sean válidos
 def verif_config(rf_coms, loop):
-    if modo.get() == "prueba":
         #Se llama función para modificar el registro de configuración 
         enviar_config(rf_coms, loop)
         messagebox.showinfo("Mensaje de parámetros", "Parámetros enviados")
         modo_texto.config(text="Modo " + modo.get())
-    else:
-        if(ppg.get() == 0 and eda.get() == 0):
-            messagebox.showerror("Error", "Debe seleccionar al menos una señal fisiológica")
-        else:
-            #Se llama función para modificar el registro de configuración 
-            enviar_config(rf_coms, loop)
-            messagebox.showinfo("Mensaje de parámetros", "Parámetros enviados")
-            modo_texto.config(text="Modo " + modo.get())
             
 def enviar_config(rf_coms, loop):   
-    #Bit 2 de configuración activar/desactivar RGB
+    #Bit 0 de configuración activar/desactivar RGB
     if rgb.get() == 1:
-       rf_coms.Config |= 0x04
+       rf_coms.Config |= 0x01
     else:
-       rf_coms.Config &= 0xFB
+       rf_coms.Config &= 0xFE
         
-    #Bit 3 y 4 de configuración dependiendo del modo
-    #entrenamiento -> 00
+    #Bit 1 de configuración dependiendo del modo
+    #entrenamiento -> 0
     if(modo.get() == "entrenamiento"):
-        rf_coms.Config &= 0xE7
-        #Bit 0 y 1 de configuración dependiendo de las SF seleccionadas
-        #Solo PPG -> 00
-        if(ppg.get() == 1 and eda.get() == 0):
-            rf_coms.Config &= 0xFC
-        #Solo EDA -> 01
-        elif(ppg.get() == 0 and eda.get() == 1):
-            rf_coms.Config |= 0x01
-            rf_coms.Config &= 0xFD
-        #EDA y PPG -> 10
-        else:
-            rf_coms.Config |= 0x02
-            rf_coms.Config &= 0xFE
+        rf_coms.Config &= 0xFD
     else:
-        #prueba -> 01
-        if(modo.get() == "prueba"):
-            rf_coms.Config |= 0x08
-            rf_coms.Config &= 0xEF
-        #correccion -> 10
-        else:
-            rf_coms.Config |= 0x10
-            rf_coms.Config &= 0xF7
+    #prueba -> 1
+        rf_coms.Config |= 0x02
             
     #Send Configuration register
     loop.create_task(rf_coms.Send_Config(), name="Task5")
@@ -368,7 +320,7 @@ def entrenar(rf_coms):
     #Si ya se eligieron ambos archivos se muestra un mensaje de que se ha entrenado al sistema
     else: 
         #Función de EMDC para entrenar 
-        rf_coms.Chars_Asig, rf_coms.FLD_W, rf_coms.Mean_Vect, rf_coms.Pik_Vect, rf_coms.Cov_S_Inv=train(filename_features,filename_targets)
+        rf_coms.Chars_Asig, rf_coms.FLD_W, rf_coms.Mean_Vect, rf_coms.Pik_Vect, rf_coms.Cov_S_Inv=EMDC(filename_features,filename_targets,Train.get())
         messagebox.showinfo("Mensaje de entrenamiento", "Sistema entrenado" )
         enviar_parametros_clasific_btn['state'] = tk.ACTIVE
 
@@ -384,25 +336,45 @@ def param_entrena(rf_coms, loop):
 #Función que se ejecuta al presionar el botón de "Mostar gráfica"
 def grafica():
     ventana_grafica = tk.Tk()
-    ventana_grafica.title("Gráfica emociones")
+    ventana_grafica.title("Gráfica de emociones")
     
-    data2 = {'Tiempo [s]': [1920,1930,1940,1950,1960,1970,1980,1990,2000,2010],
-         'Voltaje [V]': [9.8,12,8,7.2,6.9,7,6.5,6.2,5.5,6.3]
+    Neutro = 0
+    VP_EA = 0
+    VP_EB = 0
+    VN_EA = 0
+    VN_EB =0
+        
+    emotions = read_csv(filename_targets)
+    keys_emotions = emotions.keys()
+    for j in range (0,len(emotions)):
+        emotion = ""
+        for i in range(0,3):
+            emotion += str(emotions[keys_emotions[i]][j]) 
+        if(emotion == "000"):
+            VN_EB += 1
+        elif(emotion == "001"):
+            VN_EA += 1
+        elif(emotion == "010"):
+            VP_EB += 1
+        elif(emotion == "011"):
+            VP_EA += 1
+        elif(emotion == "100"):
+            Neutro += 1
+            
+        
+    data = {'Emoción': ["Neutro", "VP-EA", "VP-EB", "VN-EA", "VN-EB"],
+         'Ocurrencia': [Neutro, VP_EA, VP_EB, VN_EA, VN_EB]
         }
     
-    df2 = DataFrame(data2,columns=['Tiempo [s]','Voltaje [V]'])
+    df = DataFrame(data,columns=['Emoción','Ocurrencia'])
     
-    #dots per inch (dpi)
-    # 5 horizontal
-    # 4 vertical
-    figure2 = plt.Figure(figsize=(5,4), dpi=100)
-    #Grid parameters 111 = 1x1
-    ax2 = figure2.add_subplot(111)
-    line2 = FigureCanvasTkAgg(figure2, ventana_grafica)
-    line2.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
-    df2 = df2[['Tiempo [s]','Voltaje [V]']].groupby('Tiempo [s]').sum()
-    df2.plot(kind='line', legend=True, ax=ax2, color='r',marker='o', fontsize=10)
-    ax2.set_title('Tiempo Vs. Voltaje')
+    figure = plt.Figure(figsize=(7,6), dpi=100)
+    ax = figure.add_subplot(111)
+    bar = FigureCanvasTkAgg(figure, ventana_grafica)
+    bar.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+    df = df[['Emoción','Ocurrencia']].groupby('Emoción').sum()
+    df.plot(kind='bar', legend=True, ax=ax, color='r', fontsize=7)
+    ax.set_title('Emoción Vs. Ocurrencia')
 
 #Función que se ejecuta la presionar el botón "Esquema SAM"
 def maniqui():

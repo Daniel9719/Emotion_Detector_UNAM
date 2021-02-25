@@ -11,7 +11,7 @@
 extern volatile bool Main_Running;
 
 //%%%%%%%%%%%%%%%%%%    SCI_UART VARIABLES    %%%%%%%%%%%%%%%%%%
-extern int SCI_State;
+extern int HM10_State;
 extern volatile bool SCI_RxAvail;
 extern uint16_t SCI_Mode;                             //(0) AT Mode   (1) Connection Mode  (2) Standby Mode
 
@@ -34,6 +34,8 @@ float PRV_y[853];
 float EDA[2048];
 
 bool TxSwitch;
+
+extern volatile float CS_UpAcum, CS_UpLim;
 
 //%%%%%%%%%%%%%%%%%%    FREQUENCY EXTRACTION VARIABLES    %%%%%%%%%%%%%%%%%%
 extern volatile float Gauss[];
@@ -77,7 +79,13 @@ __interrupt void Inter_I2CA (void){
             PPG=FIR_PPG(Biom1.GR_LED);
 //            Valor=funcion1(PPG,PRV_h,PRV_y);            //Que pasa con ventaneo? segundo ciclo
             if(Valor==true){
-
+                i=CS_LowAcum==0?0:1;
+                if(CS_UpAcum<CS_UpLim){
+                    CS_UpAcum+=PRV_h[i];
+                    i++;
+                }
+                CS_OVLP=i-1;
+                CS_LowAcum-=CS_LowLim;
             }
         }
     }
@@ -93,9 +101,9 @@ __interrupt void Inter_I2CA (void){
             k++;
             if(k%4==0){
                 EDA[j]=FIR_EDA(Biom1.int_EDA);
-                if(OVLP_State==1 && j==2047){                   //COMO HACERLE?!!!
-                    Main_Running=true;
-                }
+//                if(OVLP_State==1 && j==2047){                   //COMO HACERLE?!!!
+//                    Main_Running=true;
+//                }
                 j=j<2047? j+1:0;
                 k=0;
             }
@@ -181,9 +189,9 @@ __interrupt void Inter_SCIBRX (void){
                 switch(SCI_Mode){
                 case 0:                                     //AT Mode
                     if(strstr(SCI_RxData,"OK")!=NULL){
-                        SCI_State++;                        //Increase State
+                        HM10_State++;                        //Increase State
                         SCI_RxAvail=true;
-                        if(SCI_State==5){ SCI_Mode=1; }     //Switch to Connection Mode
+                        if(HM10_State==5){ SCI_Mode=1; }     //Switch to Connection Mode
                     }
                     break;
                 case 1:                                     //Connection Mode

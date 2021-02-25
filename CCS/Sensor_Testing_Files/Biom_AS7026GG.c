@@ -46,7 +46,7 @@ void Config_LEDs(int ADD){
 void Config_PD(int ADD){
     //------Config de Fotodetectores-------//
     I2C_Write_Byte(AS7026GG_PD_CFG);
-    I2C_Write_Byte(0x24);                //PD4 y PD1 conectados a fotoamplificador TIA
+    I2C_Write_Byte(0xC);                //PD4 y PD1 conectados a fotoamplificador TIA
     I2C_StartWR(ADD, 2, WRITE);
     //------Corriente Offset ON-------//
     I2C_Write_Byte(AS7026GG_PDOFFX_LEDON);
@@ -84,11 +84,11 @@ void Config_SEQ(int ADD){
     I2C_StartWR(ADD, 2, WRITE);
     //------Tiempo incio LED principal-------//
     I2C_Write_Byte(AS7026GG_SEQ_LED_STA);
-    I2C_Write_Byte(109);                 //SEQ_LED_START=109
+    I2C_Write_Byte(158);                 //SEQ_LED_START=109
     I2C_StartWR(ADD, 2, WRITE);
     //------Tiempo finalización LED principal-------//
     I2C_Write_Byte(AS7026GG_SEQ_LED_STO);
-    I2C_Write_Byte(118);                 //SEQ_LED_STOP=122
+    I2C_Write_Byte(167);                 //SEQ_LED_STOP=122
     I2C_StartWR(ADD, 2, WRITE);
     //------Tiempo incio del integrador-------//
     I2C_Write_Byte(AS7026GG_SEQ_ITG_STA);
@@ -96,23 +96,23 @@ void Config_SEQ(int ADD){
     I2C_StartWR(ADD, 2, WRITE);
     //------Tiempo inicio para el Demodulador Sincrono Positivo-------//
     I2C_Write_Byte(AS7026GG_SEQ_SDP1_STA);
-    I2C_Write_Byte(110);                 //SEQ_SDP1_START=110
+    I2C_Write_Byte(50);                 //SEQ_SDP1_START=110
     I2C_StartWR(ADD, 2, WRITE);
     //------Tiempo finalización para el Demodulador Sincrono Positivo-------//
     I2C_Write_Byte(AS7026GG_SEQ_SDP1_STO);
-    I2C_Write_Byte(118);                 //SEQ_SDP1_STOP=118
+    I2C_Write_Byte(58);                 //SEQ_SDP1_STOP=118
     I2C_StartWR(ADD, 2, WRITE);
     //------Tiempo inicio para el Demodulador Sincrono Negativo-------//
     I2C_Write_Byte(AS7026GG_SEQ_SDM1_STA);
-    I2C_Write_Byte(1);                  //SEQ_SDM1_START=1
+    I2C_Write_Byte(159);                  //SEQ_SDM1_START=1
     I2C_StartWR(ADD, 2, WRITE);
-    //------Tiempo finalizació´n para el Demodulador Sincrono Negativo-------//
+    //------Tiempo finalización para el Demodulador Sincrono Negativo-------//
     I2C_Write_Byte(AS7026GG_SEQ_SDM1_STO);
-    I2C_Write_Byte(20);                 //SEQ_SDM1_STOP=20
+    I2C_Write_Byte(167);                 //SEQ_SDM1_STOP=20
     I2C_StartWR(ADD, 2, WRITE);
     //------Tiempo inicio ADC-------//
     I2C_Write_Byte(AS7026GG_SEQ_ADC);
-    I2C_Write_Byte(110);                //SEQ_ADC=110
+    I2C_Write_Byte(159);                //SEQ_ADC=110
     I2C_StartWR(ADD, 2, WRITE);
     //------Inicio del Secuenciador-------//
     I2C_Write_Byte(AS7026GG_SEQ_START);
@@ -132,7 +132,8 @@ void Config_OFE(int ADD){
     I2C_StartWR(ADD, 2, WRITE);
     //------Config C de OFE-------//
     I2C_Write_Byte(AS7026GG_OFE_CFGC);
-    I2C_Write_Byte(0x2F);                //PREFILTER_AA_BYP (0): Usar filtro aa_freq
+    I2C_Write_Byte(0x07);                //PREFILTER_AA_BYP (0): Usar filtro aa_freq
+//    I2C_Write_Byte(0x2F);                //PREFILTER_AA_BYP (0): Usar filtro aa_freq
                                             //PREFILTER_HP_BYP (1): Bypass de filtro HP 200 Hz
                                             //PREFILTER_GAIN_BYP (1): Bypasss ganancia gain_sd
                                             //PREFILTER_BYPASS_EN (1): Bypass todo el prefiltro
@@ -147,7 +148,7 @@ void Config_OFE(int ADD){
     I2C_StartWR(ADD, 2, WRITE);
     //------Config A de OFE 1-------//
     I2C_Write_Byte(AS7026GG_OFE1_CFGA);
-    I2C_Write_Byte(0x71);                //OFE1_SD_EN (1): Hab Demodulador Sincrono OFE1
+    I2C_Write_Byte(0xF1);                //OFE1_SD_EN (1): Hab Demodulador Sincrono OFE1
                                             //OFE1_HP_EN (1): Hab Filtro HP OFE1
                                             //OFE1_GAIN_EN (1): Hab Ganancia OFE1
                                             //OFE1_SD_BYP (0): Demodulador usado

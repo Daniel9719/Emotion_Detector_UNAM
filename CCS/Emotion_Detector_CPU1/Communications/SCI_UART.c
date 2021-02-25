@@ -1,6 +1,6 @@
 #include <Communications/SCI_UART.h>
 
-volatile int SCI_State=0;
+volatile int HM10_State=0;
 volatile bool SCI_RxAvail=true;
 bool SCI_TxAvail=true;
 uint16_t SCI_Mode=0;                             //(0) AT Mode   (1) Connection Mode  (2) Standby Mode
@@ -59,11 +59,11 @@ void ATCommand(char *Command, char *Option){
 //%%%%%%%%%%%%%%%%    HM10 MODULE CONFIGURATION    %%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 void HM10_Config(void){
-    SCI_State=0;
+    HM10_State=0;
     SCI_RxAvail=true;
-    while(SCI_State<5){                                 //While all the conditions (cases) aren't completed
+    while(HM10_State<5){                                 //While all the conditions (cases) aren't completed
         if(SCI_RxAvail){                                  //If an "OK" statement has arrived
-            switch(SCI_State){
+            switch(HM10_State){
             case 0:
                 ATCommand(AT_NAME,"EmoDet_UNAM");       //Setting name for HM10 Module to EmoDet_UNAM
                 SCI_RxAvail=false;

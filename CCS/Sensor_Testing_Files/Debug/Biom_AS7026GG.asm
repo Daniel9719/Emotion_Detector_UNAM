@@ -1,6 +1,6 @@
 ;***************************************************************
 ;* TMS320C2000 G3 C/C++ Codegen                             PC v18.12.4.LTS *
-;* Date/Time created: Wed Feb 24 20:49:18 2021                 *
+;* Date/Time created: Fri Feb 26 14:46:26 2021                 *
 ;***************************************************************
 	.compiler_opts --abi=coffabi --cla_support=cla1 --diag_wrap=off --float_support=fpu32 --hll_source=on --mem_model:code=flat --mem_model:data=large --object_format=coff --silicon_errata_fpu1_workaround=off --silicon_version=28 --symdebug:dwarf --symdebug:dwarf_version=3 --tmu_support=tmu0 
 	.asg	XAR2, FP
@@ -46,7 +46,7 @@ $C$DW$7	.dwtag  DW_TAG_subprogram
 	.dwattr $C$DW$7, DW_AT_external
 	.dwendtag $C$DW$7
 
-;	C:\ti\ccs910\ccs\tools\compiler\ti-cgt-c2000_18.12.4.LTS\bin\ac2000.exe -@C:\\Users\\danie\\AppData\\Local\\Temp\\{B2545687-A2A3-4CB3-91ED-3A619D3E4EE5} 
+;	C:\ti\ccs910\ccs\tools\compiler\ti-cgt-c2000_18.12.4.LTS\bin\ac2000.exe -@C:\\Users\\danie\\AppData\\Local\\Temp\\{9D5E3DE7-CF27-4F56-8FB1-E40DD233866F} 
 	.sect	".text"
 	.clink
 	.global	_Config_LEDs
@@ -383,7 +383,7 @@ $C$DW$38	.dwtag  DW_TAG_TI_branch
         LCR       #_I2C_Write_Byte      ; [CPU_ALU] |54| 
         ; call occurs [#_I2C_Write_Byte] ; [] |54| 
 	.dwpsn	file "../Biom_AS7026GG.c",line 55,column 5,is_stmt,isa 0
-        MOVB      AL,#10                ; [CPU_ALU] |55| 
+        MOVB      AL,#5                 ; [CPU_ALU] |55| 
 $C$DW$39	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$39, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$39, DW_AT_name("_I2C_Write_Byte")
@@ -648,7 +648,7 @@ $C$DW$61	.dwtag  DW_TAG_TI_branch
         LCR       #_I2C_Write_Byte      ; [CPU_ALU] |88| 
         ; call occurs [#_I2C_Write_Byte] ; [] |88| 
 	.dwpsn	file "../Biom_AS7026GG.c",line 89,column 5,is_stmt,isa 0
-        MOVB      AL,#158               ; [CPU_ALU] |89| 
+        MOVB      AL,#108               ; [CPU_ALU] |89| 
 $C$DW$62	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$62, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$62, DW_AT_name("_I2C_Write_Byte")
@@ -677,7 +677,7 @@ $C$DW$64	.dwtag  DW_TAG_TI_branch
         LCR       #_I2C_Write_Byte      ; [CPU_ALU] |92| 
         ; call occurs [#_I2C_Write_Byte] ; [] |92| 
 	.dwpsn	file "../Biom_AS7026GG.c",line 93,column 5,is_stmt,isa 0
-        MOVB      AL,#167               ; [CPU_ALU] |93| 
+        MOVB      AL,#116               ; [CPU_ALU] |93| 
 $C$DW$65	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$65, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$65, DW_AT_name("_I2C_Write_Byte")
@@ -735,7 +735,7 @@ $C$DW$70	.dwtag  DW_TAG_TI_branch
         LCR       #_I2C_Write_Byte      ; [CPU_ALU] |100| 
         ; call occurs [#_I2C_Write_Byte] ; [] |100| 
 	.dwpsn	file "../Biom_AS7026GG.c",line 101,column 5,is_stmt,isa 0
-        MOVB      AL,#50                ; [CPU_ALU] |101| 
+        MOVB      AL,#1                 ; [CPU_ALU] |101| 
 $C$DW$71	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$71, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$71, DW_AT_name("_I2C_Write_Byte")
@@ -764,7 +764,7 @@ $C$DW$73	.dwtag  DW_TAG_TI_branch
         LCR       #_I2C_Write_Byte      ; [CPU_ALU] |104| 
         ; call occurs [#_I2C_Write_Byte] ; [] |104| 
 	.dwpsn	file "../Biom_AS7026GG.c",line 105,column 5,is_stmt,isa 0
-        MOVB      AL,#58                ; [CPU_ALU] |105| 
+        MOVB      AL,#9                 ; [CPU_ALU] |105| 
 $C$DW$74	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$74, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$74, DW_AT_name("_I2C_Write_Byte")
@@ -793,7 +793,7 @@ $C$DW$76	.dwtag  DW_TAG_TI_branch
         LCR       #_I2C_Write_Byte      ; [CPU_ALU] |108| 
         ; call occurs [#_I2C_Write_Byte] ; [] |108| 
 	.dwpsn	file "../Biom_AS7026GG.c",line 109,column 5,is_stmt,isa 0
-        MOVB      AL,#159               ; [CPU_ALU] |109| 
+        MOVB      AL,#109               ; [CPU_ALU] |109| 
 $C$DW$77	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$77, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$77, DW_AT_name("_I2C_Write_Byte")
@@ -822,7 +822,7 @@ $C$DW$79	.dwtag  DW_TAG_TI_branch
         LCR       #_I2C_Write_Byte      ; [CPU_ALU] |112| 
         ; call occurs [#_I2C_Write_Byte] ; [] |112| 
 	.dwpsn	file "../Biom_AS7026GG.c",line 113,column 5,is_stmt,isa 0
-        MOVB      AL,#167               ; [CPU_ALU] |113| 
+        MOVB      AL,#116               ; [CPU_ALU] |113| 
 $C$DW$80	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$80, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$80, DW_AT_name("_I2C_Write_Byte")
@@ -851,7 +851,7 @@ $C$DW$82	.dwtag  DW_TAG_TI_branch
         LCR       #_I2C_Write_Byte      ; [CPU_ALU] |116| 
         ; call occurs [#_I2C_Write_Byte] ; [] |116| 
 	.dwpsn	file "../Biom_AS7026GG.c",line 117,column 5,is_stmt,isa 0
-        MOVB      AL,#159               ; [CPU_ALU] |117| 
+        MOVB      AL,#109               ; [CPU_ALU] |117| 
 $C$DW$83	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$83, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$83, DW_AT_name("_I2C_Write_Byte")
@@ -1569,7 +1569,7 @@ $C$DW$145	.dwtag  DW_TAG_TI_branch
         LCR       #_I2C_Write_Byte      ; [CPU_ALU] |228| 
         ; call occurs [#_I2C_Write_Byte] ; [] |228| 
 	.dwpsn	file "../Biom_AS7026GG.c",line 229,column 5,is_stmt,isa 0
-        MOVB      AL,#17                ; [CPU_ALU] |229| 
+        MOVB      AL,#1                 ; [CPU_ALU] |229| 
 $C$DW$146	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$146, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$146, DW_AT_name("_I2C_Write_Byte")
@@ -1598,7 +1598,7 @@ $C$DW$148	.dwtag  DW_TAG_TI_branch
         LCR       #_I2C_Write_Byte      ; [CPU_ALU] |232| 
         ; call occurs [#_I2C_Write_Byte] ; [] |232| 
 	.dwpsn	file "../Biom_AS7026GG.c",line 233,column 5,is_stmt,isa 0
-        MOVB      AL,#28                ; [CPU_ALU] |233| 
+        MOVB      AL,#29                ; [CPU_ALU] |233| 
 $C$DW$149	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$149, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$149, DW_AT_name("_I2C_Write_Byte")
@@ -2188,17 +2188,16 @@ $C$DW$201	.dwtag  DW_TAG_variable
         MOV       *-SP[3],AL            ; [CPU_ALU] |309| 
 	.dwpsn	file "../Biom_AS7026GG.c",line 311,column 5,is_stmt,isa 0
         CMPB      AL,#1                 ; [CPU_ALU] |311| 
-        B         $C$L2,EQ              ; [CPU_ALU] |311| 
+        B         $C$L3,NEQ             ; [CPU_ALU] |311| 
         ; branchcc occurs ; [] |311| 
-        MOVL      XAR4,#29442           ; [CPU_ARAU] |328| 
-        B         $C$L4,UNC             ; [CPU_ALU] |311| 
-        ; branch occurs ; [] |311| 
-$C$L2:    
+        CMP       *-SP[4],#256          ; [CPU_ALU] |311| 
+        B         $C$L3,HIS             ; [CPU_ALU] |311| 
+        ; branchcc occurs ; [] |311| 
 	.dwpsn	file "../Biom_AS7026GG.c",line 312,column 9,is_stmt,isa 0
         MOVL      XAR4,#29442           ; [CPU_ARAU] |312| 
-$C$L3:    
+$C$L2:    
         TBIT      *+XAR4[0],#12         ; [CPU_ALU] |312| 
-        B         $C$L3,TC              ; [CPU_ALU] |312| 
+        B         $C$L2,TC              ; [CPU_ALU] |312| 
         ; branchcc occurs ; [] |312| 
 	.dwpsn	file "../Biom_AS7026GG.c",line 314,column 9,is_stmt,isa 0
         MOVB      AL,#50                ; [CPU_ALU] |314| 
@@ -2298,6 +2297,14 @@ $C$DW$211	.dwtag  DW_TAG_TI_branch
 	.dwpsn	file "../Biom_AS7026GG.c",line 326,column 5,is_stmt,isa 0
         B         $C$L5,UNC             ; [CPU_ALU] |326| 
         ; branch occurs ; [] |326| 
+$C$L3:    
+	.dwpsn	file "../Biom_AS7026GG.c",line 327,column 10,is_stmt,isa 0
+        MOV       AL,*-SP[4]            ; [CPU_ALU] |327| 
+        CMPB      AL,#39                ; [CPU_ALU] |327| 
+        B         $C$L5,HIS             ; [CPU_ALU] |327| 
+        ; branchcc occurs ; [] |327| 
+	.dwpsn	file "../Biom_AS7026GG.c",line 328,column 9,is_stmt,isa 0
+        MOVL      XAR4,#29442           ; [CPU_ARAU] |328| 
 $C$L4:    
         TBIT      *+XAR4[0],#12         ; [CPU_ALU] |328| 
         B         $C$L4,TC              ; [CPU_ALU] |328| 

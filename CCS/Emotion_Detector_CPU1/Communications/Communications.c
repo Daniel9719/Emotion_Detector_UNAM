@@ -107,7 +107,7 @@ __interrupt void Inter_I2CA (void){
                 j=j<2047? j+1:0;
                 k=0;
             }
-            i=i<2? i+1:0;
+            i=i<2? i+1:0;               //ESTA BIEN?
         }
     }
 //--------------CALIBRATION---------------//
@@ -139,7 +139,7 @@ __interrupt void Inter_I2CA (void){
                     Clb_Mode=0;                     //End of calibration
                 }
                 else{
-                    if(Current<17){    //Max 50 [mA] & Min 7.5 [mA]
+                    if(Current<39){    //Max 100 [mA] & Min 2.5 [mA]
                         if(Clb_Ampl<1200){
                             Current++;
                         }

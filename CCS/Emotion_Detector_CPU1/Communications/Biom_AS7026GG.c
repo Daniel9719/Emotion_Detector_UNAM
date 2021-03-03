@@ -13,8 +13,8 @@
 void Config_LEDs(int ADD){
     //--------------------------Current Config LED 1 (Green)-----------------------//
     I2C_Write_Byte(AS7026GG_LED1_CURRL);
-    I2C_Write_Byte(0x40);                       //Current in LED4 set to 7.5 mA (69=0x45)
-    I2C_Write_Byte(0x19);                       //Write to AS7026GG_LED1_CURR
+    I2C_Write_Byte(0x80);                       //Current in LED4 set to 2.5 mA (18=0x12)
+    I2C_Write_Byte(0x04);                       //Write to AS7026GG_LED1_CURR
     I2C_StartWR(ADD, 3, WRITE);
     //------Current Config LED 4 (IR)-------//
     I2C_Write_Byte(AS7026GG_LED4_CURRL);
@@ -55,7 +55,7 @@ void Config_PD(int ADD){
     I2C_StartWR(ADD, 2, WRITE);
     //------Current Offset ON-------//
     I2C_Write_Byte(AS7026GG_PDOFFX_LEDON);
-    I2C_Write_Byte(10);                         //Set to 10 due to initial testing
+    I2C_Write_Byte(7);                         //Set to 7 due to initial testing
     I2C_StartWR(ADD, 2, WRITE);
 }
 
@@ -89,11 +89,11 @@ void Config_SEQ(int ADD){
     I2C_StartWR(ADD, 2, WRITE);
     //------Start time of first LED-------//
     I2C_Write_Byte(AS7026GG_SEQ_LED_STA);
-    I2C_Write_Byte(158);                        //SEQ_LED_START=158
+    I2C_Write_Byte(108);                        //SEQ_LED_START=108
     I2C_StartWR(ADD, 2, WRITE);
     //------Stop time of first LED-------//
     I2C_Write_Byte(AS7026GG_SEQ_LED_STO);
-    I2C_Write_Byte(167);                        //SEQ_LED_STOP=167
+    I2C_Write_Byte(117);                        //SEQ_LED_STOP=117
     I2C_StartWR(ADD, 2, WRITE);
     //------Integrator start time-------//
     I2C_Write_Byte(AS7026GG_SEQ_ITG_STA);
@@ -101,23 +101,23 @@ void Config_SEQ(int ADD){
     I2C_StartWR(ADD, 2, WRITE);
     //------Start time of positive synchronous demodulator-------//
     I2C_Write_Byte(AS7026GG_SEQ_SDP1_STA);
-    I2C_Write_Byte(50);                        //SEQ_SDP1_START=50
+    I2C_Write_Byte(1);                        //SEQ_SDP1_START=1
     I2C_StartWR(ADD, 2, WRITE);
     //------Stop time of positive synchronous demodulator-------//
     I2C_Write_Byte(AS7026GG_SEQ_SDP1_STO);
-    I2C_Write_Byte(58);                        //SEQ_SDP1_STOP=58
+    I2C_Write_Byte(9);                        //SEQ_SDP1_STOP=9
     I2C_StartWR(ADD, 2, WRITE);
     //------Start time of negative synchronous demodulator-------//
     I2C_Write_Byte(AS7026GG_SEQ_SDM1_STA);
-    I2C_Write_Byte(159);                          //SEQ_SDM1_START=159
+    I2C_Write_Byte(109);                          //SEQ_SDM1_START=109
     I2C_StartWR(ADD, 2, WRITE);
-    //------Stop time of negative synchronous demodulatoro-------//
+    //------Stop time of negative synchronous demodulator-------//
     I2C_Write_Byte(AS7026GG_SEQ_SDM1_STO);
-    I2C_Write_Byte(167);                         //SEQ_SDM1_STOP=167
+    I2C_Write_Byte(117);                         //SEQ_SDM1_STOP=117
     I2C_StartWR(ADD, 2, WRITE);
     //------ADC Start time-------//
     I2C_Write_Byte(AS7026GG_SEQ_ADC);
-    I2C_Write_Byte(159);                        //SEQ_SDM1_STOP=159
+    I2C_Write_Byte(109);                        //SEQ_SDM1_STOP=109
     I2C_StartWR(ADD, 2, WRITE);
 //    //------Sequencer Start-------//
 //    I2C_Write_Byte(AS7026GG_SEQ_START);
@@ -148,7 +148,6 @@ void Config_OFE(int ADD){
     //------Config D of OFE-------//
     I2C_Write_Byte(AS7026GG_OFE_CFGD);
     I2C_Write_Byte(0x3);                        //OFE_GS_AA (3):826 Hz antialiasing filter HP
-//    I2C_Write_Byte(0x1);                      //OFE_GS_AA (1):100 kHz antialiasing filter HP
     I2C_StartWR(ADD, 2, WRITE);
     //------Config A of OFE 1-------//
     I2C_Write_Byte(AS7026GG_OFE1_CFGA);
@@ -178,27 +177,27 @@ void Config_LTF(int ADD){
 //-----Electrical Analog Frontend (EAF)-----
 //******************************************
 void Config_EAF(int ADD){
-    //------Config del edo Ganancia-------//
+    //------Gain Config-------//
     I2C_Write_Byte(AS7026GG_EAF_GST);
     I2C_Write_Byte(0x20);                       //GPIO_GST_IN: (1) GPIO0
                                                 //GST_REF: (0) AGND
-                                                //GST_GAIN (0) x1   **REVISAR
+                                                //GST_GAIN (0) x1
     I2C_StartWR(ADD, 2, WRITE);
-    //------Config DAC-------//
+    //------DAC Config-------//
     I2C_Write_Byte(AS7026GG_EAF_DAC);
     I2C_Write_Byte(0x2);                        //GPIO_DAC (2) DAC al GPIO1
     I2C_StartWR(ADD, 2, WRITE);
-    //------DAC 1 Valor-------//
+    //------DAC 1st Value-------//
     I2C_Write_Byte(AS7026GG_EAF_DAC1_L);
     I2C_Write_Byte(0xC0);                       //DAC1_VALUE 0x3FF (1.9[V])
     I2C_Write_Byte(0xFF);
     I2C_StartWR(ADD, 3, WRITE);
-    //------Config del EAF-------//
+    //------EAF Config-------//
     I2C_Write_Byte(AS7026GG_EAF_CFG);
-    I2C_Write_Byte(0xF);                        //AFE_ENAB: Hab EAF bias
-                                                //AFE_ENAB_DAC: Hab DAC
-                                                //AFE_ENAB_DAC_BUF: Hab DAC Buffer
-                                                //AFE_ENAB_GAINSTAGE: Hab Gain Stage
+    I2C_Write_Byte(0xF);                        //AFE_ENAB: Enable EAF bias
+                                                //AFE_ENAB_DAC: Enable DAC
+                                                //AFE_ENAB_DAC_BUF: Enable DAC Buffer
+                                                //AFE_ENAB_GAINSTAGE: Enable Gain Stage
     I2C_StartWR(ADD, 2, WRITE);
 }
 
@@ -226,17 +225,17 @@ void Config_ECG(int ADD){
 //------Analog-Digital Converter (ADC)------
 //******************************************
 void Config_ADC(int ADD){
-    //------Config ADC B-------//
+    //------ADC B Config-------//
     I2C_Write_Byte(AS7026GG_ADC_CFGB);
-    I2C_Write_Byte(0x11);                       //ADC_EN y ADC_CLOCK (2)=333[kHz]=3[us]
+    I2C_Write_Byte(0x01);                       //ADC_EN y ADC_CLOCK (0)=1[MHz]=1[us]
     I2C_StartWR(ADD, 2, WRITE);
-    //------Config ADC C-------//
+    //------ADC C Config-------//
     I2C_Write_Byte(AS7026GG_ADC_CFGC);
-    I2C_Write_Byte(0x1C);                       //ADC_SELFPD Se apaga cada que no convierte el ADC
-                                                //ADC_DISCHARGE Descarga Cap antes de tracking
-                                                //ADC_SETTLING_TIME (4)= 32 Periodos = 3us*32 = 96us
+    I2C_Write_Byte(0x1D);                       //ADC_SELFPD power down the ADC when not converting
+                                                //ADC_DISCHARGE Discharge ADC capacitor before tracking
+                                                //ADC_SETTLING_TIME (5)= 64 Periods = 1us*64 = 64us
     I2C_StartWR(ADD, 2, WRITE);
-    //------Canales al ADC-------//
+    //------ ADC Channels-------//
     I2C_Write_Byte(AS7026GG_ADC_CHANNEL_MASK_L);
     I2C_Write_Byte(0x82);                       // OFE1 After Gain & Pregain
     I2C_StartWR(ADD, 2, WRITE);
@@ -246,13 +245,13 @@ void Config_ADC(int ADD){
 //------------------FIFO--------------------
 //******************************************
 void Config_FIFO(int ADD){
-    //------Configuración de FIFO-------//
+    //------FIFO Config-------//
     I2C_Write_Byte(AS7026GG_FIFO_CFG);
-    I2C_Write_Byte(0);                          //Define la profundidad para interrupción de la FIFO a +1 datos 16b
+    I2C_Write_Byte(0);                          //Set depth for interrupt rise on FIFO to +1 data 16b
     I2C_StartWR(ADD, 2, WRITE);
-    //------Controlador del FIFO-------//
+    //------FIFO Controller-------//
     I2C_Write_Byte(AS7026GG_FIFO_CNTRL);
-    I2C_Write_Byte(0x1);                        //Limpia FIFO del sensor
+    I2C_Write_Byte(0x1);                        //Clean FIFO from sensor
     I2C_StartWR(ADD, 2, WRITE);
 }
 
@@ -260,21 +259,21 @@ void Config_FIFO(int ADD){
 //------------Digital Interface-------------
 //******************************************
 void Config_GPIOs(int ADD){
-    //------Config de Controlador-------//
+    //------Controller Config-------//
     I2C_Write_Byte(AS7026GG_CONTROL);
     I2C_Write_Byte(0x3);                        //OSC_EN y LDO_EN
     I2C_StartWR(ADD, 2, WRITE);
-    //------Config GPIOs-------//
+    //------GPIOs Config-------//
     I2C_Write_Byte(AS7026GG_GPIO_A);
-    I2C_Write_Byte(0x3);                        //GPIO0_A, GPIO1_A Hab modo analógico para GPIO0, GPIO1
+    I2C_Write_Byte(0x3);                        //GPIO0_A, GPIO1_A Set on analog mode GPIO0, GPIO1
     I2C_StartWR(ADD, 2, WRITE);
-    //------Desactiva interrupción -------//
+    //------Disable interrupt -------//
     I2C_Write_Byte(AS7026GG_STATUS);
-    I2C_Write_Byte(0x10);                       //(4) Desactiva interrupción por umbral FIFO
+    I2C_Write_Byte(0x10);                       //(4) Disable FIFO threshold interrupt
     I2C_StartWR(ADD, 2, WRITE);
-    //------Config de Controlador-------//
+    //------Interrupt Config-------//
     I2C_Write_Byte(AS7026GG_INTENAB);
-    I2C_Write_Byte(0x10);                       //(4) Interrupción por umbral FIFO
+    I2C_Write_Byte(0x10);                       //(4) Enable FIFO threshold interrupt
     I2C_StartWR(ADD, 2, WRITE);
 }
 
@@ -344,7 +343,7 @@ void AS7026GG_ADC_Channel(uint16_t Channel){
 //--------------------------------------------------------------------
 void Biom_Calibration(uint16_t Mode, uint16_t Offset_Curr){
     uint32_t Curr;
-    if(Mode==1){
+    if(Mode==1 && Offset_Curr<256){
         while(I2CA_STR_R&0x1000){};             //Mientras el controlador esté ocupado BB
         //------Apagado del Secuenciador-------//
         I2C_Write_Byte(AS7026GG_SEQ_START);
@@ -360,7 +359,7 @@ void Biom_Calibration(uint16_t Mode, uint16_t Offset_Curr){
         I2C_StartWR(AS7026GG_ADD, 2, WRITE);
         I2C_Stop();
     }
-    else{
+    else if(Offset_Curr<39){
         while(I2CA_STR_R&0x1000){};             //Mientras el controlador esté ocupado BB
         //------Apagado del Secuenciador-------//
         I2C_Write_Byte(AS7026GG_SEQ_START);
@@ -373,7 +372,7 @@ void Biom_Calibration(uint16_t Mode, uint16_t Offset_Curr){
         I2C_StartWR(AS7026GG_ADD, 2, WRITE);
         //------Config Corriente LED 1 (Verde)-------//
         I2C_Write_Byte(AS7026GG_LED1_CURRL);
-        Curr=69+26*Offset_Curr;                 //7.5 [mA] + 2.5 [mA]*Offset
+        Curr=18+26*Offset_Curr;                 //2.5 [mA] + 2.5 [mA]*Offset
         I2C_Write_Byte((Curr<<6)&0xFF);         //Corriente al LED1
         I2C_Write_Byte((Curr>>2)&0xFF);         //Escritura a AS7026GG_LED1_CURRH
         I2C_StartWR(AS7026GG_ADD, 3, WRITE);

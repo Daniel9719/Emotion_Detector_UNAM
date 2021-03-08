@@ -64,14 +64,14 @@ void Write_Emotion(void){
 //  0x01: NN50          0x09: PRV_HF        0x11: ctl50
 //  0x02: RRmed         0x0A: SD1           0x12: ctl75
 //  0x03: SDNN          0x0B: SD2           0x13: ctl90
-//  0x04: RMSSD         0x0C: NumSCR        0x14: EDA_LF
-//  0x05: SD1/SD2       0x0D: AmpSCR        0x15: EDA_HF
+//  0x04: RMSSD         0x0C: NumSCR        0x14: EDA_HF
+//  0x05: SD1/SD2       0x0D: AmpSCR
 //  0x06: LF/HF         0x0E: mTL
 //  0x07: VLF           0x0F: sdAmpl
 //--------------------------------------------------------------------
 void Send_Feature(uint16_t Number){
     if(AutoTx){
-        if(Number<0x16){
+        if(Number<0x15){
             if(Modality==0){
                 VariablesMap(0x11,Number);      //Selecting the Vector to transmit in Variables Map
                 VariablesMap(0x92,0);           //Requesting a reading from Vector data in Variables Map

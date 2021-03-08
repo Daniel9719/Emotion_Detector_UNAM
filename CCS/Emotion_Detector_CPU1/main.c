@@ -65,7 +65,7 @@ Disconnect:
         IDLE;
     }
     while(Main_Running==true){
-        funcion2()
+        funcion2();
 //        Freq_Extraction(ptPRV_h,ptPRV_y,PRVSig);
 //        Freq_Extraction(0,ptEDA,EDASig);
         if(Modality==1){

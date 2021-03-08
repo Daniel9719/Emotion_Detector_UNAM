@@ -8,8 +8,10 @@
 #include <Freq_Extraction/Cubic_Spline.h>
 
 extern float absf(float);
-volatile uint16_t CS_UpN=0, CS_LowN=0, CS_OVLP=0;
-volatile float CS_LowAcum=0, CS_UpAcum=0, CS_UpLim=256.0, CS_LowLim=64.0;
+volatile uint16_t CS_UpN=0, CS_LowN=0, CS_SHIFT=0;
+volatile float CS_LowAcum=0, CS_UpAcum=0;
+#define CS_UpLim 256.0
+#define CS_LowLim 64.0
 
 //float h[N-1];
 float Gauss[N-2];
@@ -26,8 +28,7 @@ float CubSpl[lenCS];
 float* Cubic_Spline(float* h, float* Y){
     float w;
     int16_t i,j;
-    float WD=256.0;      //64[s] o 16[s]
-    float tq=0.125;
+    float tq=0.125;      //Interpolation to signal of 8 Hz
     float Thrs, Aux, A, B, C, D;
 
     //Matrix construction based on Cubic Spline coefficient parameters (eq. 3.17 Gerald, Wheatley)
@@ -45,8 +46,9 @@ float* Cubic_Spline(float* h, float* Y){
     }
 
     //Conditions for interpolation process
-    CS_UpAcum-=WD;
+    CS_UpAcum-=CS_UpLim;
     Thrs=h[CS_UpN-2]-CS_UpAcum;
+    CS_UpAcum+=192;
     j=lenCS-1;
 
     //2nd step of Gauss elimination method to obtain A,B,C & D parameters
@@ -57,7 +59,7 @@ float* Cubic_Spline(float* h, float* Y){
         else if(i>0){
             Aux=(d[i-1]-h[i]*S[i+1])/Gauss[i-1];
             //Stop condition in case of convergence of new S results from previous S results
-            if(absf(absf(Aux)-absf(S[i-CS_OVLP]))<0.001){ break; }
+            if(absf(absf(Aux)-absf(S[i-CS_SHIFT]))<(0.01*absf(S[i-CS_SHIFT])){ break; }
             S[i]=Aux;
         }
         A=(S[i+1]-S[i])/(6*h[i]);
@@ -76,20 +78,18 @@ float* Cubic_Spline(float* h, float* Y){
         Thrs=h[i-1]+Thrs;
     }
 
-    //Estimation of global parameters for the Overlapping (CS_OVLP) process
+    //Estimation of global parameters for the Overlapping (CS_SHIFT) process
     i=CS_LowAcum==0?0:1;
     while(CS_LowAcum<CS_LowLim){
         CS_LowAcum+=h[i];
         i++;
     }
-    CS_OVLP=i-1;
+    CS_SHIFT=i-1;
     CS_LowAcum-=CS_LowLim;
 
-    CS_UpN-=CS_OVLP;
-    DMA_Channels_Config(CS_OVLP, CS_UpN);
+    CS_UpN-=CS_SHIFT;
+    DMA_Channels_Config(CS_SHIFT, CS_UpN);
     CS_LowN=CS_UpN;
-
-    CS_UpLim=64.0;              //Quizas poner en otro lado
 
     return &CubSpl[0];
 }

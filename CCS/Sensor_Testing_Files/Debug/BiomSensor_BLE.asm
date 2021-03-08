@@ -1,6 +1,6 @@
 ;***************************************************************
 ;* TMS320C2000 G3 C/C++ Codegen                             PC v18.12.4.LTS *
-;* Date/Time created: Tue Mar  2 12:24:49 2021                 *
+;* Date/Time created: Sun Mar  7 15:03:38 2021                 *
 ;***************************************************************
 	.compiler_opts --abi=coffabi --cla_support=cla1 --diag_wrap=off --float_support=fpu32 --hll_source=on --mem_model:code=flat --mem_model:data=large --object_format=coff --silicon_errata_fpu1_workaround=off --silicon_version=28 --symdebug:dwarf --symdebug:dwarf_version=3 --tmu_support=tmu0 
 	.asg	XAR2, FP
@@ -129,207 +129,207 @@ $C$DW$CU	.dwtag  DW_TAG_compile_unit
 	.align	1
 	.field  	-$C$IR_1,16
 	.field  	_coef_FIR_EDA+0,32
-	.bits		0x3,16
+	.bits		0xfffd,16
 			; _coef_FIR_EDA[0] @ 0
 	.bits		0,16
 			; _coef_FIR_EDA[1] @ 16
-	.bits		0xfffc,16
+	.bits		0x3,16
 			; _coef_FIR_EDA[2] @ 32
-	.bits		0xfff9,16
+	.bits		0x6,16
 			; _coef_FIR_EDA[3] @ 48
-	.bits		0xfff7,16
-			; _coef_FIR_EDA[4] @ 64
-	.bits		0xfff7,16
-			; _coef_FIR_EDA[5] @ 80
-	.bits		0xfff7,16
-			; _coef_FIR_EDA[6] @ 96
-	.bits		0xfffa,16
-			; _coef_FIR_EDA[7] @ 112
-	.bits		0xfffe,16
-			; _coef_FIR_EDA[8] @ 128
-	.bits		0x2,16
-			; _coef_FIR_EDA[9] @ 144
-	.bits		0x7,16
-			; _coef_FIR_EDA[10] @ 160
-	.bits		0xb,16
-			; _coef_FIR_EDA[11] @ 176
-	.bits		0xd,16
-			; _coef_FIR_EDA[12] @ 192
-	.bits		0xe,16
-			; _coef_FIR_EDA[13] @ 208
-	.bits		0xc,16
-			; _coef_FIR_EDA[14] @ 224
 	.bits		0x8,16
-			; _coef_FIR_EDA[15] @ 240
-	.bits		0x1,16
-			; _coef_FIR_EDA[16] @ 256
-	.bits		0xfffa,16
-			; _coef_FIR_EDA[17] @ 272
-	.bits		0xfff3,16
-			; _coef_FIR_EDA[18] @ 288
+			; _coef_FIR_EDA[4] @ 64
+	.bits		0x8,16
+			; _coef_FIR_EDA[5] @ 80
+	.bits		0x7,16
+			; _coef_FIR_EDA[6] @ 96
+	.bits		0x4,16
+			; _coef_FIR_EDA[7] @ 112
+	.bits		0,16
+			; _coef_FIR_EDA[8] @ 128
+	.bits		0xfffb,16
+			; _coef_FIR_EDA[9] @ 144
+	.bits		0xfff6,16
+			; _coef_FIR_EDA[10] @ 160
+	.bits		0xfff1,16
+			; _coef_FIR_EDA[11] @ 176
+	.bits		0xffee,16
+			; _coef_FIR_EDA[12] @ 192
 	.bits		0xffed,16
+			; _coef_FIR_EDA[13] @ 208
+	.bits		0xffee,16
+			; _coef_FIR_EDA[14] @ 224
+	.bits		0xfff1,16
+			; _coef_FIR_EDA[15] @ 240
+	.bits		0xfff6,16
+			; _coef_FIR_EDA[16] @ 256
+	.bits		0xfffd,16
+			; _coef_FIR_EDA[17] @ 272
+	.bits		0x3,16
+			; _coef_FIR_EDA[18] @ 288
+	.bits		0x7,16
 			; _coef_FIR_EDA[19] @ 304
-	.bits		0xffea,16
+	.bits		0x9,16
 			; _coef_FIR_EDA[20] @ 320
-	.bits		0xffeb,16
+	.bits		0x7,16
 			; _coef_FIR_EDA[21] @ 336
-	.bits		0xffef,16
+	.bits		0x1,16
 			; _coef_FIR_EDA[22] @ 352
 	.bits		0xfff7,16
 			; _coef_FIR_EDA[23] @ 368
-	.bits		0x2,16
+	.bits		0xffeb,16
 			; _coef_FIR_EDA[24] @ 384
-	.bits		0xe,16
+	.bits		0xffdd,16
 			; _coef_FIR_EDA[25] @ 400
-	.bits		0x19,16
+	.bits		0xffd0,16
 			; _coef_FIR_EDA[26] @ 416
-	.bits		0x21,16
-			; _coef_FIR_EDA[27] @ 432
-	.bits		0x23,16
-			; _coef_FIR_EDA[28] @ 448
-	.bits		0x20,16
-			; _coef_FIR_EDA[29] @ 464
-	.bits		0x16,16
-			; _coef_FIR_EDA[30] @ 480
-	.bits		0x7,16
-			; _coef_FIR_EDA[31] @ 496
-	.bits		0xfff5,16
-			; _coef_FIR_EDA[32] @ 512
-	.bits		0xffe3,16
-			; _coef_FIR_EDA[33] @ 528
-	.bits		0xffd4,16
-			; _coef_FIR_EDA[34] @ 544
-	.bits		0xffcb,16
-			; _coef_FIR_EDA[35] @ 560
-	.bits		0xffcb,16
-			; _coef_FIR_EDA[36] @ 576
-	.bits		0xffd4,16
-			; _coef_FIR_EDA[37] @ 592
-	.bits		0xffe6,16
-			; _coef_FIR_EDA[38] @ 608
-	.bits		0xffff,16
-			; _coef_FIR_EDA[39] @ 624
-	.bits		0x1a,16
-			; _coef_FIR_EDA[40] @ 640
-	.bits		0x34,16
-			; _coef_FIR_EDA[41] @ 656
-	.bits		0x48,16
-			; _coef_FIR_EDA[42] @ 672
-	.bits		0x50,16
-			; _coef_FIR_EDA[43] @ 688
-	.bits		0x4b,16
-			; _coef_FIR_EDA[44] @ 704
-	.bits		0x38,16
-			; _coef_FIR_EDA[45] @ 720
-	.bits		0x19,16
-			; _coef_FIR_EDA[46] @ 736
-	.bits		0xfff3,16
-			; _coef_FIR_EDA[47] @ 752
-	.bits		0xffca,16
-			; _coef_FIR_EDA[48] @ 768
-	.bits		0xffa8,16
-			; _coef_FIR_EDA[49] @ 784
-	.bits		0xff92,16
-			; _coef_FIR_EDA[50] @ 800
-	.bits		0xff8d,16
-			; _coef_FIR_EDA[51] @ 816
-	.bits		0xff9c,16
-			; _coef_FIR_EDA[52] @ 832
-	.bits		0xffbf,16
-			; _coef_FIR_EDA[53] @ 848
-	.bits		0xfff0,16
-			; _coef_FIR_EDA[54] @ 864
-	.bits		0x29,16
-			; _coef_FIR_EDA[55] @ 880
-	.bits		0x60,16
-			; _coef_FIR_EDA[56] @ 896
-	.bits		0x8c,16
-			; _coef_FIR_EDA[57] @ 912
-	.bits		0xa2,16
-			; _coef_FIR_EDA[58] @ 928
-	.bits		0x9e,16
-			; _coef_FIR_EDA[59] @ 944
-	.bits		0x7e,16
-			; _coef_FIR_EDA[60] @ 960
-	.bits		0x44,16
-			; _coef_FIR_EDA[61] @ 976
-	.bits		0xfff8,16
-			; _coef_FIR_EDA[62] @ 992
-	.bits		0xffa7,16
-			; _coef_FIR_EDA[63] @ 1008
-	.bits		0xff5e,16
-			; _coef_FIR_EDA[64] @ 1024
-	.bits		0xff2a,16
-			; _coef_FIR_EDA[65] @ 1040
-	.bits		0xff18,16
-			; _coef_FIR_EDA[66] @ 1056
-	.bits		0xff2d,16
-			; _coef_FIR_EDA[67] @ 1072
-	.bits		0xff69,16
-			; _coef_FIR_EDA[68] @ 1088
 	.bits		0xffc6,16
+			; _coef_FIR_EDA[27] @ 432
+	.bits		0xffc1,16
+			; _coef_FIR_EDA[28] @ 448
+	.bits		0xffc2,16
+			; _coef_FIR_EDA[29] @ 464
+	.bits		0xffc9,16
+			; _coef_FIR_EDA[30] @ 480
+	.bits		0xffd5,16
+			; _coef_FIR_EDA[31] @ 496
+	.bits		0xffe4,16
+			; _coef_FIR_EDA[32] @ 512
+	.bits		0xfff4,16
+			; _coef_FIR_EDA[33] @ 528
+	.bits		0,16
+			; _coef_FIR_EDA[34] @ 544
+	.bits		0x6,16
+			; _coef_FIR_EDA[35] @ 560
+	.bits		0x3,16
+			; _coef_FIR_EDA[36] @ 576
+	.bits		0xfff6,16
+			; _coef_FIR_EDA[37] @ 592
+	.bits		0xffe0,16
+			; _coef_FIR_EDA[38] @ 608
+	.bits		0xffc3,16
+			; _coef_FIR_EDA[39] @ 624
+	.bits		0xffa4,16
+			; _coef_FIR_EDA[40] @ 640
+	.bits		0xff85,16
+			; _coef_FIR_EDA[41] @ 656
+	.bits		0xff6e,16
+			; _coef_FIR_EDA[42] @ 672
+	.bits		0xff61,16
+			; _coef_FIR_EDA[43] @ 688
+	.bits		0xff61,16
+			; _coef_FIR_EDA[44] @ 704
+	.bits		0xff70,16
+			; _coef_FIR_EDA[45] @ 720
+	.bits		0xff8a,16
+			; _coef_FIR_EDA[46] @ 736
+	.bits		0xffac,16
+			; _coef_FIR_EDA[47] @ 752
+	.bits		0xffcf,16
+			; _coef_FIR_EDA[48] @ 768
+	.bits		0xffed,16
+			; _coef_FIR_EDA[49] @ 784
+	.bits		0xfffe,16
+			; _coef_FIR_EDA[50] @ 800
+	.bits		0xfffd,16
+			; _coef_FIR_EDA[51] @ 816
+	.bits		0xffe9,16
+			; _coef_FIR_EDA[52] @ 832
+	.bits		0xffc0,16
+			; _coef_FIR_EDA[53] @ 848
+	.bits		0xff89,16
+			; _coef_FIR_EDA[54] @ 864
+	.bits		0xff4a,16
+			; _coef_FIR_EDA[55] @ 880
+	.bits		0xff0d,16
+			; _coef_FIR_EDA[56] @ 896
+	.bits		0xfedc,16
+			; _coef_FIR_EDA[57] @ 912
+	.bits		0xfec0,16
+			; _coef_FIR_EDA[58] @ 928
+	.bits		0xfebe,16
+			; _coef_FIR_EDA[59] @ 944
+	.bits		0xfed9,16
+			; _coef_FIR_EDA[60] @ 960
+	.bits		0xff0d,16
+			; _coef_FIR_EDA[61] @ 976
+	.bits		0xff52,16
+			; _coef_FIR_EDA[62] @ 992
+	.bits		0xff9e,16
+			; _coef_FIR_EDA[63] @ 1008
+	.bits		0xffe1,16
+			; _coef_FIR_EDA[64] @ 1024
+	.bits		0xf,16
+			; _coef_FIR_EDA[65] @ 1040
+	.bits		0x1b,16
+			; _coef_FIR_EDA[66] @ 1056
+	.bits		0,16
+			; _coef_FIR_EDA[67] @ 1072
+	.bits		0xffbe,16
+			; _coef_FIR_EDA[68] @ 1088
+	.bits		0xff5b,16
 			; _coef_FIR_EDA[69] @ 1104
-	.bits		0x37,16
+	.bits		0xfee5,16
 			; _coef_FIR_EDA[70] @ 1120
-	.bits		0xa9,16
+	.bits		0xfe6d,16
 			; _coef_FIR_EDA[71] @ 1136
-	.bits		0x109,16
-			; _coef_FIR_EDA[72] @ 1152
-	.bits		0x143,16
-			; _coef_FIR_EDA[73] @ 1168
-	.bits		0x14a,16
-			; _coef_FIR_EDA[74] @ 1184
-	.bits		0x117,16
-			; _coef_FIR_EDA[75] @ 1200
-	.bits		0xad,16
-			; _coef_FIR_EDA[76] @ 1216
-	.bits		0x18,16
-			; _coef_FIR_EDA[77] @ 1232
-	.bits		0xff6d,16
-			; _coef_FIR_EDA[78] @ 1248
-	.bits		0xfec9,16
-			; _coef_FIR_EDA[79] @ 1264
-	.bits		0xfe49,16
-			; _coef_FIR_EDA[80] @ 1280
 	.bits		0xfe07,16
+			; _coef_FIR_EDA[72] @ 1152
+	.bits		0xfdc7,16
+			; _coef_FIR_EDA[73] @ 1168
+	.bits		0xfdbb,16
+			; _coef_FIR_EDA[74] @ 1184
+	.bits		0xfde9,16
+			; _coef_FIR_EDA[75] @ 1200
+	.bits		0xfe4e,16
+			; _coef_FIR_EDA[76] @ 1216
+	.bits		0xfede,16
+			; _coef_FIR_EDA[77] @ 1232
+	.bits		0xff84,16
+			; _coef_FIR_EDA[78] @ 1248
+	.bits		0x24,16
+			; _coef_FIR_EDA[79] @ 1264
+	.bits		0xa0,16
+			; _coef_FIR_EDA[80] @ 1280
+	.bits		0xde,16
 			; _coef_FIR_EDA[81] @ 1296
-	.bits		0xfe18,16
-			; _coef_FIR_EDA[82] @ 1312
-	.bits		0xfe83,16
-			; _coef_FIR_EDA[83] @ 1328
-	.bits		0xff42,16
-			; _coef_FIR_EDA[84] @ 1344
-	.bits		0x41,16
-			; _coef_FIR_EDA[85] @ 1360
-	.bits		0x15c,16
-			; _coef_FIR_EDA[86] @ 1376
-	.bits		0x267,16
-			; _coef_FIR_EDA[87] @ 1392
-	.bits		0x332,16
-			; _coef_FIR_EDA[88] @ 1408
-	.bits		0x38c,16
-			; _coef_FIR_EDA[89] @ 1424
-	.bits		0x350,16
-			; _coef_FIR_EDA[90] @ 1440
-	.bits		0x265,16
-			; _coef_FIR_EDA[91] @ 1456
 	.bits		0xc9,16
+			; _coef_FIR_EDA[82] @ 1312
+	.bits		0x59,16
+			; _coef_FIR_EDA[83] @ 1328
+	.bits		0xff96,16
+			; _coef_FIR_EDA[84] @ 1344
+	.bits		0xfe93,16
+			; _coef_FIR_EDA[85] @ 1360
+	.bits		0xfd74,16
+			; _coef_FIR_EDA[86] @ 1376
+	.bits		0xfc64,16
+			; _coef_FIR_EDA[87] @ 1392
+	.bits		0xfb97,16
+			; _coef_FIR_EDA[88] @ 1408
+	.bits		0xfb3a,16
+			; _coef_FIR_EDA[89] @ 1424
+	.bits		0xfb73,16
+			; _coef_FIR_EDA[90] @ 1440
+	.bits		0xfc5c,16
+			; _coef_FIR_EDA[91] @ 1456
+	.bits		0xfdf7,16
 			; _coef_FIR_EDA[92] @ 1472
-	.bits		0xfe8c,16
+	.bits		0x33,16
 			; _coef_FIR_EDA[93] @ 1488
-	.bits		0xfbd5,16
+	.bits		0x2ea,16
 			; _coef_FIR_EDA[94] @ 1504
-	.bits		0xf8db,16
+	.bits		0x5e3,16
 			; _coef_FIR_EDA[95] @ 1520
-	.bits		0xf5e2,16
+	.bits		0x8dc,16
 			; _coef_FIR_EDA[96] @ 1536
-	.bits		0xf332,16
+	.bits		0xb8c,16
 			; _coef_FIR_EDA[97] @ 1552
-	.bits		0xf10e,16
+	.bits		0xdb0,16
 			; _coef_FIR_EDA[98] @ 1568
-	.bits		0xefae,16
+	.bits		0xf11,16
 			; _coef_FIR_EDA[99] @ 1584
-	.bits		0x6f2f,16
+	.bits		0xf8b,16
 			; _coef_FIR_EDA[100] @ 1600
 $C$IR_1:	.set	101
 
@@ -338,207 +338,207 @@ $C$IR_1:	.set	101
 	.align	1
 	.field  	-$C$IR_2,16
 	.field  	_coef_FIR_PPG+0,32
-	.bits		0xfff9,16
+	.bits		0x5,16
 			; _coef_FIR_PPG[0] @ 0
-	.bits		0xfff8,16
-			; _coef_FIR_PPG[1] @ 16
-	.bits		0xfff8,16
-			; _coef_FIR_PPG[2] @ 32
-	.bits		0xfff7,16
-			; _coef_FIR_PPG[3] @ 48
-	.bits		0xfff7,16
-			; _coef_FIR_PPG[4] @ 64
-	.bits		0xfff7,16
-			; _coef_FIR_PPG[5] @ 80
-	.bits		0xfff7,16
-			; _coef_FIR_PPG[6] @ 96
-	.bits		0xfff7,16
-			; _coef_FIR_PPG[7] @ 112
-	.bits		0xfff7,16
-			; _coef_FIR_PPG[8] @ 128
-	.bits		0xfff8,16
-			; _coef_FIR_PPG[9] @ 144
-	.bits		0xfff8,16
-			; _coef_FIR_PPG[10] @ 160
-	.bits		0xfffa,16
-			; _coef_FIR_PPG[11] @ 176
-	.bits		0xfffb,16
-			; _coef_FIR_PPG[12] @ 192
-	.bits		0xfffd,16
-			; _coef_FIR_PPG[13] @ 208
-	.bits		0xffff,16
-			; _coef_FIR_PPG[14] @ 224
-	.bits		0x1,16
-			; _coef_FIR_PPG[15] @ 240
-	.bits		0x3,16
-			; _coef_FIR_PPG[16] @ 256
 	.bits		0x6,16
-			; _coef_FIR_PPG[17] @ 272
-	.bits		0x9,16
-			; _coef_FIR_PPG[18] @ 288
-	.bits		0xc,16
-			; _coef_FIR_PPG[19] @ 304
-	.bits		0xf,16
-			; _coef_FIR_PPG[20] @ 320
-	.bits		0x13,16
-			; _coef_FIR_PPG[21] @ 336
-	.bits		0x16,16
-			; _coef_FIR_PPG[22] @ 352
-	.bits		0x19,16
-			; _coef_FIR_PPG[23] @ 368
-	.bits		0x1c,16
-			; _coef_FIR_PPG[24] @ 384
-	.bits		0x1e,16
-			; _coef_FIR_PPG[25] @ 400
-	.bits		0x20,16
-			; _coef_FIR_PPG[26] @ 416
-	.bits		0x21,16
-			; _coef_FIR_PPG[27] @ 432
-	.bits		0x21,16
-			; _coef_FIR_PPG[28] @ 448
-	.bits		0x21,16
-			; _coef_FIR_PPG[29] @ 464
-	.bits		0x1f,16
-			; _coef_FIR_PPG[30] @ 480
-	.bits		0x1d,16
-			; _coef_FIR_PPG[31] @ 496
-	.bits		0x19,16
-			; _coef_FIR_PPG[32] @ 512
-	.bits		0x14,16
-			; _coef_FIR_PPG[33] @ 528
-	.bits		0xf,16
-			; _coef_FIR_PPG[34] @ 544
-	.bits		0x8,16
-			; _coef_FIR_PPG[35] @ 560
+			; _coef_FIR_PPG[1] @ 16
+	.bits		0x6,16
+			; _coef_FIR_PPG[2] @ 32
+	.bits		0x6,16
+			; _coef_FIR_PPG[3] @ 48
+	.bits		0x6,16
+			; _coef_FIR_PPG[4] @ 64
+	.bits		0x6,16
+			; _coef_FIR_PPG[5] @ 80
+	.bits		0x6,16
+			; _coef_FIR_PPG[6] @ 96
+	.bits		0x5,16
+			; _coef_FIR_PPG[7] @ 112
+	.bits		0x4,16
+			; _coef_FIR_PPG[8] @ 128
+	.bits		0x3,16
+			; _coef_FIR_PPG[9] @ 144
+	.bits		0x2,16
+			; _coef_FIR_PPG[10] @ 160
 	.bits		0,16
-			; _coef_FIR_PPG[36] @ 576
-	.bits		0xfff7,16
-			; _coef_FIR_PPG[37] @ 592
+			; _coef_FIR_PPG[11] @ 176
+	.bits		0xfffe,16
+			; _coef_FIR_PPG[12] @ 192
+	.bits		0xfffc,16
+			; _coef_FIR_PPG[13] @ 208
+	.bits		0xfff9,16
+			; _coef_FIR_PPG[14] @ 224
+	.bits		0xfff6,16
+			; _coef_FIR_PPG[15] @ 240
+	.bits		0xfff2,16
+			; _coef_FIR_PPG[16] @ 256
 	.bits		0xffee,16
-			; _coef_FIR_PPG[38] @ 608
-	.bits		0xffe4,16
-			; _coef_FIR_PPG[39] @ 624
-	.bits		0xffda,16
-			; _coef_FIR_PPG[40] @ 640
-	.bits		0xffcf,16
-			; _coef_FIR_PPG[41] @ 656
-	.bits		0xffc5,16
-			; _coef_FIR_PPG[42] @ 672
-	.bits		0xffbb,16
-			; _coef_FIR_PPG[43] @ 688
-	.bits		0xffb2,16
-			; _coef_FIR_PPG[44] @ 704
-	.bits		0xffaa,16
-			; _coef_FIR_PPG[45] @ 720
-	.bits		0xffa3,16
-			; _coef_FIR_PPG[46] @ 736
-	.bits		0xff9e,16
-			; _coef_FIR_PPG[47] @ 752
-	.bits		0xff9b,16
-			; _coef_FIR_PPG[48] @ 768
-	.bits		0xff9b,16
-			; _coef_FIR_PPG[49] @ 784
-	.bits		0xff9d,16
-			; _coef_FIR_PPG[50] @ 800
-	.bits		0xffa1,16
-			; _coef_FIR_PPG[51] @ 816
-	.bits		0xffa9,16
-			; _coef_FIR_PPG[52] @ 832
-	.bits		0xffb3,16
-			; _coef_FIR_PPG[53] @ 848
-	.bits		0xffc0,16
-			; _coef_FIR_PPG[54] @ 864
-	.bits		0xffd0,16
-			; _coef_FIR_PPG[55] @ 880
-	.bits		0xffe3,16
-			; _coef_FIR_PPG[56] @ 896
-	.bits		0xfff8,16
-			; _coef_FIR_PPG[57] @ 912
-	.bits		0x10,16
-			; _coef_FIR_PPG[58] @ 928
-	.bits		0x29,16
-			; _coef_FIR_PPG[59] @ 944
-	.bits		0x44,16
-			; _coef_FIR_PPG[60] @ 960
-	.bits		0x60,16
-			; _coef_FIR_PPG[61] @ 976
-	.bits		0x7c,16
-			; _coef_FIR_PPG[62] @ 992
-	.bits		0x97,16
-			; _coef_FIR_PPG[63] @ 1008
-	.bits		0xb1,16
-			; _coef_FIR_PPG[64] @ 1024
-	.bits		0xca,16
-			; _coef_FIR_PPG[65] @ 1040
-	.bits		0xe0,16
-			; _coef_FIR_PPG[66] @ 1056
-	.bits		0xf2,16
-			; _coef_FIR_PPG[67] @ 1072
-	.bits		0x100,16
-			; _coef_FIR_PPG[68] @ 1088
-	.bits		0x10a,16
-			; _coef_FIR_PPG[69] @ 1104
-	.bits		0x10e,16
-			; _coef_FIR_PPG[70] @ 1120
-	.bits		0x10b,16
-			; _coef_FIR_PPG[71] @ 1136
-	.bits		0x102,16
-			; _coef_FIR_PPG[72] @ 1152
-	.bits		0xf2,16
-			; _coef_FIR_PPG[73] @ 1168
-	.bits		0xda,16
-			; _coef_FIR_PPG[74] @ 1184
-	.bits		0xba,16
-			; _coef_FIR_PPG[75] @ 1200
-	.bits		0x92,16
-			; _coef_FIR_PPG[76] @ 1216
-	.bits		0x62,16
-			; _coef_FIR_PPG[77] @ 1232
-	.bits		0x2a,16
-			; _coef_FIR_PPG[78] @ 1248
+			; _coef_FIR_PPG[17] @ 272
 	.bits		0xffea,16
+			; _coef_FIR_PPG[18] @ 288
+	.bits		0xffe6,16
+			; _coef_FIR_PPG[19] @ 304
+	.bits		0xffe1,16
+			; _coef_FIR_PPG[20] @ 320
+	.bits		0xffdc,16
+			; _coef_FIR_PPG[21] @ 336
+	.bits		0xffd8,16
+			; _coef_FIR_PPG[22] @ 352
+	.bits		0xffd3,16
+			; _coef_FIR_PPG[23] @ 368
+	.bits		0xffcf,16
+			; _coef_FIR_PPG[24] @ 384
+	.bits		0xffca,16
+			; _coef_FIR_PPG[25] @ 400
+	.bits		0xffc7,16
+			; _coef_FIR_PPG[26] @ 416
+	.bits		0xffc3,16
+			; _coef_FIR_PPG[27] @ 432
+	.bits		0xffc1,16
+			; _coef_FIR_PPG[28] @ 448
+	.bits		0xffbf,16
+			; _coef_FIR_PPG[29] @ 464
+	.bits		0xffbe,16
+			; _coef_FIR_PPG[30] @ 480
+	.bits		0xffbe,16
+			; _coef_FIR_PPG[31] @ 496
+	.bits		0xffbe,16
+			; _coef_FIR_PPG[32] @ 512
+	.bits		0xffc0,16
+			; _coef_FIR_PPG[33] @ 528
+	.bits		0xffc3,16
+			; _coef_FIR_PPG[34] @ 544
+	.bits		0xffc6,16
+			; _coef_FIR_PPG[35] @ 560
+	.bits		0xffcb,16
+			; _coef_FIR_PPG[36] @ 576
+	.bits		0xffd0,16
+			; _coef_FIR_PPG[37] @ 592
+	.bits		0xffd6,16
+			; _coef_FIR_PPG[38] @ 608
+	.bits		0xffdc,16
+			; _coef_FIR_PPG[39] @ 624
+	.bits		0xffe3,16
+			; _coef_FIR_PPG[40] @ 640
+	.bits		0xffe9,16
+			; _coef_FIR_PPG[41] @ 656
+	.bits		0xffef,16
+			; _coef_FIR_PPG[42] @ 672
+	.bits		0xfff5,16
+			; _coef_FIR_PPG[43] @ 688
+	.bits		0xfffa,16
+			; _coef_FIR_PPG[44] @ 704
+	.bits		0xfffd,16
+			; _coef_FIR_PPG[45] @ 720
+	.bits		0,16
+			; _coef_FIR_PPG[46] @ 736
+	.bits		0,16
+			; _coef_FIR_PPG[47] @ 752
+	.bits		0xfffe,16
+			; _coef_FIR_PPG[48] @ 768
+	.bits		0xfffa,16
+			; _coef_FIR_PPG[49] @ 784
+	.bits		0xfff3,16
+			; _coef_FIR_PPG[50] @ 800
+	.bits		0xffea,16
+			; _coef_FIR_PPG[51] @ 816
+	.bits		0xffdd,16
+			; _coef_FIR_PPG[52] @ 832
+	.bits		0xffce,16
+			; _coef_FIR_PPG[53] @ 848
+	.bits		0xffbc,16
+			; _coef_FIR_PPG[54] @ 864
+	.bits		0xffa7,16
+			; _coef_FIR_PPG[55] @ 880
+	.bits		0xff8f,16
+			; _coef_FIR_PPG[56] @ 896
+	.bits		0xff74,16
+			; _coef_FIR_PPG[57] @ 912
+	.bits		0xff57,16
+			; _coef_FIR_PPG[58] @ 928
+	.bits		0xff39,16
+			; _coef_FIR_PPG[59] @ 944
+	.bits		0xff19,16
+			; _coef_FIR_PPG[60] @ 960
+	.bits		0xfef8,16
+			; _coef_FIR_PPG[61] @ 976
+	.bits		0xfed6,16
+			; _coef_FIR_PPG[62] @ 992
+	.bits		0xfeb6,16
+			; _coef_FIR_PPG[63] @ 1008
+	.bits		0xfe96,16
+			; _coef_FIR_PPG[64] @ 1024
+	.bits		0xfe78,16
+			; _coef_FIR_PPG[65] @ 1040
+	.bits		0xfe5d,16
+			; _coef_FIR_PPG[66] @ 1056
+	.bits		0xfe46,16
+			; _coef_FIR_PPG[67] @ 1072
+	.bits		0xfe32,16
+			; _coef_FIR_PPG[68] @ 1088
+	.bits		0xfe23,16
+			; _coef_FIR_PPG[69] @ 1104
+	.bits		0xfe1b,16
+			; _coef_FIR_PPG[70] @ 1120
+	.bits		0xfe18,16
+			; _coef_FIR_PPG[71] @ 1136
+	.bits		0xfe1c,16
+			; _coef_FIR_PPG[72] @ 1152
+	.bits		0xfe27,16
+			; _coef_FIR_PPG[73] @ 1168
+	.bits		0xfe3b,16
+			; _coef_FIR_PPG[74] @ 1184
+	.bits		0xfe56,16
+			; _coef_FIR_PPG[75] @ 1200
+	.bits		0xfe79,16
+			; _coef_FIR_PPG[76] @ 1216
+	.bits		0xfea4,16
+			; _coef_FIR_PPG[77] @ 1232
+	.bits		0xfed8,16
+			; _coef_FIR_PPG[78] @ 1248
+	.bits		0xff13,16
 			; _coef_FIR_PPG[79] @ 1264
-	.bits		0xffa3,16
+	.bits		0xff55,16
 			; _coef_FIR_PPG[80] @ 1280
-	.bits		0xff56,16
+	.bits		0xff9e,16
 			; _coef_FIR_PPG[81] @ 1296
-	.bits		0xff02,16
+	.bits		0xffee,16
 			; _coef_FIR_PPG[82] @ 1312
-	.bits		0xfeaa,16
+	.bits		0x42,16
 			; _coef_FIR_PPG[83] @ 1328
-	.bits		0xfe4d,16
+	.bits		0x9b,16
 			; _coef_FIR_PPG[84] @ 1344
-	.bits		0xfded,16
+	.bits		0xf7,16
 			; _coef_FIR_PPG[85] @ 1360
-	.bits		0xfd8c,16
+	.bits		0x155,16
 			; _coef_FIR_PPG[86] @ 1376
-	.bits		0xfd29,16
+	.bits		0x1b5,16
 			; _coef_FIR_PPG[87] @ 1392
-	.bits		0xfcc7,16
+	.bits		0x214,16
 			; _coef_FIR_PPG[88] @ 1408
-	.bits		0xfc66,16
+	.bits		0x271,16
 			; _coef_FIR_PPG[89] @ 1424
-	.bits		0xfc09,16
+	.bits		0x2cc,16
 			; _coef_FIR_PPG[90] @ 1440
-	.bits		0xfbb0,16
+	.bits		0x322,16
 			; _coef_FIR_PPG[91] @ 1456
-	.bits		0xfb5d,16
+	.bits		0x374,16
 			; _coef_FIR_PPG[92] @ 1472
-	.bits		0xfb10,16
+	.bits		0x3be,16
 			; _coef_FIR_PPG[93] @ 1488
-	.bits		0xfacb,16
+	.bits		0x402,16
 			; _coef_FIR_PPG[94] @ 1504
-	.bits		0xfa8f,16
+	.bits		0x43c,16
 			; _coef_FIR_PPG[95] @ 1520
-	.bits		0xfa5c,16
+	.bits		0x46e,16
 			; _coef_FIR_PPG[96] @ 1536
-	.bits		0xfa34,16
+	.bits		0x495,16
 			; _coef_FIR_PPG[97] @ 1552
-	.bits		0xfa17,16
+	.bits		0x4b1,16
 			; _coef_FIR_PPG[98] @ 1568
-	.bits		0xfa06,16
+	.bits		0x4c2,16
 			; _coef_FIR_PPG[99] @ 1584
-	.bits		0x7a06,16
+	.bits		0x4c8,16
 			; _coef_FIR_PPG[100] @ 1600
 $C$IR_2:	.set	101
 
@@ -825,7 +825,7 @@ $C$DW$39	.dwtag  DW_TAG_variable
 	.sblock	".ebss:_coef_FIR_PPG"
 	.sblock	".ebss:_xb_EDA"
 	.sblock	".ebss:_xb_PPG"
-;	C:\ti\ccs910\ccs\tools\compiler\ti-cgt-c2000_18.12.4.LTS\bin\ac2000.exe -@C:\\Users\\danie\\AppData\\Local\\Temp\\{4101ABE1-DE23-49D2-A0E3-5A924B9CB9EC} 
+;	C:\ti\ccs910\ccs\tools\compiler\ti-cgt-c2000_18.12.4.LTS\bin\ac2000.exe -@C:\\Users\\danie\\AppData\\Local\\Temp\\{591F306F-018A-43BD-B077-A76AB4C1BBBF} 
 	.sect	".text"
 	.clink
 	.global	_FIR_EDA

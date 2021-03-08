@@ -19,7 +19,7 @@ BiomSensor_BLE.obj: ../IEEE_I2C.h
 BiomSensor_BLE.obj: C:/ti/ccs910/ccs/tools/compiler/ti-cgt-c2000_18.12.4.LTS/include/stdbool.h
 BiomSensor_BLE.obj: ../HM10_BLE.h
 BiomSensor_BLE.obj: ../filtro.h
-BiomSensor_BLE.obj: ../Coef_Noise.h
+BiomSensor_BLE.obj: ../Coef.h
 
 ../BiomSensor_BLE.c: 
 C:/ti/ccs910/ccs/tools/compiler/ti-cgt-c2000_18.12.4.LTS/include/stdint.h: 
@@ -40,4 +40,4 @@ C:/ti/c2000/C2000Ware_3_01_00_00/driverlib/f2837xd/driverlib/cpu.h:
 C:/ti/ccs910/ccs/tools/compiler/ti-cgt-c2000_18.12.4.LTS/include/stdbool.h: 
 ../HM10_BLE.h: 
 ../filtro.h: 
-../Coef_Noise.h: 
+../Coef.h: 

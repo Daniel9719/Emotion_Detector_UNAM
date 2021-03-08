@@ -37,7 +37,6 @@ struct Features_Value{
     float ctl50;
     float ctl75;
     float ctl90;
-    float EDA_LF;
     float EDA_HF;
 };
 

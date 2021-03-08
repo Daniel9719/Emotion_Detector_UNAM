@@ -84,7 +84,7 @@ __interrupt void Inter_I2CA (void){
                     CS_UpAcum+=PRV_h[i];
                     i++;
                 }
-                CS_OVLP=i-1;
+                CS_SHIFT=i-1;
                 CS_LowAcum-=CS_LowLim;
             }
         }

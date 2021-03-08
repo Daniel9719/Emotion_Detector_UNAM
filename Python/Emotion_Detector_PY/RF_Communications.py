@@ -16,11 +16,6 @@ HM10_address = "88:25:83:F1:39:75"
 class RF_COMS:
     
     client: BleakClient = None
-    # Mode = {
-    #     "Training": 0,
-    #     "Test": 1,
-    #     "Correction": 2
-    # }
     
     # CONSTRUCTOR
     def __init__(
@@ -55,20 +50,16 @@ class RF_COMS:
         self.Chars_Asig = None
         
         self.FLD_W_Config = 0x00
-        self.FLD_W = None     # Cada matriz cambia de dimensión 22x1
+        self.FLD_W = None     # Every matrix changes of dimension 21x1
         
         self.Vect_Config = 0x00
         self.Pik_Vect = None
         self.Mean_Vect = None
         self.Cov_S_Inv = None
-        
-        # self.Measure = False
-        # self.Modality = self.Mode["Training"]
-        # self.Hab_RGB = True
-        # self.PS_Selector = 0
+    
         
         self.Emotion = 7
-        self.Chars_Val = np.zeros(22, dtype=float)
+        self.Chars_Val = np.zeros(21, dtype=float)
 
     # BLE METHODS
     async def manager(self):
@@ -115,7 +106,6 @@ class RF_COMS:
                     Addr = Byte
                 else:
                     self.Rx_Menu(Addr, Byte)
-                # data=data>>8
                 self.FirstByte = not self.FirstByte
             else:
                 Addr += 1
@@ -171,7 +161,7 @@ class RF_COMS:
         
         # Sending FLD_W Matrix
         for i in range(0,len(self.FLD_W)):
-            for j in range(0,22):
+            for j in range(0,21):
                 self.FLD_W_Config = 0x80 | (i<<5) | j
                 if j < len(self.FLD_W[i][0]):
                     Data = ( ( int(self.FLD_W[i][3][j,0])<<40)
@@ -294,8 +284,6 @@ class RF_COMS:
             elif self.index == 19:
                 self.str = 'ctl90'
             elif self.index == 20:
-                self.str = 'EDA_LF'
-            elif self.index == 21:
                 self.str = 'EDA_HF'
                 self.feat_index += 1
                 

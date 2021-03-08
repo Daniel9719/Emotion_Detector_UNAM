@@ -1,8 +1,8 @@
 #ifndef _FILTRO_H_
 #define _FILTRO_H_
 
-//#include "Coef.h"
-#include "Coef_Noise.h"
+#include "Coef.h"
+//#include "Coef_Noise.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,4 +1,4 @@
-clear all
+clearvars
 %.dat to .h 
 TableT=importdata('h_EDA.dat',' ',1);
 str = num2str(TableT.data.');

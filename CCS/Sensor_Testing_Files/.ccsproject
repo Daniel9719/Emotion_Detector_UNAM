@@ -2,4 +2,8 @@
 <?ccsproject version="1.0"?>
 <projectOptions>
 	<deviceFamily value="C2000"/>
+<<<<<<< HEAD
+	<isTargetManual value="true"/>
+=======
+>>>>>>> f663dc9e5ff6954f4ae5a891c5aab6b54930ce97
 </projectOptions>

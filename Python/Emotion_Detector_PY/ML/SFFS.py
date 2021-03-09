@@ -118,10 +118,10 @@ def SFFS_wrapper(features_train, features_test, targets_train, targets_test, pLD
     
     #codification
     #0-7 features
-    register_len=8
+    ind_car=8
     index_cod=[]
     s=""
-    for d in range(register_len):
+    for d in range(ind_car):
         if d in IndexAdd:
             s+="1"
         else:
@@ -129,8 +129,8 @@ def SFFS_wrapper(features_train, features_test, targets_train, targets_test, pLD
     index_cod.append(int(s,2))
     #8-11 features
     s=""
-    for d in range(register_len,register_len+8):
-        if d>=register_len+4:
+    for d in range(ind_car,ind_car+8):
+        if d>=ind_car+4:
             break
         if d in IndexAdd:
             s+="1"
@@ -139,18 +139,18 @@ def SFFS_wrapper(features_train, features_test, targets_train, targets_test, pLD
     index_cod.append(int(s,2))
     #12-19 features
     s=""
-    register_len+=4
-    for d in range(register_len,register_len+8):
+    ind_car+=4
+    for d in range(ind_car,ind_car+8):
         if d in IndexAdd:
             s+="1"
         else:
             s+="0"
     index_cod.append(int(s,2))
-    register_len+=8
+    ind_car+=8
     #20-21 features
     s=""
-    for d in range(register_len,register_len+8):
-        if d>=register_len+2:
+    for d in range(ind_car,ind_car+8):
+        if d>=ind_car+1:
             break
         if d in IndexAdd:
             s+="1"
@@ -243,10 +243,10 @@ def SFFS_wrapper_LOOCV(features_train, targets_train, pLDA):
     
     #codification
     #0-7 features
-    register_len=8
+    ind_car=8
     index_cod=[]
     s=""
-    for d in range(register_len):
+    for d in range(ind_car):
         if d in IndexAdd:
             s+="1"
         else:
@@ -254,8 +254,8 @@ def SFFS_wrapper_LOOCV(features_train, targets_train, pLDA):
     index_cod.append(int(s,2))
     #8-11 features
     s=""
-    for d in range(register_len,register_len+8):
-        if d>=register_len+4:
+    for d in range(ind_car,ind_car+8):
+        if d>=ind_carn+4:
             break
         if d in IndexAdd:
             s+="1"
@@ -264,18 +264,18 @@ def SFFS_wrapper_LOOCV(features_train, targets_train, pLDA):
     index_cod.append(int(s,2))
     #12-19 features
     s=""
-    register_len+=4
-    for d in range(register_len,register_len+8):
+    ind_car+=4
+    for d in range(ind_car,ind_car+8):
         if d in IndexAdd:
             s+="1"
         else:
             s+="0"
     index_cod.append(int(s,2))
-    register_len+=8
+    ind_car+=8
     #20-21 features
     s=""
-    for d in range(register_len,register_len+8):
-        if d>=register_len+2:
+    for d in range(ind_car,ind_car+8):
+        if d>=ind_car+1:
             break
         if d in IndexAdd:
             s+="1"

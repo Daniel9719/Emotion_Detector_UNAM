@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 #define N 101 //Number of coefficients
-#define order 201 //FIR order
+#define order 201 //FIR order+1
 
 //%%%%%%%%%%%%%%%%%%    FILTERS VARIABLES    %%%%%%%%%%%%%%%%%%
 

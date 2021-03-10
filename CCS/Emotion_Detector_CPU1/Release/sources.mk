@@ -112,6 +112,10 @@ PDE_DEPS__QUOTED :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 . \
+Classification \
 Communications \
+Conditioning \
 Configuration \
+Freq_Extraction \
+Time_Extraction \
 

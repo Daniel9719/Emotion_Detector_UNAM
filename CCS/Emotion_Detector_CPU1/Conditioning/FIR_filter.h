@@ -10,7 +10,7 @@ extern "C" {
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%%%    FILTERS FUNCTIONS    %%%%%%%%%%%%%%%%%%%%
 //EDA's filter with cut frequencies of 0.16 to 2.1 Hz (SCR), fs=32 Hz
-//PPG's filter with cut frequencies of 0.6 to 3 Hz, fs=128 Hz
+//PPG's filter with cut frequencies of 0.6 to 3.7 Hz, fs=128 Hz
 
 //int16_t x: Sample of PPG or EDA
 //--------------------------------------------------------------------

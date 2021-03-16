@@ -1,7 +1,7 @@
           .global _firFilter
 Qi         .set    15
 
-xbf       .word   0        ;Buffer´s last memory allocation
+xbf       .word   0        ;Last memory allocation of Buffer
 
 _firFilter ; N=AH, x=AL, XAR4->fir###_EDA XAR5->xb
           MOVL XAR0, XAR5  ;XAR0->xb

@@ -30,7 +30,7 @@ extern float sub(float a, float b);
 float FLD(float* features,volatile float* W, uint32_t index){
     float y=0;
     uint32_t aux=0x1;
-    while(*W&&aux<0x100000){
+    while(*W&&aux<=0x100000){
         if(index&aux){
             y=mult(*features, *(W++),y);
         }

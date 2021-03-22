@@ -104,7 +104,7 @@ def train(features_csv,targets_csv):
     #FLD_1
     K_FLD=1
     t_start=time()
-    matrix_W_1=FLD.train(SFS_features_temp,targets_temp[:,0],K_FLD, pLDA=True, plot=False, Terminal=False, Binary=True)
+    matrix_W_1=FLD.train(SFS_features_temp,targets_temp[:,0],K_FLD, pLDA=True, plot=False, Terminal=False)
     t_final=time()
     print("\nExecution time of FLD_1 with "+ str(K_FLD)+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
@@ -172,7 +172,7 @@ def train(features_csv,targets_csv):
     #FLD_2
     K_FLD=1
     t_start=time()
-    matrix_W_2=FLD.train(SFS_features_temp,targets_temp[:,1],K_FLD, pLDA=True, plot=False, Terminal=False, Binary=True)
+    matrix_W_2=FLD.train(SFS_features_temp,targets_temp[:,1],K_FLD, pLDA=True, plot=False, Terminal=False)
     t_final=time()
     print("\nExecution time of FLD_2 with "+ str(K_FLD)+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
@@ -238,7 +238,7 @@ def train(features_csv,targets_csv):
     #FLD_3
     K_FLD=1
     t_start=time()
-    matrix_W_3=FLD.train(SFS_features_temp,targets_temp[:,2],K_FLD, pLDA=True, plot=False, Terminal=False, Binary=True)
+    matrix_W_3=FLD.train(SFS_features_temp,targets_temp[:,2],K_FLD, pLDA=True, plot=False, Terminal=False)
     t_final=time()
     print("\nExecution time of FLD_3 with "+ str(K_FLD)+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
@@ -304,7 +304,7 @@ def train(features_csv,targets_csv):
     #FLD_4
     K_FLD=1
     t_start=time()
-    matrix_W_4=FLD.train(SFS_features_temp,targets_temp[:,2],K_FLD, pLDA=True, plot=False, Terminal=False, Binary=True)
+    matrix_W_4=FLD.train(SFS_features_temp,targets_temp[:,2],K_FLD, pLDA=True, plot=False, Terminal=False)
     t_final=time()
     print("\nExecution time of FLD_4 with "+ str(K_FLD)+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
@@ -654,7 +654,7 @@ def train_LOOCV(features_csv,targets_csv):
     #FLD_1
     K_FLD=1
     t_start=time()
-    matrix_W_1=FLD.train(SFS_features_train_1,targets_train[:,0],K_FLD, pLDA=True, plot=False, Terminal=False, Binary=True)
+    matrix_W_1=FLD.train(SFS_features_train_1,targets_train[:,0],K_FLD, pLDA=True, plot=False, Terminal=False)
     t_final=time()
     print("\nExecution time of FLD_1 with "+ str(K_FLD)+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
@@ -697,7 +697,7 @@ def train_LOOCV(features_csv,targets_csv):
     #FLD_2
     K_FLD=1
     t_start=time()
-    matrix_W_2=FLD.train(SFS_features_train_2,targets_train[:,1],K_FLD, pLDA=True, plot=False, Terminal=False, Binary=True)
+    matrix_W_2=FLD.train(SFS_features_train_2,targets_train[:,1],K_FLD, pLDA=True, plot=False, Terminal=False)
     t_final=time()
     print("\nExecution time of FLD_2 with "+ str(K_FLD)+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
@@ -741,7 +741,7 @@ def train_LOOCV(features_csv,targets_csv):
     #FLD_3
     K_FLD=1
     t_start=time()
-    matrix_W_3=FLD.train(SFS_features_train_3,targets_trainHA[:,2],K_FLD, pLDA=True, plot=False, Terminal=False, Binary=True)
+    matrix_W_3=FLD.train(SFS_features_train_3,targets_trainHA[:,2],K_FLD, pLDA=True, plot=False, Terminal=False)
     t_final=time()
     print("\nExecution time of FLD_3 with "+ str(K_FLD)+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     
@@ -785,7 +785,7 @@ def train_LOOCV(features_csv,targets_csv):
     #FLD_4
     K_FLD=1
     t_start=time()
-    matrix_W_4=FLD.train(SFS_features_train_4,targets_trainLA[:,2],K_FLD, pLDA=True, plot=False, Terminal=False, Binary=True)
+    matrix_W_4=FLD.train(SFS_features_train_4,targets_trainLA[:,2],K_FLD, pLDA=True, plot=False, Terminal=False)
     t_final=time()
     print("\nExecution time of FLD_4 with "+ str(K_FLD)+ " dimensions: " + str((t_final-t_start)*1000) + " ms")
     

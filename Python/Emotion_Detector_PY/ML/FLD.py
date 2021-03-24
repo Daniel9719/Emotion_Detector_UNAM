@@ -234,9 +234,10 @@ def train(features_train,targets_train, K, pLDA=False, plot=False, Terminal=Fals
     C,OmegaC=indexTarget(targets_train)
     mc,m,D=average(features_train,C,OmegaC)
     Sw,Sb= covariance(features_train,C,OmegaC,D,mc,m)
-    
     if mc.shape[0]==2:
         W=mc[1,:]-mc[0,:]
+        val_p=0
+        vect_p=0
         if pLDA:
             Swpseudo,Sbpseudo=pseudoinverseLDA(Sw,Sb,D)
             W=np.matmul(Swpseudo,W)

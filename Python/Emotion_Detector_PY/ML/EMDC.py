@@ -611,26 +611,8 @@ def train_LOOCV(features_csv,targets_csv):
     keys_features=data_features.keys()
     keys_targets=data_targets.keys()
     
-    #Random arrangement of data
-    total_data=[]
-    for j in range (dim):
-        total_data.append(data_features[keys_features[j]])
-        
-    for j in range (targets_len):
-        total_data.append(data_targets[keys_targets[j]])
             
-    data_features={}
-    data_targets={}
-    
-    for j in range (dim):
-        data_features[keys_features[j]]=total_data[j]
-    
-    i=0
-    for j in range (dim,targets_len+dim):
-        data_targets[keys_targets[i]]=total_data[j]
-        i+=1
-            
-    #Create training set and test set 
+    #Create training set
     for j in range (dim):
         for i in range(samples):        
             features_train[i][j]=data_features[keys_features[j]][i]
@@ -801,7 +783,7 @@ def train_LOOCV(features_csv,targets_csv):
     acc=LDA.LOOCV(new_features_train_4,targets_trainLA[:,2],pLDA=False)
     print("\nAccuracy: " + str(acc*100) + " %\n")
 
-    del acc,dim,i,j,K_FLD, keys_features, keys_targets, samples, t_final, t_start, targets_len, total_data
+    del acc,dim,i,j,K_FLD, keys_features, keys_targets, samples, t_final, t_start, targets_len
     
     #pik to ln(pik) 
     pi_k_1=np.log(pi_k_1)
@@ -1086,4 +1068,4 @@ def EMDC(features_csv,targets_csv, LOOCV=False):
 if __name__ == "__main__":
     features_csv="features.csv"
     targets_csv="targets.csv" 
-    list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv=EMDC(features_csv,targets_csv, LOOCV=False)    
+    list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv=EMDC(features_csv,targets_csv, LOOCV=True)    

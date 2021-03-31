@@ -222,9 +222,7 @@ class RF_COMS:
         None
         
     def Rx_Menu(self, Addr: int, Data: int):
-        print(f"Addr={hex(Addr)}   Data:{hex(Data)}")
         if Addr == 0x10:
-
             self.Emotion = Data & 0x7
             if self.Emotion == 7:       #Neutral
                 self.emo_df.loc[self.emo_index]=['1','0','0']
@@ -238,8 +236,8 @@ class RF_COMS:
                 self.emo_df.loc[self.emo_index]=['0','1','1']  
             self.emo_index += 1
             self.emo_df.to_csv("Emotions.csv", index=False)
+            
         elif Addr == 0x11:
-
             self.index = Data & 0x1F
             if Data & 0x20:
                 self.Auto = True
@@ -289,17 +287,19 @@ class RF_COMS:
                 
         elif Addr == 0x12:
             self.DataQ16 = (self.DataQ16 & 0xFFFFFF00)|Data;
+            
         elif Addr == 0x13:
             self.DataQ16 = (self.DataQ16 & 0xFFFF00FF)|(Data<<8)
+            
         elif Addr == 0x14:
             self.DataQ16 = (self.DataQ16 & 0xFF00FFFF)|(Data<<16)
+            
         elif Addr == 0x15:
             Q16 = 65536
             self.DataQ16 = (self.DataQ16 & 0x00FFFFFF)|(Data<<24)
             self.Chars_Val[self.index] = float(self.DataQ16)/Q16
             
             self.feat_df.loc[self.feat_index, self.str] = self.Chars_Val[self.index]
-            print(f"{self.feat_df.head()}")
             self.feat_df.to_csv("Features.csv", index=False)
             self.Auto = False
         

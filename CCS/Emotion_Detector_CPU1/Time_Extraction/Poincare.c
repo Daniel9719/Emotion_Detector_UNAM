@@ -1,5 +1,5 @@
 #include <stdbool.h>
-#include "Configuration/Configuration.h"
+#include <Configuration.h>
 
 #define const1_sd 0.7071067812
 #define const2_sd -0.7071067812

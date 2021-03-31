@@ -5,17 +5,19 @@
  *      Author: danie
  */
 #include <driverlib/cpu.h>
+#include <Freq_Extraction/Freq_Extraction.h>
 #include <Freq_Extraction/Cubic_Spline.h>
 #include <Freq_Extraction/PSD_Periodogram.h>
 #include "Configuration/Configuration.h"
 
 extern volatile struct Features_Value Feat_Val;
+volatile bool SCRShift=false, PRVShift=false;
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%    FREQUENCY CHARS ESTIMATION     %%%%%%%%%%%%%%%%%
 // float* InputX: Pointer to data input X
 // float* InputY: Pointer to data input Y
-//uint16_t Type: (0) EDA (1) PRV
+// uint16_t Type: (0) SCR (1) PRV
 //--------------------------------------------------------------------
 void Freq_Extraction(float* InputX, float* InputY, uint16_t Type){ //Takes 1.133 seg = 11333000 clock cycles
     int i=0;
@@ -23,11 +25,14 @@ void Freq_Extraction(float* InputX, float* InputY, uint16_t Type){ //Takes 1.133
     float* Ptr=InputY;
 
     if(Type){                               //If Input==PRV
+
         Ptr=Cubic_Spline(InputX, InputY);
+        PRVShift=true;
+
         EALLOW;
-        DMA_CH2_CONTROL_R|=0x8;             //PERINTFRC:Force peripheral event from CH2 (OVLP Gauss)
-        DMA_CH3_CONTROL_R|=0x8;             //PERINTFRC:Force peripheral event from CH3 (OVLP d)
-        DMA_CH4_CONTROL_R|=0x8;             //PERINTFRC:Force peripheral event from CH4 (OVLP S)
+        DMA_CH4_CONTROL_R|=0x9;             //RUN: Enable CH4 PERINTFRC:Force peripheral event from CH4 (OVLP Coeff_A)
+        DMA_CH5_CONTROL_R|=0x9;             //RUN: Enable CH5 PERINTFRC:Force peripheral event from CH5 (OVLP Const_B)
+        DMA_CH6_CONTROL_R|=0x9;             //RUN: Enable CH6 PERINTFRC:Force peripheral event from CH6 (OVLP S)
         EDIS;
 
         Ptr = PSD_Periodogram(Ptr);         //freq_res=1/(Ts*NFFT)
@@ -47,8 +52,9 @@ void Freq_Extraction(float* InputX, float* InputY, uint16_t Type){ //Takes 1.133
         Feat_Val.PRV_HF=Aux3/62;            // HF: 0.1523437 - 0.3906250
         Feat_Val.PRV_LF_HF=Feat_Val.PRV_LF/Feat_Val.PRV_HF;
     }
-    else{                                   //If Input==EDA
+    else{                                   //If Input==SCR
         Ptr = PSD_Periodogram(Ptr);         //freq_res=1/(Ts*NFFT)
+        SCRShift=true;
         for(i=11;i<33;i++){                 //Resolution=32[Hz]/2048
             Aux1+=Ptr[i];
         }

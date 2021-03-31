@@ -7,7 +7,7 @@
 #include <Freq_Extraction/Cubic_Spline.h>
 #include <Freq_Extraction/PSD_Burg.h>
 
-float FFT_R[NFFT]={0};
+float FFT_I[NFFT]={0};
 float PSD[NFFT]={0};
 
 extern float* fft_float(float* ,uint16_t);

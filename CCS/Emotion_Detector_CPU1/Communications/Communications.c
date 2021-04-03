@@ -49,15 +49,15 @@ extern volatile uint16_t sum_flg;
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%     DMA CH3 INTERRUPT   %%%%%%%%%%%%%%%%%%
-// Request for reading data from biometric sensor
+// Switching between SCR & CubSpl signals for shifting process
 //--------------------------------------------------------------------
 __interrupt void Inter_DMACH3 (void){
     PIE_ACK_R|=0x40;                                //Clean flag interrupt from Group 7
-    DMA_CH3_TRANSFERSIZE_R=1536;                    //Transfer Size=Size+1 bursts per transfer
+    DMA_CH3_TRANSFERSIZE_R=3071;                    //Transfer Size=Size+1 bursts per transfer
     DMA_CH3_DSTBEGADDRSHADOW_R=(uint32_t)(&CubSpl[0]);
     DMA_CH3_DSTADDRESHADOW_R=(uint32_t)(&CubSpl[0]);
-    DMA_CH3_SRCBEGADDRSHADOW_R=(uint32_t)(&CubSpl[2048]);
-    DMA_CH3_SRCADDRSHADOW_R=(uint32_t)(&CubSpl[2048]);
+    DMA_CH3_SRCBEGADDRSHADOW_R=(uint32_t)(&CubSpl[512]);
+    DMA_CH3_SRCADDRSHADOW_R=(uint32_t)(&CubSpl[512]);
     DMA_CH3_MODE_R&=~0x8000;                        //CHINTE: Disable interrupt
     DMA_CH3_CONTROL_R|=0x9;                         //RUN: Enable CH4 PERINTFRC:Force peripheral event from CH4 (OVLP Coeff_A)
 }
@@ -237,9 +237,9 @@ __interrupt void Inter_SCIBRX (void){
                 switch(SCI_Mode){
                 case 0:                                     //AT Mode
                     if(strstr(SCI_RxData,"OK")!=NULL){
-                        HM10_State++;                        //Increase State
+                        HM10_State++;                       //Increase State
                         SCI_RxAvail=true;
-                        if(HM10_State==5){ SCI_Mode=1; }     //Switch to Connection Mode
+                        if(HM10_State==5){ SCI_Mode=1; }    //Switch to Connection Mode
                     }
                     break;
                 case 1:                                     //Connection Mode

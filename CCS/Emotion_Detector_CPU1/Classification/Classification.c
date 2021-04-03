@@ -10,7 +10,7 @@ uint16_t* Asig_car=&Feat_Asig.PRV[0];
 volatile float MeanVect[8];
 volatile float ApriVect[8];
 volatile float Cov_S[4];
-volatile float FLD_W[4][22];
+volatile float FLD_W[4][21];
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%%%    ASM FUNCTIONS    %%%%%%%%%%%%%%%%%%%%
@@ -30,7 +30,7 @@ extern float sub(float a, float b);
 float FLD(float* features,volatile float* W, uint32_t index){
     float y=0;
     uint32_t aux=0x1;
-    while(*W&&aux<0x400000){
+    while(*W&&aux<=0x100000){
         if(index&aux){
             y=mult(*features, *(W++),y);
         }

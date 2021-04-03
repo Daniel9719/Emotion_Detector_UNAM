@@ -9,7 +9,7 @@ f_EDAHigh = 2.1;         %Cut-off frequency of EDA_SCR
 
 n_PPGBand=200;
 f_PPGLow = 0.6;      %Cut-off frequency of PPG
-f_PPGHigh = 3;         %Cut-off frequency of PPG
+f_PPGHigh = 3.7;         %Cut-off frequency of PPG
 
 wnBand_EDA = [(f_EDALow)/(Fs_EDA/2) (f_EDAHigh)/(Fs_EDA/2)]; 
 h_EDABand = fir1(n_EDABand,wnBand_EDA);

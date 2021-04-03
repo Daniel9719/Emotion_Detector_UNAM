@@ -1086,4 +1086,4 @@ def EMDC(features_csv,targets_csv, LOOCV=False):
 if __name__ == "__main__":
     features_csv="features.csv"
     targets_csv="targets.csv" 
-    list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv=EMDC(features_csv,targets_csv, LOOCV=True)    
+    list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv=EMDC(features_csv,targets_csv, LOOCV=False)    

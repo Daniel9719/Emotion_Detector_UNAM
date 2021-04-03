@@ -4,18 +4,31 @@
 
 SHELL = cmd.exe
 
-CG_TOOL_ROOT := C:/ti/ccs910/ccs/tools/compiler/ti-cgt-c2000_18.12.4.LTS
+CG_TOOL_ROOT := D:/Programas/ti/ccs1011/ccs/tools/compiler/ti-cgt-c2000_20.2.1.LTS
 
 GEN_OPTS__FLAG := 
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
 "./main.obj" \
+"./Classification/Class_func.obj" \
+"./Classification/Classification.obj" \
 "./Communications/Biom_AS7026GG.obj" \
 "./Communications/Communications.obj" \
 "./Communications/I2C.obj" \
 "./Communications/SCI_UART.obj" \
+"./Conditioning/FIR.obj" \
+"./Conditioning/FIR_filter.obj" \
 "./Configuration/Configuration.obj" \
+"./Freq_Extraction/Abs_Value.obj" \
+"./Freq_Extraction/Cubic_Spline.obj" \
+"./Freq_Extraction/FFT.obj" \
+"./Freq_Extraction/Freq_Extraction.obj" \
+"./Freq_Extraction/PSD_Burg.obj" \
+"./Freq_Extraction/PSD_Periodogram.obj" \
+"./Time_Extraction/PPI_Estimation.obj" \
+"./Time_Extraction/Poincare.obj" \
+"./Time_Extraction/Time_Features.obj" \
 "../2837x_FLASH_lnk_cpu1.cmd" \
 $(GEN_CMDS__FLAG) \
 -llibc.a \
@@ -28,11 +41,19 @@ RMDIR := RMDIR /S/Q
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include subdir_vars.mk
+-include Classification/subdir_vars.mk
 -include Communications/subdir_vars.mk
+-include Conditioning/subdir_vars.mk
 -include Configuration/subdir_vars.mk
+-include Freq_Extraction/subdir_vars.mk
+-include Time_Extraction/subdir_vars.mk
 -include subdir_rules.mk
+-include Classification/subdir_rules.mk
 -include Communications/subdir_rules.mk
+-include Conditioning/subdir_rules.mk
 -include Configuration/subdir_rules.mk
+-include Freq_Extraction/subdir_rules.mk
+-include Time_Extraction/subdir_rules.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -149,22 +170,23 @@ all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 Emotion_Detector_CPU1.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: C2000 Linker'
-	"C:/ti/ccs910/ccs/tools/compiler/ti-cgt-c2000_18.12.4.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 -O2 --diag_warning=225 --diag_wrap=off --display_error_number --abi=coffabi -z -m"Emotion_Detector_CPU1.map" --stack_size=0x200 --warn_sections -i"C:/ti/ccs910/ccs/tools/compiler/ti-cgt-c2000_18.12.4.LTS/lib" -i"C:/ti/ccs910/ccs/tools/compiler/ti-cgt-c2000_18.12.4.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="Emotion_Detector_CPU1_linkInfo.xml" --rom_model -o "Emotion_Detector_CPU1.out" $(ORDERED_OBJS)
+	"D:/Programas/ti/ccs1011/ccs/tools/compiler/ti-cgt-c2000_20.2.1.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 -O2 --diag_warning=225 --diag_wrap=off --display_error_number --abi=coffabi -z -m"Emotion_Detector_CPU1.map" --stack_size=0x200 --warn_sections -i"D:/Programas/ti/ccs1011/ccs/tools/compiler/ti-cgt-c2000_20.2.1.LTS/lib" -i"D:/Programas/ti/ccs1011/ccs/tools/compiler/ti-cgt-c2000_20.2.1.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="Emotion_Detector_CPU1_linkInfo.xml" --rom_model -o "Emotion_Detector_CPU1.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
 Emotion_Detector_CPU1.hex: $(EXE_OUTPUTS)
 	@echo 'Building files: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo 'Invoking: C2000 Hex Utility'
-	"C:/ti/ccs910/ccs/tools/compiler/ti-cgt-c2000_18.12.4.LTS/bin/hex2000"  -o "Emotion_Detector_CPU1.hex" $(EXE_OUTPUTS__QUOTED)
+	"D:/Programas/ti/ccs1011/ccs/tools/compiler/ti-cgt-c2000_20.2.1.LTS/bin/hex2000"  -o "Emotion_Detector_CPU1.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo ' '
 
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "main.obj" "Communications\Biom_AS7026GG.obj" "Communications\Communications.obj" "Communications\I2C.obj" "Communications\SCI_UART.obj" "Configuration\Configuration.obj" 
-	-$(RM) "main.d" "Communications\Biom_AS7026GG.d" "Communications\Communications.d" "Communications\I2C.d" "Communications\SCI_UART.d" "Configuration\Configuration.d" 
+	-$(RM) "main.obj" "Classification\Class_func.obj" "Classification\Classification.obj" "Communications\Biom_AS7026GG.obj" "Communications\Communications.obj" "Communications\I2C.obj" "Communications\SCI_UART.obj" "Conditioning\FIR.obj" "Conditioning\FIR_filter.obj" "Configuration\Configuration.obj" "Freq_Extraction\Abs_Value.obj" "Freq_Extraction\Cubic_Spline.obj" "Freq_Extraction\FFT.obj" "Freq_Extraction\Freq_Extraction.obj" "Freq_Extraction\PSD_Burg.obj" "Freq_Extraction\PSD_Periodogram.obj" "Time_Extraction\PPI_Estimation.obj" "Time_Extraction\Poincare.obj" "Time_Extraction\Time_Features.obj" 
+	-$(RM) "main.d" "Classification\Classification.d" "Communications\Biom_AS7026GG.d" "Communications\Communications.d" "Communications\I2C.d" "Communications\SCI_UART.d" "Conditioning\FIR_filter.d" "Configuration\Configuration.d" "Freq_Extraction\Cubic_Spline.d" "Freq_Extraction\Freq_Extraction.d" "Freq_Extraction\PSD_Burg.d" "Freq_Extraction\PSD_Periodogram.d" "Time_Extraction\PPI_Estimation.d" "Time_Extraction\Poincare.d" "Time_Extraction\Time_Features.d" 
+	-$(RM) "Classification\Class_func.d" "Conditioning\FIR.d" "Freq_Extraction\Abs_Value.d" "Freq_Extraction\FFT.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

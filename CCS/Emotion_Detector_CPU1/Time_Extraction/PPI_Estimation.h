@@ -13,7 +13,7 @@
 //%%%%%%%%%%%%%%%    PPI ESTIMATION FUNCTION   %%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 
-float* PPI_Estimation(int x_PPG, float* Y, float* X, bool rdy);
+bool PPI_Estimation(int x_PPG, float* Y, float* X);
 
 #endif /* PPI_ESTIMATION_H_ */
 

@@ -19,7 +19,7 @@ def train(features_csv,targets_csv):
     #Features and targets import
     data_features=pd.read_csv(features_csv)
     data_targets=pd.read_csv(targets_csv)
-    train_len=int((len(data_features))*0.8)
+    train_len=int((len(data_features))*0.75)
     test_len=int(len(data_features)-train_len)
     
     dim=len(data_features.columns)
@@ -1068,4 +1068,4 @@ def EMDC(features_csv,targets_csv, LOOCV=False):
 if __name__ == "__main__":
     features_csv="features.csv"
     targets_csv="targets.csv" 
-    list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv=EMDC(features_csv,targets_csv, LOOCV=True)    
+    list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv=EMDC(features_csv,targets_csv, LOOCV=False)    

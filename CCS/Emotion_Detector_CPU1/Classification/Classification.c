@@ -17,7 +17,7 @@ volatile float FLD_W[4][21];
 //--------------------------------------------------------------------
 
 extern float mult(float features, float W, float y);
-extern float func_LDA(float cons, float x, float ConvS, float ApriVect);
+extern float func_LDA(float cons, float x, float Cov_S, float ApriVect);
 extern float sub(float a, float b);
 
 //--------------------------------------------------------------------

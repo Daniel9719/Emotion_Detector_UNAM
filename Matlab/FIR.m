@@ -37,7 +37,7 @@ h_PPGBand=int16(h_PPGBand);
 
 %% Tables
 Tab=table(h_EDABand);
-writetable(Tab,'h_EDA');
+writetable(Tab,'h_EDA.dat');
 
 Tab=table(h_PPGBand);
-writetable(Tab,'h_PPG');
+writetable(Tab,'h_PPG.dat');

@@ -51,6 +51,11 @@ void Freq_Extraction(float* InputX, float* InputY, uint16_t Type){ //Takes 1.133
         Feat_Val.PRV_LF=Aux2/28;            // LF: 0.0429687 - 0.1484375
         Feat_Val.PRV_HF=Aux3/62;            // HF: 0.1523437 - 0.3906250
         Feat_Val.PRV_LF_HF=Feat_Val.PRV_LF/Feat_Val.PRV_HF;
+
+        Send_Feature(0x06);
+        Send_Feature(0x07);
+        Send_Feature(0x08);
+        Send_Feature(0x09);
     }
     else{                                   //If Input==SCR
         Ptr = PSD_Periodogram(Ptr);         //freq_res=1/(Ts*NFFT)
@@ -59,5 +64,6 @@ void Freq_Extraction(float* InputX, float* InputY, uint16_t Type){ //Takes 1.133
             Aux1+=Ptr[i];
         }
         Feat_Val.EDA_HF=Aux1/22;            //HF: 0.171875 - 0.5
+        Send_Feature(0x14);
     }
 }

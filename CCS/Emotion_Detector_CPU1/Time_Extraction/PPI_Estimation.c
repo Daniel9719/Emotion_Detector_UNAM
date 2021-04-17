@@ -1,14 +1,13 @@
-#include <stdint.h>
-
-#include <Poincare.h>
-#include <Time_Features.h>
+#include "Time_Extraction/PPI_Estimation.h"
+#include "Time_Extraction/Poincare.h"
+#include "Time_Extraction/Time_Features.h"
 
 #define f_s 128.0
 
 extern volatile uint16_t CS_SHIFT;
 extern volatile float CS_UpAcum, CS_UpN;
 
-volatile uint16_t sum_flg;
+volatile uint16_t sum_flg=0;
 uint16_t XY_indx;
 
 
@@ -21,8 +20,8 @@ bool PPI_Estimation(int x_PPG, float* Y, float* X){
     float PPI[2];
     float Y_buff[2];
     float X_buff[2];
-    uint16_t PPG[2];
-
+    int16_t PPG[2];
+    uint16_t i;
 
     if(sum_flg > 3){
         Poincare_Graph(PPI, sum_flg);
@@ -46,7 +45,7 @@ bool PPI_Estimation(int x_PPG, float* Y, float* X){
         subs_up_steps=0;
 
         if(detected_peaks == 2){
-            //Adaptative time threshold
+            //Adaptive time threshold
             if((indx_dist/f_s < 1.5*temp_meanPPI) && (indx_dist/f_s > 0.75*temp_meanPPI) || PPI_indx == 0){
                 if((DMA_CH1_CONTROL_R&0x2000)==0x2000){
                    if(dma_flg != 1){

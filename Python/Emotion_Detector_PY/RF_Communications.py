@@ -43,7 +43,7 @@ class RF_COMS:
         self.Auto = False
         
         # RF COMS VARIABLES
-        self.Config = 0x06
+        self.Config = 0x05
         self.No_Emotions = 0x01
         
         self.CC_Config = 0x00

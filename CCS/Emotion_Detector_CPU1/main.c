@@ -80,11 +80,11 @@ Disconnect:
                 Write_Emotion();
             }
             Main_Running=false;
-            if(SCI_Mode!=2){
-                goto Disconnect;
-            }
         }
-        CPUSYS_LPMCR_R&=0xFFFFFFFC;         //IDLE MODE
-        IDLE;
+        if(SCI_Mode!=2){
+            goto Disconnect;
+        }
+//        CPUSYS_LPMCR_R&=0xFFFFFFFC;         //IDLE MODE
+//        IDLE;
     }
 }

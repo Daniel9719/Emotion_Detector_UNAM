@@ -162,7 +162,7 @@ void Config_OFE(int ADD){
     I2C_Write_Byte(AS7026GG_OFE1_CFGB);
     I2C_Write_Byte(0x30);                       //OFE1_GAIN_G (3): x8
                                                 //OFE1_SD_BW (0): 10 Hz LP filter
-                                                //OFE1_HP_FREQ (0): 1.32 Hz
+                                                //OFE1_HP_FREQ (0): 0.33 Hz
     I2C_StartWR(ADD, 2, WRITE);
 }
 

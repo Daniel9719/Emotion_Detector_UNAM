@@ -45,10 +45,10 @@ __interrupt void Inter_GPIO22 (void){
 //%%%%%%%%%%%%%%%%%%%%%%    I2CA INTERRUPT    %%%%%%%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 __interrupt void Inter_I2CA (void){
-    static uint16_t i=0, j=0, k=0;
+    static uint16_t i=0, j=0, k=4;
     static char Conmut=1;
     //-------Calibration variables---------//
-    static uint16_t Clb_Windw=0, Clb_Mode=1, Offset=10, Current=0;
+    static uint16_t Clb_Windw=0, Clb_Mode=1, Offset=7, Current=0;
     static int32_t Clb_Max=0, Clb_Min=16383, Clb_Ampl=0;
 
     if(Conmut){
@@ -60,8 +60,8 @@ __interrupt void Inter_I2CA (void){
             Clb_Min=__min(Clb_Min,Raw.GR_LED);
         }
         if(Clb_Mode==0){
-            Biom1.LED_V[i]=FIR_PPG(Raw.GR_LED);
-//            Biom1.LED_V[i]=Raw.GR_LED;
+//            Biom1.LED_V[i]=FIR_PPG(Raw.GR_LED);
+            Biom1.LED_V[i]=Raw.GR_LED;
             i++;
         }
     }
@@ -78,10 +78,7 @@ __interrupt void Inter_I2CA (void){
             if(k%4==0){
                 Biom1.EDA[j]=FIR_EDA(Raw.int_EDA);
 //                Biom1.EDA[j]=Raw.int_EDA;
-//                if(OVLP_State==1 && j==2047){                   //COMO HACERLE?!!!
-//                    Main_Running=true;
-//                }
-                j=j<2? j+1:0;
+                j^=1;
                 k=0;
             }
         }
@@ -135,7 +132,7 @@ __interrupt void Inter_I2CA (void){
                     while(I2CA_STR_R&0x1000){};             //Mientras el controlador esté ocupado BB
                     //------Canales al ADC-------//
                     I2C_Write_Byte(AS7026GG_ADC_CHANNEL_MASK_L);
-                    I2C_Write_Byte(0xC);                // OFE1 After Gain & Electrical Front End
+                    I2C_Write_Byte(0x42);                // OFE1 After Gain & Electrical Front End
                     I2C_StartWR(AS7026GG_ADD, 2, WRITE);
                     I2C_Stop();
                 }
@@ -150,7 +147,7 @@ __interrupt void Inter_I2CA (void){
         while(!SCI_TxAvail){}
         SCI_TxAvail=false;
         SCI_StartPt=&Biom1.LED_V[0];
-        SCI_EndPt=&Biom1.EDA[1];
+        SCI_EndPt=&Biom1.EDA[2];
         SCI_Data=Biom1.LED_V[0];
         SCIB_FFTX_R|=0x20;                          //TXFFIENA: Hab Inter Tx FIFO
         i=0;

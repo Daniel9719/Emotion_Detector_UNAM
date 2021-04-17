@@ -8,6 +8,10 @@
 #ifndef PPI_ESTIMATION_H_
 #define PPI_ESTIMATION_H_
 
+#define CS_UpLim 256.0
+
+#include <stdint.h>
+#include <stdbool.h>
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%    PPI ESTIMATION FUNCTION   %%%%%%%%%%%%%%%

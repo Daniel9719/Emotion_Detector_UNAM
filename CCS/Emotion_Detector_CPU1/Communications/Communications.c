@@ -46,6 +46,7 @@ extern volatile bool SCRShift, PRVShift;
 
 //%%%%%%%%%%%%%%%%%%    TIME EXTRACTION VARIABLES    %%%%%%%%%%%%%%%%%%
 extern volatile uint16_t sum_flg;
+extern volatile uint16_t XY_indx;
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%     DMA CH3 INTERRUPT   %%%%%%%%%%%%%%%%%%
@@ -82,7 +83,7 @@ __interrupt void Inter_I2CA (void){
     static char Conmut=1;
     static uint16_t i=0, j=0, k=0;
     //-------Calibration variables---------//
-    static uint16_t Clb_Windw=0, Offset=10, Current=0;
+    static uint16_t Clb_Windw=0, Offset=7, Current=0;
     static int32_t Clb_Max=0, Clb_Min=16383, Clb_Ampl=0;
     //-------Shifting variables---------//
     static bool WDW_ready=false;
@@ -110,7 +111,7 @@ __interrupt void Inter_I2CA (void){
                 EDIS;
                 PRVShift=false;
             }
-            WDW_ready=PPI_Estimation(PPG, PRV_y, PRV_h);
+            WDW_ready|=PPI_Estimation(PPG, PRV_y, PRV_h);
         }
     }
     else{
@@ -124,36 +125,41 @@ __interrupt void Inter_I2CA (void){
         if(Clb_Mode==0){
             j++;
             if(j%4==0){
-                SCR[i]=FIR_EDA(Biom1.int_EDA);
-                if(WDW_ready==1 && i>2047){
-                    Main_Running=true;
-                    WDW_ready=0;
+                if(i==2048){
+                    sum_flg++;
+                    if(sum_flg<=3){
+                        i=0;
+                    }
+                }
+                if(sum_flg>=3){
+                    SCR[i]=FIR_EDA(Biom1.int_EDA);
+                    if(WDW_ready==1 && i>2047){
+                        Main_Running=true;
+                        WDW_ready=0;
+                    }
+                    if(i>2048){
+                        k++;
+                    }
+                    if(SCRShift==true){
+                        Size=(k<<1)-1;
+                        EALLOW;
+
+                        DMA_CH3_TRANSFERSIZE_R=Size;        //Transfer Size=Size+1 bursts per transfer
+                        DMA_CH3_DSTBEGADDRSHADOW_R=(uint32_t)(&SCR[0]);
+                        DMA_CH3_DSTADDRESHADOW_R=(uint32_t)(&SCR[0]);
+                        DMA_CH3_SRCBEGADDRSHADOW_R=(uint32_t)(&SCR[2048]);
+                        DMA_CH3_SRCADDRSHADOW_R=(uint32_t)(&SCR[2048]);
+                        DMA_CH3_MODE_R|=0x8000;             //CHINTE: Enable interrupt
+                        DMA_CH3_CONTROL_R|=0x9;             //RUN: Enable CH3 PERINTFRC:Force peripheral event from CH3 (SCR)
+
+                        EDIS;
+                        i=k;
+                        k=0;
+                        SCRShift=false;
+                    }
                 }
                 i++;
                 j=0;
-                if(i>2048){
-                    k++;
-                }
-                if(i==2047){
-                    sum_flg++;
-                }
-                if(SCRShift==true){
-                    Size=(k<<1)-1;
-                    EALLOW;
-
-                    DMA_CH3_TRANSFERSIZE_R=Size;        //Transfer Size=Size+1 bursts per transfer
-                    DMA_CH3_DSTBEGADDRSHADOW_R=(uint32_t)(&SCR[0]);
-                    DMA_CH3_DSTADDRESHADOW_R=(uint32_t)(&SCR[0]);
-                    DMA_CH3_SRCBEGADDRSHADOW_R=(uint32_t)(&SCR[2048]);
-                    DMA_CH3_SRCADDRSHADOW_R=(uint32_t)(&SCR[2048]);
-                    DMA_CH3_MODE_R|=0x8000;             //CHINTE: Enable interrupt
-                    DMA_CH3_CONTROL_R|=0x9;             //RUN: Enable CH3 PERINTFRC:Force peripheral event from CH3 (SCR)
-
-                    EDIS;
-                    i=k;
-                    k=0;
-                    SCRShift=false;
-                }
             }
         }
     }

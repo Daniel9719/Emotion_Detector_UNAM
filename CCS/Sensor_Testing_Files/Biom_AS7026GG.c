@@ -48,11 +48,11 @@ void Config_LEDs(int ADD){
 void Config_PD(int ADD){
     //------Config de Fotodetectores-------//
     I2C_Write_Byte(AS7026GG_PD_CFG);
-    I2C_Write_Byte(0xC);                //PD4 y PD1 conectados a fotoamplificador TIA
+    I2C_Write_Byte(0xC);                //PD1 y PD2 conectados a fotoamplificador TIA
     I2C_StartWR(ADD, 2, WRITE);
     //------Corriente Offset ON-------//
     I2C_Write_Byte(AS7026GG_PDOFFX_LEDON);
-    I2C_Write_Byte(5);
+    I2C_Write_Byte(7);
     I2C_StartWR(ADD, 2, WRITE);
 }
 

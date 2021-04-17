@@ -1,6 +1,6 @@
 ;***************************************************************
 ;* TMS320C2000 G3 C/C++ Codegen                             PC v18.12.4.LTS *
-;* Date/Time created: Sun Mar  7 14:49:22 2021                 *
+;* Date/Time created: Fri Apr 16 14:40:57 2021                 *
 ;***************************************************************
 	.compiler_opts --abi=coffabi --cla_support=cla1 --diag_wrap=off --float_support=fpu32 --hll_source=on --mem_model:code=flat --mem_model:data=large --object_format=coff --silicon_errata_fpu1_workaround=off --silicon_version=28 --symdebug:dwarf --symdebug:dwarf_version=3 --tmu_support=tmu0 
 	.asg	XAR2, FP
@@ -46,7 +46,7 @@ $C$DW$7	.dwtag  DW_TAG_subprogram
 	.dwattr $C$DW$7, DW_AT_external
 	.dwendtag $C$DW$7
 
-;	C:\ti\ccs910\ccs\tools\compiler\ti-cgt-c2000_18.12.4.LTS\bin\ac2000.exe -@C:\\Users\\danie\\AppData\\Local\\Temp\\{307F5B29-97BC-4165-B7AE-50340CB01609} 
+;	C:\ti\ccs910\ccs\tools\compiler\ti-cgt-c2000_18.12.4.LTS\bin\ac2000.exe -@C:\\Users\\danie\\AppData\\Local\\Temp\\{EAE661BE-837A-4B29-816B-0154A532185A} 
 	.sect	".text"
 	.clink
 	.global	_Config_LEDs
@@ -383,7 +383,7 @@ $C$DW$38	.dwtag  DW_TAG_TI_branch
         LCR       #_I2C_Write_Byte      ; [CPU_ALU] |54| 
         ; call occurs [#_I2C_Write_Byte] ; [] |54| 
 	.dwpsn	file "../Biom_AS7026GG.c",line 55,column 5,is_stmt,isa 0
-        MOVB      AL,#5                 ; [CPU_ALU] |55| 
+        MOVB      AL,#7                 ; [CPU_ALU] |55| 
 $C$DW$39	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$39, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$39, DW_AT_name("_I2C_Write_Byte")

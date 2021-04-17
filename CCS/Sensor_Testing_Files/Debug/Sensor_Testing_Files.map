@@ -1,10 +1,10 @@
 ******************************************************************************
              TMS320C2000 Linker PC v18.12.4                    
 ******************************************************************************
->> Linked Sun Mar  7 15:03:39 2021
+>> Linked Fri Apr 16 15:06:09 2021
 
 OUTPUT FILE NAME:   <Sensor_Testing_Files.out>
-ENTRY POINT SYMBOL: "_c_int00"  address: 000827d8
+ENTRY POINT SYMBOL: "_c_int00"  address: 000827cf
 
 
 MEMORY CONFIGURATION
@@ -23,7 +23,7 @@ PAGE 0:
   RAMGS15               0001b000   00001000  00000000  00001000  RWIX
   BEGIN                 00080000   00000002  00000000  00000002  RWIX
   FLASHA                00080002   00001ffe  00000000  00001ffe  RWIX
-  FLASHB                00082000   00002000  00000931  000016cf  RWIX
+  FLASHB                00082000   00002000  00000928  000016d8  RWIX
   FLASHC                00084000   00002000  00000000  00002000  RWIX
   FLASHD                00086000   00002000  00000000  00002000  RWIX
   FLASHE                00088000   00008000  00000000  00008000  RWIX
@@ -96,22 +96,22 @@ GETWRITEIDX
 PUTREADIDX 
 *          0    0003f800    00000000     DSECT
 
-.text      0    00082134    000007ff     
+.text      0    00082134    000007f6     
                   00082134    000002b1     Biom_AS7026GG.obj (.text)
-                  000823e5    00000235     BiomSensor_BLE.obj (.text:retain)
-                  0008261a    000000f1     BiomSensor_BLE.obj (.text)
-                  0008270b    000000cd     HM10_BLE.obj (.text)
-                  000827d8    00000056     rts2800_fpu32.lib : boot28.asm.obj (.text)
-                  0008282e    00000036     IEEE_I2C.obj (.text)
-                  00082864    0000002a     FIR.obj (.text)
-                  0008288e    00000029     rts2800_fpu32.lib : exit.c.obj (.text)
-                  000828b7    00000024                       : cpy_tbl.c.obj (.text)
-                  000828db    0000001d                       : memcpy.c.obj (.text)
-                  000828f8    00000019                       : args_main.c.obj (.text)
-                  00082911    00000016                       : strstr.c.obj (.text)
-                  00082927    00000009                       : _lock.c.obj (.text)
-                  00082930    00000002                       : pre_init.c.obj (.text)
-                  00082932    00000001                       : startup.c.obj (.text)
+                  000823e5    0000022c     BiomSensor_BLE.obj (.text:retain)
+                  00082611    000000f1     BiomSensor_BLE.obj (.text)
+                  00082702    000000cd     HM10_BLE.obj (.text)
+                  000827cf    00000056     rts2800_fpu32.lib : boot28.asm.obj (.text)
+                  00082825    00000036     IEEE_I2C.obj (.text)
+                  0008285b    0000002a     FIR.obj (.text)
+                  00082885    00000029     rts2800_fpu32.lib : exit.c.obj (.text)
+                  000828ae    00000024                       : cpy_tbl.c.obj (.text)
+                  000828d2    0000001d                       : memcpy.c.obj (.text)
+                  000828ef    00000019                       : args_main.c.obj (.text)
+                  00082908    00000016                       : strstr.c.obj (.text)
+                  0008291e    00000009                       : _lock.c.obj (.text)
+                  00082927    00000002                       : pre_init.c.obj (.text)
+                  00082929    00000001                       : startup.c.obj (.text)
 
 .econst    0    00090000    0000005c     
                   00090000    0000003b     HM10_BLE.obj (.econst:.string)
@@ -141,13 +141,13 @@ MODULE SUMMARY
        Module               code   initialized data   uninitialized data
        ------               ----   ----------------   ------------------
     .\
-       BiomSensor_BLE.obj   806    308                668               
+       BiomSensor_BLE.obj   797    308                668               
        Biom_AS7026GG.obj    689    0                  0                 
        HM10_BLE.obj         205    63                 1                 
        IEEE_I2C.obj         54     0                  0                 
        FIR.obj              42     0                  0                 
     +--+--------------------+------+------------------+--------------------+
-       Total:               1796   371                669               
+       Total:               1787   371                669               
                                                                         
     C:\ti\ccs910\ccs\tools\compiler\ti-cgt-c2000_18.12.4.LTS\lib\rts2800_fpu32.lib
        boot28.asm.obj       86     0                  0                 
@@ -164,7 +164,7 @@ MODULE SUMMARY
                                                                         
        Stack:               0      0                  512               
     +--+--------------------+------+------------------+--------------------+
-       Grand Total:         2047   395                1191              
+       Grand Total:         2038   395                1191              
 
 
 GLOBAL DATA SYMBOLS: SORTED BY DATA PAGE
@@ -202,38 +202,38 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 page  address   name                            
 ----  -------   ----                            
 abs   ffffffff  .text                           
-0     0008288e  C$$EXIT                         
+0     00082885  C$$EXIT                         
 1     0000a8e6  _Biom1                          
 0     00082366  _Biom_Calibration               
 0     00082339  _Biom_Config                    
-0     00082761  _Clean_Reg                      
-0     0008276d  _ComandoAT                      
+0     00082758  _Clean_Reg                      
+0     00082764  _ComandoAT                      
 0     000822ca  _Config_ADC                     
 0     00082272  _Config_EAF                     
 0     000822a5  _Config_ECG                     
 0     000822ef  _Config_FIFO                    
 0     00082309  _Config_GPIOs                   
-0     00082697  _Config_I2CA                    
+0     0008268e  _Config_I2CA                    
 0     00082134  _Config_LEDs                    
 0     0008226c  _Config_LTF                     
 0     00082231  _Config_OFE                     
 0     00082180  _Config_PD                      
-0     000826bb  _Config_PIE                     
-0     0008266f  _Config_SCIB                    
+0     000826b2  _Config_PIE                     
+0     00082666  _Config_SCIB                    
 0     000821b4  _Config_SEQ                     
 0     0008219a  _Config_TIA                     
-0     00082632  _Config_puertos                 
-0     0008261a  _FIR_EDA                        
-0     00082626  _FIR_PPG                        
-0     0008277f  _HM10_Config                    
-0     00082858  _I2C_Read_Byte                  
-0     0008282e  _I2C_StartWR                    
-0     0008285d  _I2C_Stop                       
-0     0008284e  _I2C_Write_Byte                 
+0     00082629  _Config_puertos                 
+0     00082611  _FIR_EDA                        
+0     0008261d  _FIR_PPG                        
+0     00082776  _HM10_Config                    
+0     0008284f  _I2C_Read_Byte                  
+0     00082825  _I2C_StartWR                    
+0     00082854  _I2C_Stop                       
+0     00082845  _I2C_Write_Byte                 
 0     000823e5  _Inter_GPIO22                   
 0     00082428  _Inter_I2CA                     
-0     00082586  _Inter_SCIBRX                   
-0     00082541  _Inter_SCIBTX                   
+0     0008257d  _Inter_SCIBRX                   
+0     00082538  _Inter_SCIBTX                   
 0     00008000  _RamfuncsLoadEnd                
 abs   00000000  _RamfuncsLoadSize               
 0     00008000  _RamfuncsLoadStart              
@@ -241,9 +241,9 @@ abs   00000000  _RamfuncsLoadSize
 abs   00000000  _RamfuncsRunSize                
 0     00008000  _RamfuncsRunStart               
 1     0000a8dc  _Raw                            
-0     00082757  _SCIB_Read                      
-0     00082723  _SCIB_WData                     
-0     0008270b  _SCIB_WText                     
+0     0008274e  _SCIB_Read                      
+0     0008271a  _SCIB_WData                     
+0     00082702  _SCIB_WText                     
 1     0000a8cd  _SCI_Data                       
 1     0000a8da  _SCI_EndPt                      
 1     0000a8ce  _SCI_Mode                       
@@ -265,26 +265,26 @@ abs   ffffffff  ___c_args__
 abs   ffffffff  ___etext__                      
 abs   ffffffff  ___pinit__                      
 abs   ffffffff  ___text__                       
-0     000828f8  __args_main                     
+0     000828ef  __args_main                     
 1     0000a8f6  __lock                          
-0     0008292f  __nop                           
-0     0008292b  __register_lock                 
-0     00082927  __register_unlock               
+0     00082926  __nop                           
+0     00082922  __register_lock                 
+0     0008291e  __register_unlock               
 1     00000400  __stack                         
-0     00082932  __system_post_cinit             
-0     00082930  __system_pre_init               
+0     00082929  __system_post_cinit             
+0     00082927  __system_pre_init               
 1     0000a8f8  __unlock                        
-0     0008288e  _abort                          
-0     000827d8  _c_int00                        
+0     00082885  _abort                          
+0     000827cf  _c_int00                        
 1     0000aa00  _coef_FIR_EDA                   
 1     0000aa80  _coef_FIR_PPG                   
-0     00082885  _conv                           
-0     000828b7  _copy_in                        
-0     00082890  _exit                           
-0     00082865  _firFilter                      
-0     000826d8  _main                           
-0     000828db  _memcpy                         
-0     00082911  _strstr                         
+0     0008287c  _conv                           
+0     000828ae  _copy_in                        
+0     00082887  _exit                           
+0     0008285c  _firFilter                      
+0     000826cf  _main                           
+0     000828d2  _memcpy                         
+0     00082908  _strstr                         
 1     0000a800  _xb_EDA                         
 1     0000a900  _xb_PPG                         
 abs   ffffffff  binit                           
@@ -318,40 +318,40 @@ page  address   name
 0     00082366  _Biom_Calibration               
 0     000823e5  _Inter_GPIO22                   
 0     00082428  _Inter_I2CA                     
-0     00082541  _Inter_SCIBTX                   
-0     00082586  _Inter_SCIBRX                   
-0     0008261a  _FIR_EDA                        
-0     00082626  _FIR_PPG                        
-0     00082632  _Config_puertos                 
-0     0008266f  _Config_SCIB                    
-0     00082697  _Config_I2CA                    
-0     000826bb  _Config_PIE                     
-0     000826d8  _main                           
-0     0008270b  _SCIB_WText                     
-0     00082723  _SCIB_WData                     
-0     00082757  _SCIB_Read                      
-0     00082761  _Clean_Reg                      
-0     0008276d  _ComandoAT                      
-0     0008277f  _HM10_Config                    
-0     000827d8  _c_int00                        
-0     0008282e  _I2C_StartWR                    
-0     0008284e  _I2C_Write_Byte                 
-0     00082858  _I2C_Read_Byte                  
-0     0008285d  _I2C_Stop                       
-0     00082865  _firFilter                      
-0     00082885  _conv                           
-0     0008288e  C$$EXIT                         
-0     0008288e  _abort                          
-0     00082890  _exit                           
-0     000828b7  _copy_in                        
-0     000828db  _memcpy                         
-0     000828f8  __args_main                     
-0     00082911  _strstr                         
-0     00082927  __register_unlock               
-0     0008292b  __register_lock                 
-0     0008292f  __nop                           
-0     00082930  __system_pre_init               
-0     00082932  __system_post_cinit             
+0     00082538  _Inter_SCIBTX                   
+0     0008257d  _Inter_SCIBRX                   
+0     00082611  _FIR_EDA                        
+0     0008261d  _FIR_PPG                        
+0     00082629  _Config_puertos                 
+0     00082666  _Config_SCIB                    
+0     0008268e  _Config_I2CA                    
+0     000826b2  _Config_PIE                     
+0     000826cf  _main                           
+0     00082702  _SCIB_WText                     
+0     0008271a  _SCIB_WData                     
+0     0008274e  _SCIB_Read                      
+0     00082758  _Clean_Reg                      
+0     00082764  _ComandoAT                      
+0     00082776  _HM10_Config                    
+0     000827cf  _c_int00                        
+0     00082825  _I2C_StartWR                    
+0     00082845  _I2C_Write_Byte                 
+0     0008284f  _I2C_Read_Byte                  
+0     00082854  _I2C_Stop                       
+0     0008285c  _firFilter                      
+0     0008287c  _conv                           
+0     00082885  C$$EXIT                         
+0     00082885  _abort                          
+0     00082887  _exit                           
+0     000828ae  _copy_in                        
+0     000828d2  _memcpy                         
+0     000828ef  __args_main                     
+0     00082908  _strstr                         
+0     0008291e  __register_unlock               
+0     00082922  __register_lock                 
+0     00082926  __nop                           
+0     00082927  __system_pre_init               
+0     00082929  __system_post_cinit             
 1     00000400  __stack                         
 1     00000600  __STACK_END                     
 1     0000a800  _xb_EDA                         

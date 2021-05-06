@@ -5,10 +5,12 @@
 #define f_s 128.0
 
 extern volatile uint16_t CS_SHIFT;
-extern volatile float CS_UpAcum, CS_UpN;
+extern volatile float CS_UpAcum;
+extern volatile int16_t CS_UpN;
 
 volatile uint16_t sum_flg=0;
 uint16_t XY_indx;
+extern bool Clb_Peak;
 
 
 bool PPI_Estimation(int x_PPG, float* Y, float* X){
@@ -18,14 +20,15 @@ bool PPI_Estimation(int x_PPG, float* Y, float* X){
 
     bool WR = false;
     float PPI[2];
-    float Y_buff[2];
-    float X_buff[2];
+    static float Y_buff[2];
+    static float X_buff[2];
     int16_t PPG[2];
     uint16_t i;
 
     if(sum_flg > 3){
         Poincare_Graph(PPI, sum_flg);
         Time_Features(PPI, sum_flg);
+        sum_flg--;
         return 0;
     }
 
@@ -40,6 +43,7 @@ bool PPI_Estimation(int x_PPG, float* Y, float* X){
         //Slope threshold to detect a falling edge
         if(subs_up_steps >= 25){
             detected_peaks++;
+            Clb_Peak=true;
         }
         //The count is reset if there is an up-step
         subs_up_steps=0;
@@ -47,17 +51,14 @@ bool PPI_Estimation(int x_PPG, float* Y, float* X){
         if(detected_peaks == 2){
             //Adaptive time threshold
             if((indx_dist/f_s < 1.5*temp_meanPPI) && (indx_dist/f_s > 0.75*temp_meanPPI) || PPI_indx == 0){
-                if((DMA_CH1_CONTROL_R&0x2000)==0x2000){
-                   if(dma_flg != 1){
-                       XY_indx = XY_indx - CS_SHIFT;
-                   }
+                if((DMA_CH1_CONTROL_R&0x2000)==0x2000){                 //If DMA Channel 1 is running
                    Y_buff[buff_indx] = indx_dist/f_s;
-                   X_buff[buff_indx] = Y_buff[XY_indx] + missed_PPI;
+                   X_buff[buff_indx] = Y_buff[buff_indx] + missed_PPI;
                    Acum = Acum + Y_buff[buff_indx] + missed_PPI;
                    buff_indx++;
                    dma_flg = 1;
                }
-               else if((DMA_CH1_CONTROL_R&0x2000)!=0x2000 && dma_flg){
+               else if((DMA_CH1_CONTROL_R&0x2000)!=0x2000 && dma_flg){  //When DMA Channel 1 has finished running
                    for(i=0; i<buff_indx; i++){
                        Y[XY_indx] = Y_buff[i];
                        X[XY_indx-1] = X_buff[i];
@@ -69,7 +70,7 @@ bool PPI_Estimation(int x_PPG, float* Y, float* X){
                    Acum = Acum + Y[XY_indx] + missed_PPI;
                    XY_indx++;
                }
-               else{
+               else{                                                    //When DMA Channel 1 is not running
                    //PPI = (Number of indexes between peaks)/(sampling frequency)
                    Y[XY_indx] = indx_dist/f_s;
                    if(XY_indx > 0){
@@ -79,7 +80,7 @@ bool PPI_Estimation(int x_PPG, float* Y, float* X){
                    XY_indx++;
                }
 
-               if(Acum >= CS_UpLim){
+               if(Acum >= 320.0){
                    CS_UpAcum = Acum;
                    CS_UpN = XY_indx-1;
                    Acum -= 64;

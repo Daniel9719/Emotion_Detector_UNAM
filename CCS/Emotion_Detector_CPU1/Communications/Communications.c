@@ -36,6 +36,7 @@ float PRV_y[853];
 float SCR[2208];    //2048 points for 64s of signal + 160 points for buffer of 5s
 
 bool TxSwitch;
+bool Clb_Peak=false;
 
 //%%%%%%%%%%%%%%%%%%    FREQUENCY EXTRACTION VARIABLES    %%%%%%%%%%%%%%%%%%
 extern volatile float Coeff_A[];
@@ -43,6 +44,7 @@ extern volatile float Const_B[];
 extern volatile float S[];
 extern volatile float CubSpl[];
 extern volatile bool SCRShift, PRVShift;
+extern volatile int16_t CS_SHIFT;
 
 //%%%%%%%%%%%%%%%%%%    TIME EXTRACTION VARIABLES    %%%%%%%%%%%%%%%%%%
 extern volatile uint16_t sum_flg;
@@ -60,7 +62,7 @@ __interrupt void Inter_DMACH3 (void){
     DMA_CH3_SRCBEGADDRSHADOW_R=(uint32_t)(&CubSpl[512]);
     DMA_CH3_SRCADDRSHADOW_R=(uint32_t)(&CubSpl[512]);
     DMA_CH3_MODE_R&=~0x8000;                        //CHINTE: Disable interrupt
-    DMA_CH3_CONTROL_R|=0x9;                         //RUN: Enable CH4 PERINTFRC:Force peripheral event from CH4 (OVLP Coeff_A)
+    DMA_CH3_CONTROL_R|=0x9;                         //RUN: Enable CH3 PERINTFRC:Force peripheral event from CH3 (CubSpl)
 }
 
 //--------------------------------------------------------------------
@@ -81,10 +83,11 @@ __interrupt void Inter_XINT2 (void){
 //--------------------------------------------------------------------
 __interrupt void Inter_I2CA (void){
     static char Conmut=1;
-    static uint16_t i=0, j=0, k=0;
+    static uint16_t i=0, j=3, k=0;
     //-------Calibration variables---------//
     static uint16_t Clb_Windw=0, Offset=7, Current=0;
     static int32_t Clb_Max=0, Clb_Min=16383, Clb_Ampl=0;
+    static uint16_t Clb_Delay=0;
     //-------Shifting variables---------//
     static bool WDW_ready=false;
     uint16_t Size;
@@ -99,19 +102,26 @@ __interrupt void Inter_I2CA (void){
         }
         if(Clb_Mode==0){
             PPG=FIR_PPG(Biom1.GR_LED);
-            if(PRVShift==true){
-                Size=(XY_indx<<1)-1;
-                EALLOW;
+            if(Clb_Delay>=800){                     //Delay of 800 samples/128 Hz=6.25 s due to FIR filter
+                                                    //(Value at 6.25 due to worst case scenario for EDA with 200 samples/32 Hz)
+                if(PRVShift==true){
+                    Size=(XY_indx<<1)-1;
+                    EALLOW;
 
-                DMA_CH1_TRANSFERSIZE_R=Size;        //Transfer Size=Size+1 bursts per transfer
-                DMA_CH2_TRANSFERSIZE_R=Size;        //Transfer Size=Size+1 bursts per transfer
-                DMA_CH1_CONTROL_R|=0x9;             //RUN: Enable CH1 PERINTFRC:Force peripheral event from CH1 (PRV_h)
-                DMA_CH2_CONTROL_R|=0x9;             //RUN: Enable CH2 PERINTFRC:Force peripheral event from CH2 (PRV_y)
+                    DMA_CH1_TRANSFERSIZE_R=Size;        //Transfer Size=Size+1 bursts per transfer
+                    DMA_CH2_TRANSFERSIZE_R=Size;        //Transfer Size=Size+1 bursts per transfer
+                    DMA_CH1_CONTROL_R|=0x9;             //RUN: Enable CH1 PERINTFRC:Force peripheral event from CH1 (PRV_h)
+                    DMA_CH2_CONTROL_R|=0x9;             //RUN: Enable CH2 PERINTFRC:Force peripheral event from CH2 (PRV_y)
 
-                EDIS;
-                PRVShift=false;
+                    EDIS;
+                    PRVShift=false;
+                    XY_indx = XY_indx - CS_SHIFT;
+                }
+                WDW_ready|=PPI_Estimation(PPG, PRV_y, PRV_h);
             }
-            WDW_ready|=PPI_Estimation(PPG, PRV_y, PRV_h);
+            else{
+                Clb_Delay++;
+            }
         }
     }
     else{
@@ -122,7 +132,7 @@ __interrupt void Inter_I2CA (void){
             Clb_Max=__max(Clb_Max,Biom1.int_EDA);   //PPG Signal Pregain
             Clb_Min=__min(Clb_Min,Biom1.int_EDA);
         }
-        if(Clb_Mode==0){
+        if(Clb_Mode==0 && Clb_Peak==true){
             j++;
             if(j%4==0){
                 if(i==2048){
@@ -133,9 +143,9 @@ __interrupt void Inter_I2CA (void){
                 }
                 if(sum_flg>=3){
                     SCR[i]=FIR_EDA(Biom1.int_EDA);
-                    if(WDW_ready==1 && i>2047){
+                    if(WDW_ready==true){
                         Main_Running=true;
-                        WDW_ready=0;
+                        WDW_ready=false;
                     }
                     if(i>2048){
                         k++;
@@ -156,6 +166,9 @@ __interrupt void Inter_I2CA (void){
                         i=k;
                         k=0;
                         SCRShift=false;
+                    }
+                    if(i>2208){
+                        i=0;
                     }
                 }
                 i++;
@@ -220,10 +233,6 @@ __interrupt void Inter_I2CA (void){
     Conmut^=1;
     I2CA_FFRX_R|=0x40;                              //RXFFINTCLR: Clean FIFO Rx flag
     PIE_ACK_R|=0x80;                                //Clean flag interrupt from Group 8
-//    if(!Main_Running){
-//        CPUSYS_LPMCR_R&=0xFFFFFFFC;                 //IDLE MODE
-//        IDLE;
-//    }
 }
 
 //--------------------------------------------------------------------
@@ -402,7 +411,7 @@ void Config_DMA(void){
     DMA_CH2_CONTROL_R|=0x90;                 //ERRCLR: Limpia bandera OVRFLG
                                              //PERINTCLR: Limpia bandera PERINTFLG
 
-    //CHANNEL 3 (SCR)
+    //CHANNEL 3 (SCR or CubSpl)
     DMA_CH3_MODE_R=0x4520;                   //DATASIZE: 32 bits of transfer (1)
                                              //ONESHOT: Channel performs an entire transfer
                                              //PERINTE: Enable pheripheral event trigger

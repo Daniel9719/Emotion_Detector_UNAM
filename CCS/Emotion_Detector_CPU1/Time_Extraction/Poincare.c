@@ -75,7 +75,6 @@ void Poincare_Graph(float* PPI, uint16_t sum_flg){
             PFeat_Estimation(&num_PPI4, &sum4_prj_SD1, &sum4_prj_SD2, &mean4SD1, &mean4SD2);
             sum_count = 0;
         }
-        sum_flg--;
     }
     else{
 

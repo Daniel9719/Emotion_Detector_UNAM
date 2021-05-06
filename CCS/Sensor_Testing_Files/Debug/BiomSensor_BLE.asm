@@ -1,6 +1,6 @@
 ;***************************************************************
 ;* TMS320C2000 G3 C/C++ Codegen                             PC v18.12.4.LTS *
-;* Date/Time created: Fri Apr 16 15:06:09 2021                 *
+;* Date/Time created: Tue Apr 27 11:09:19 2021                 *
 ;***************************************************************
 	.compiler_opts --abi=coffabi --cla_support=cla1 --diag_wrap=off --float_support=fpu32 --hll_source=on --mem_model:code=flat --mem_model:data=large --object_format=coff --silicon_errata_fpu1_workaround=off --silicon_version=28 --symdebug:dwarf --symdebug:dwarf_version=3 --tmu_support=tmu0 
 	.asg	XAR2, FP
@@ -825,7 +825,7 @@ $C$DW$39	.dwtag  DW_TAG_variable
 	.sblock	".ebss:_coef_FIR_PPG"
 	.sblock	".ebss:_xb_EDA"
 	.sblock	".ebss:_xb_PPG"
-;	C:\ti\ccs910\ccs\tools\compiler\ti-cgt-c2000_18.12.4.LTS\bin\ac2000.exe -@C:\\Users\\danie\\AppData\\Local\\Temp\\{81ECBBEA-8290-41BA-8F33-DC0E9662A0C7} 
+;	C:\ti\ccs910\ccs\tools\compiler\ti-cgt-c2000_18.12.4.LTS\bin\ac2000.exe -@C:\\Users\\danie\\AppData\\Local\\Temp\\{E59D0881-0A32-46D4-AC0A-B5B5EA743C8C} 
 	.sect	".text"
 	.clink
 	.global	_FIR_EDA
@@ -1361,11 +1361,19 @@ $C$L2:
         MOV       AL,@_Clb_Mode$6       ; [CPU_ALU] |62| 
         B         $C$L5,NEQ             ; [CPU_ALU] |62| 
         ; branchcc occurs ; [] |62| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 64,column 13,is_stmt,isa 0
-        MOVZ      AR0,@_i$1             ; [CPU_ALU] |64| 
-        MOV       AL,@_Raw              ; [CPU_ALU] |64| 
-        MOVL      XAR4,#_Biom1          ; [CPU_ARAU] |64| 
-        MOV       *+XAR4[AR0],AL        ; [CPU_ALU] |64| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 63,column 13,is_stmt,isa 0
+        MOV       AL,@_Raw              ; [CPU_ALU] |63| 
+$C$DW$72	.dwtag  DW_TAG_TI_branch
+	.dwattr $C$DW$72, DW_AT_low_pc(0x00)
+	.dwattr $C$DW$72, DW_AT_name("_FIR_PPG")
+	.dwattr $C$DW$72, DW_AT_TI_call
+
+        LCR       #_FIR_PPG             ; [CPU_ALU] |63| 
+        ; call occurs [#_FIR_PPG] ; [] |63| 
+        MOVW      DP,#_i$1              ; [CPU_ARAU] 
+        MOVZ      AR0,@_i$1             ; [CPU_ALU] |63| 
+        MOVL      XAR4,#_Biom1          ; [CPU_ARAU] |63| 
+        MOV       *+XAR4[AR0],AL        ; [CPU_ALU] |63| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 65,column 13,is_stmt,isa 0
         INC       @_i$1                 ; [CPU_ALU] |65| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 67,column 5,is_stmt,isa 0
@@ -1373,10 +1381,10 @@ $C$L2:
         ; branch occurs ; [] |67| 
 $C$L3:    
 	.dwpsn	file "../BiomSensor_BLE.c",line 70,column 9,is_stmt,isa 0
-$C$DW$72	.dwtag  DW_TAG_TI_branch
-	.dwattr $C$DW$72, DW_AT_low_pc(0x00)
-	.dwattr $C$DW$72, DW_AT_name("_I2C_Read_Byte")
-	.dwattr $C$DW$72, DW_AT_TI_call
+$C$DW$73	.dwtag  DW_TAG_TI_branch
+	.dwattr $C$DW$73, DW_AT_low_pc(0x00)
+	.dwattr $C$DW$73, DW_AT_name("_I2C_Read_Byte")
+	.dwattr $C$DW$73, DW_AT_TI_call
 
         LCR       #_I2C_Read_Byte       ; [CPU_ALU] |70| 
         ; call occurs [#_I2C_Read_Byte] ; [] |70| 
@@ -1384,10 +1392,10 @@ $C$DW$72	.dwtag  DW_TAG_TI_branch
         ASR       AL,2                  ; [CPU_ALU] |70| 
         MOV       @_Raw+1,AL            ; [CPU_ALU] |70| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 71,column 9,is_stmt,isa 0
-$C$DW$73	.dwtag  DW_TAG_TI_branch
-	.dwattr $C$DW$73, DW_AT_low_pc(0x00)
-	.dwattr $C$DW$73, DW_AT_name("_I2C_Read_Byte")
-	.dwattr $C$DW$73, DW_AT_TI_call
+$C$DW$74	.dwtag  DW_TAG_TI_branch
+	.dwattr $C$DW$74, DW_AT_low_pc(0x00)
+	.dwattr $C$DW$74, DW_AT_name("_I2C_Read_Byte")
+	.dwattr $C$DW$74, DW_AT_TI_call
 
         LCR       #_I2C_Read_Byte       ; [CPU_ALU] |71| 
         ; call occurs [#_I2C_Read_Byte] ; [] |71| 
@@ -1422,19 +1430,11 @@ $C$L4:
         ANDB      AL,#0x03              ; [CPU_ALU] |78| 
         B         $C$L5,NEQ             ; [CPU_ALU] |78| 
         ; branchcc occurs ; [] |78| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 79,column 17,is_stmt,isa 0
-        MOV       AL,@_Raw+1            ; [CPU_ALU] |79| 
-$C$DW$74	.dwtag  DW_TAG_TI_branch
-	.dwattr $C$DW$74, DW_AT_low_pc(0x00)
-	.dwattr $C$DW$74, DW_AT_name("_FIR_EDA")
-	.dwattr $C$DW$74, DW_AT_TI_call
-
-        LCR       #_FIR_EDA             ; [CPU_ALU] |79| 
-        ; call occurs [#_FIR_EDA] ; [] |79| 
-        MOVW      DP,#_j$2              ; [CPU_ARAU] 
-        MOVZ      AR0,@_j$2             ; [CPU_ALU] |79| 
-        MOVL      XAR4,#_Biom1+8        ; [CPU_ARAU] |79| 
-        MOV       *+XAR4[AR0],AL        ; [CPU_ALU] |79| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 80,column 17,is_stmt,isa 0
+        MOVZ      AR0,@_j$2             ; [CPU_ALU] |80| 
+        MOV       AL,@_Raw+1            ; [CPU_ALU] |80| 
+        MOVL      XAR4,#_Biom1+8        ; [CPU_ARAU] |80| 
+        MOV       *+XAR4[AR0],AL        ; [CPU_ALU] |80| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 81,column 17,is_stmt,isa 0
         XOR       @_j$2,#0x0001         ; [CPU_ALU] |81| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 82,column 17,is_stmt,isa 0
@@ -1598,88 +1598,88 @@ $C$DW$77	.dwtag  DW_TAG_TI_branch
 
         LCR       #_I2C_Write_Byte      ; [CPU_ALU] |134| 
         ; call occurs [#_I2C_Write_Byte] ; [] |134| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 135,column 21,is_stmt,isa 0
-        MOVB      AL,#66                ; [CPU_ALU] |135| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 136,column 21,is_stmt,isa 0
+        MOVB      AL,#66                ; [CPU_ALU] |136| 
 $C$DW$78	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$78, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$78, DW_AT_name("_I2C_Write_Byte")
 	.dwattr $C$DW$78, DW_AT_TI_call
 
-        LCR       #_I2C_Write_Byte      ; [CPU_ALU] |135| 
-        ; call occurs [#_I2C_Write_Byte] ; [] |135| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 136,column 21,is_stmt,isa 0
-        MOVB      AL,#48                ; [CPU_ALU] |136| 
-        MOVB      XAR4,#1               ; [CPU_ALU] |136| 
-        MOVB      AH,#2                 ; [CPU_ALU] |136| 
+        LCR       #_I2C_Write_Byte      ; [CPU_ALU] |136| 
+        ; call occurs [#_I2C_Write_Byte] ; [] |136| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 137,column 21,is_stmt,isa 0
+        MOVB      AL,#48                ; [CPU_ALU] |137| 
+        MOVB      XAR4,#1               ; [CPU_ALU] |137| 
+        MOVB      AH,#2                 ; [CPU_ALU] |137| 
 $C$DW$79	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$79, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$79, DW_AT_name("_I2C_StartWR")
 	.dwattr $C$DW$79, DW_AT_TI_call
 
-        LCR       #_I2C_StartWR         ; [CPU_ALU] |136| 
-        ; call occurs [#_I2C_StartWR] ; [] |136| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 137,column 21,is_stmt,isa 0
+        LCR       #_I2C_StartWR         ; [CPU_ALU] |137| 
+        ; call occurs [#_I2C_StartWR] ; [] |137| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 138,column 21,is_stmt,isa 0
 $C$DW$80	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$80, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$80, DW_AT_name("_I2C_Stop")
 	.dwattr $C$DW$80, DW_AT_TI_call
 
-        LCR       #_I2C_Stop            ; [CPU_ALU] |137| 
-        ; call occurs [#_I2C_Stop] ; [] |137| 
+        LCR       #_I2C_Stop            ; [CPU_ALU] |138| 
+        ; call occurs [#_I2C_Stop] ; [] |138| 
 $C$L17:    
-	.dwpsn	file "../BiomSensor_BLE.c",line 140,column 13,is_stmt,isa 0
-        MOVW      DP,#_Clb_Windw$5      ; [CPU_ARAU] 
-        MOV       @_Clb_Windw$5,#0      ; [CPU_ALU] |140| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 141,column 13,is_stmt,isa 0
-        MOVB      ACC,#0                ; [CPU_ALU] |141| 
-        MOVL      @_Clb_Max$9,ACC       ; [CPU_ALU] |141| 
+        MOVW      DP,#_Clb_Windw$5      ; [CPU_ARAU] 
+        MOV       @_Clb_Windw$5,#0      ; [CPU_ALU] |141| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 142,column 13,is_stmt,isa 0
-        MOVL      XAR4,#16383           ; [CPU_ARAU] |142| 
-        MOVL      @_Clb_Min$10,XAR4     ; [CPU_ALU] |142| 
+        MOVB      ACC,#0                ; [CPU_ALU] |142| 
+        MOVL      @_Clb_Max$9,ACC       ; [CPU_ALU] |142| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 143,column 13,is_stmt,isa 0
+        MOVL      XAR4,#16383           ; [CPU_ARAU] |143| 
+        MOVL      @_Clb_Min$10,XAR4     ; [CPU_ALU] |143| 
 $C$L18:    
-	.dwpsn	file "../BiomSensor_BLE.c",line 146,column 5,is_stmt,isa 0
-        MOV       AL,@_i$1              ; [CPU_ALU] |146| 
-        CMPB      AL,#8                 ; [CPU_ALU] |146| 
-        B         $C$L20,NEQ            ; [CPU_ALU] |146| 
-        ; branchcc occurs ; [] |146| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 147,column 9,is_stmt,isa 0
-$C$L19:    
-	.dwpsn	file "../BiomSensor_BLE.c",line 147,column 15,is_stmt,isa 0
-        MOV       AL,@_SCI_TxAvail      ; [CPU_ALU] |147| 
-        B         $C$L19,EQ             ; [CPU_ALU] |147| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 147,column 5,is_stmt,isa 0
+        MOV       AL,@_i$1              ; [CPU_ALU] |147| 
+        CMPB      AL,#8                 ; [CPU_ALU] |147| 
+        B         $C$L20,NEQ            ; [CPU_ALU] |147| 
         ; branchcc occurs ; [] |147| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 148,column 9,is_stmt,isa 0
-        MOV       @_SCI_TxAvail,#0      ; [CPU_ALU] |148| 
+$C$L19:    
+	.dwpsn	file "../BiomSensor_BLE.c",line 148,column 15,is_stmt,isa 0
+        MOV       AL,@_SCI_TxAvail      ; [CPU_ALU] |148| 
+        B         $C$L19,EQ             ; [CPU_ALU] |148| 
+        ; branchcc occurs ; [] |148| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 149,column 9,is_stmt,isa 0
-        MOVL      XAR4,#_Biom1          ; [CPU_ARAU] |149| 
-        MOVL      @_SCI_StartPt,XAR4    ; [CPU_ALU] |149| 
+        MOV       @_SCI_TxAvail,#0      ; [CPU_ALU] |149| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 150,column 9,is_stmt,isa 0
-        MOVL      XAR4,#_Biom1+10       ; [CPU_ARAU] |150| 
-        MOVL      @_SCI_EndPt,XAR4      ; [CPU_ALU] |150| 
+        MOVL      XAR4,#_Biom1          ; [CPU_ARAU] |150| 
+        MOVL      @_SCI_StartPt,XAR4    ; [CPU_ALU] |150| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 151,column 9,is_stmt,isa 0
-        MOV       AL,@_Biom1            ; [CPU_ALU] |151| 
-        MOV       @_SCI_Data,AL         ; [CPU_ALU] |151| 
+        MOVL      XAR4,#_Biom1+10       ; [CPU_ARAU] |151| 
+        MOVL      @_SCI_EndPt,XAR4      ; [CPU_ALU] |151| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 152,column 9,is_stmt,isa 0
-        MOVB      ACC,#32               ; [CPU_ALU] |152| 
-        MOVL      XAR4,#29210           ; [CPU_ARAU] |152| 
-        OR        *+XAR4[0],AL          ; [CPU_ALU] |152| 
-        OR        *+XAR4[1],AH          ; [CPU_ALU] |152| 
+        MOV       AL,@_Biom1            ; [CPU_ALU] |152| 
+        MOV       @_SCI_Data,AL         ; [CPU_ALU] |152| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 153,column 9,is_stmt,isa 0
-        MOV       @_i$1,#0              ; [CPU_ALU] |153| 
+        MOVB      ACC,#32               ; [CPU_ALU] |153| 
+        MOVL      XAR4,#29210           ; [CPU_ARAU] |153| 
+        OR        *+XAR4[0],AL          ; [CPU_ALU] |153| 
+        OR        *+XAR4[1],AH          ; [CPU_ALU] |153| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 154,column 9,is_stmt,isa 0
+        MOV       @_i$1,#0              ; [CPU_ALU] |154| 
 $C$L20:    
-	.dwpsn	file "../BiomSensor_BLE.c",line 155,column 5,is_stmt,isa 0
-        XOR       @_Conmut$4,#0x0001    ; [CPU_ALU] |155| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 156,column 5,is_stmt,isa 0
-        MOVB      ACC,#64               ; [CPU_ALU] |156| 
-        MOVL      XAR4,#29473           ; [CPU_ARAU] |156| 
-        OR        *+XAR4[0],AL          ; [CPU_ALU] |156| 
-        OR        *+XAR4[1],AH          ; [CPU_ALU] |156| 
+        XOR       @_Conmut$4,#0x0001    ; [CPU_ALU] |156| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 157,column 5,is_stmt,isa 0
-        MOVB      ACC,#128              ; [CPU_ALU] |157| 
-        MOVL      XAR4,#3297            ; [CPU_ARAU] |157| 
+        MOVB      ACC,#64               ; [CPU_ALU] |157| 
+        MOVL      XAR4,#29473           ; [CPU_ARAU] |157| 
         OR        *+XAR4[0],AL          ; [CPU_ALU] |157| 
         OR        *+XAR4[1],AH          ; [CPU_ALU] |157| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 158,column 1,is_stmt,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 158,column 5,is_stmt,isa 0
+        MOVB      ACC,#128              ; [CPU_ALU] |158| 
+        MOVL      XAR4,#3297            ; [CPU_ARAU] |158| 
+        OR        *+XAR4[0],AL          ; [CPU_ALU] |158| 
+        OR        *+XAR4[1],AH          ; [CPU_ALU] |158| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 159,column 1,is_stmt,isa 0
         MOV32     R3H,*--SP             ; [CPU_FPU] 
 	.dwcfi	cfa_offset, -24
 	.dwcfi	restore_reg, 55
@@ -1727,7 +1727,7 @@ $C$DW$81	.dwtag  DW_TAG_TI_branch
         IRET      ; [CPU_ALU] 
         ; return occurs ; [] 
 	.dwattr $C$DW$58, DW_AT_TI_end_file("../BiomSensor_BLE.c")
-	.dwattr $C$DW$58, DW_AT_TI_end_line(0x9e)
+	.dwattr $C$DW$58, DW_AT_TI_end_line(0x9f)
 	.dwattr $C$DW$58, DW_AT_TI_end_column(0x01)
 	.dwendentry
 	.dwendtag $C$DW$58
@@ -1744,11 +1744,11 @@ $C$DW$82	.dwtag  DW_TAG_subprogram
 	.dwattr $C$DW$82, DW_AT_TI_symbol_name("_Inter_SCIBTX")
 	.dwattr $C$DW$82, DW_AT_external
 	.dwattr $C$DW$82, DW_AT_TI_begin_file("../BiomSensor_BLE.c")
-	.dwattr $C$DW$82, DW_AT_TI_begin_line(0xa3)
+	.dwattr $C$DW$82, DW_AT_TI_begin_line(0xa4)
 	.dwattr $C$DW$82, DW_AT_TI_begin_column(0x12)
 	.dwattr $C$DW$82, DW_AT_TI_interrupt
 	.dwattr $C$DW$82, DW_AT_TI_max_frame_size(-26)
-	.dwpsn	file "../BiomSensor_BLE.c",line 163,column 37,is_stmt,address _Inter_SCIBTX,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 164,column 37,is_stmt,address _Inter_SCIBTX,isa 0
 
 	.dwfde $C$DW$CIE, _Inter_SCIBTX
 
@@ -1811,39 +1811,39 @@ _Inter_SCIBTX:
         SPM       0                     ; [CPU_ALU] 
         CLRC      PAGE0,OVM             ; [CPU_ALU] 
         CLRC      AMODE                 ; [CPU_ALU] 
-	.dwpsn	file "../BiomSensor_BLE.c",line 164,column 5,is_stmt,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 165,column 5,is_stmt,isa 0
 $C$DW$83	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$83, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$83, DW_AT_name("_SCIB_WData")
 	.dwattr $C$DW$83, DW_AT_TI_call
 
-        LCR       #_SCIB_WData          ; [CPU_ALU] |164| 
-        ; call occurs [#_SCIB_WData] ; [] |164| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 165,column 5,is_stmt,isa 0
+        LCR       #_SCIB_WData          ; [CPU_ALU] |165| 
+        ; call occurs [#_SCIB_WData] ; [] |165| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 166,column 5,is_stmt,isa 0
         MOVW      DP,#_SCI_EndPt        ; [CPU_ARAU] 
-        MOVL      ACC,@_SCI_EndPt       ; [CPU_ALU] |165| 
-        CMPL      ACC,@_SCI_StartPt     ; [CPU_ALU] |165| 
-        B         $C$L21,NEQ            ; [CPU_ALU] |165| 
-        ; branchcc occurs ; [] |165| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 166,column 9,is_stmt,isa 0
-        MOVL      XAR4,#29210           ; [CPU_ARAU] |166| 
-        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |166| 
-        AND       AL,#65503             ; [CPU_ALU] |166| 
-        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |166| 
+        MOVL      ACC,@_SCI_EndPt       ; [CPU_ALU] |166| 
+        CMPL      ACC,@_SCI_StartPt     ; [CPU_ALU] |166| 
+        B         $C$L21,NEQ            ; [CPU_ALU] |166| 
+        ; branchcc occurs ; [] |166| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 167,column 9,is_stmt,isa 0
-        MOVB      @_SCI_TxAvail,#1,UNC  ; [CPU_ALU] |167| 
+        MOVL      XAR4,#29210           ; [CPU_ARAU] |167| 
+        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |167| 
+        AND       AL,#65503             ; [CPU_ALU] |167| 
+        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |167| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 168,column 9,is_stmt,isa 0
+        MOVB      @_SCI_TxAvail,#1,UNC  ; [CPU_ALU] |168| 
 $C$L21:    
-	.dwpsn	file "../BiomSensor_BLE.c",line 169,column 5,is_stmt,isa 0
-        MOVB      ACC,#64               ; [CPU_ALU] |169| 
-        MOVL      XAR4,#29210           ; [CPU_ARAU] |169| 
-        OR        *+XAR4[0],AL          ; [CPU_ALU] |169| 
-        OR        *+XAR4[1],AH          ; [CPU_ALU] |169| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 170,column 5,is_stmt,isa 0
-        MOVL      XAR4,#3297            ; [CPU_ARAU] |170| 
-        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |170| 
-        OR        AL,#256               ; [CPU_ALU] |170| 
-        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |170| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 171,column 1,is_stmt,isa 0
+        MOVB      ACC,#64               ; [CPU_ALU] |170| 
+        MOVL      XAR4,#29210           ; [CPU_ARAU] |170| 
+        OR        *+XAR4[0],AL          ; [CPU_ALU] |170| 
+        OR        *+XAR4[1],AH          ; [CPU_ALU] |170| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 171,column 5,is_stmt,isa 0
+        MOVL      XAR4,#3297            ; [CPU_ARAU] |171| 
+        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |171| 
+        OR        AL,#256               ; [CPU_ALU] |171| 
+        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |171| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 172,column 1,is_stmt,isa 0
         MOV32     R3H,*--SP             ; [CPU_FPU] 
 	.dwcfi	cfa_offset, -24
 	.dwcfi	restore_reg, 55
@@ -1891,7 +1891,7 @@ $C$DW$84	.dwtag  DW_TAG_TI_branch
         IRET      ; [CPU_ALU] 
         ; return occurs ; [] 
 	.dwattr $C$DW$82, DW_AT_TI_end_file("../BiomSensor_BLE.c")
-	.dwattr $C$DW$82, DW_AT_TI_end_line(0xab)
+	.dwattr $C$DW$82, DW_AT_TI_end_line(0xac)
 	.dwattr $C$DW$82, DW_AT_TI_end_column(0x01)
 	.dwendentry
 	.dwendtag $C$DW$82
@@ -1908,11 +1908,11 @@ $C$DW$85	.dwtag  DW_TAG_subprogram
 	.dwattr $C$DW$85, DW_AT_TI_symbol_name("_Inter_SCIBRX")
 	.dwattr $C$DW$85, DW_AT_external
 	.dwattr $C$DW$85, DW_AT_TI_begin_file("../BiomSensor_BLE.c")
-	.dwattr $C$DW$85, DW_AT_TI_begin_line(0xb0)
+	.dwattr $C$DW$85, DW_AT_TI_begin_line(0xb1)
 	.dwattr $C$DW$85, DW_AT_TI_begin_column(0x12)
 	.dwattr $C$DW$85, DW_AT_TI_interrupt
 	.dwattr $C$DW$85, DW_AT_TI_max_frame_size(-26)
-	.dwpsn	file "../BiomSensor_BLE.c",line 176,column 37,is_stmt,address _Inter_SCIBRX,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 177,column 37,is_stmt,address _Inter_SCIBRX,isa 0
 
 	.dwfde $C$DW$CIE, _Inter_SCIBRX
 $C$DW$86	.dwtag  DW_TAG_variable
@@ -1993,168 +1993,168 @@ _Inter_SCIBRX:
         SPM       0                     ; [CPU_ALU] 
         CLRC      PAGE0,OVM             ; [CPU_ALU] 
         CLRC      AMODE                 ; [CPU_ALU] 
-	.dwpsn	file "../BiomSensor_BLE.c",line 181,column 5,is_stmt,isa 0
-        MOVB      ACC,#64               ; [CPU_ALU] |181| 
-        MOVL      XAR4,#29211           ; [CPU_ARAU] |181| 
-        OR        *+XAR4[0],AL          ; [CPU_ALU] |181| 
-        OR        *+XAR4[1],AH          ; [CPU_ALU] |181| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 182,column 5,is_stmt,isa 0
-        B         $C$L29,UNC            ; [CPU_ALU] |182| 
-        ; branch occurs ; [] |182| 
+        MOVB      ACC,#64               ; [CPU_ALU] |182| 
+        MOVL      XAR4,#29211           ; [CPU_ARAU] |182| 
+        OR        *+XAR4[0],AL          ; [CPU_ALU] |182| 
+        OR        *+XAR4[1],AH          ; [CPU_ALU] |182| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 183,column 5,is_stmt,isa 0
+        B         $C$L29,UNC            ; [CPU_ALU] |183| 
+        ; branch occurs ; [] |183| 
 $C$L22:    
-	.dwpsn	file "../BiomSensor_BLE.c",line 183,column 9,is_stmt,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 184,column 9,is_stmt,isa 0
         MOVW      DP,#_SCI_RxPt$13      ; [CPU_ARAU] 
-        MOVL      XAR4,@_SCI_RxPt$13    ; [CPU_ALU] |183| 
+        MOVL      XAR4,@_SCI_RxPt$13    ; [CPU_ALU] |184| 
 $C$DW$89	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$89, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$89, DW_AT_name("_SCIB_Read")
 	.dwattr $C$DW$89, DW_AT_TI_call
 
-        LCR       #_SCIB_Read           ; [CPU_ALU] |183| 
-        ; call occurs [#_SCIB_Read] ; [] |183| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 184,column 9,is_stmt,isa 0
+        LCR       #_SCIB_Read           ; [CPU_ALU] |184| 
+        ; call occurs [#_SCIB_Read] ; [] |184| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 185,column 9,is_stmt,isa 0
         MOVW      DP,#_RxType$14        ; [CPU_ARAU] 
-        MOV       AL,@_RxType$14        ; [CPU_ALU] |184| 
-        B         $C$L29,EQ             ; [CPU_ALU] |184| 
-        ; branchcc occurs ; [] |184| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 185,column 13,is_stmt,isa 0
-        MOVL      XAR4,@_SCI_RxPt$13    ; [CPU_ALU] |185| 
-        MOV       AL,*XAR4++            ; [CPU_ALU] |185| 
-        CMPB      AL,#10                ; [CPU_ALU] |185| 
-        MOVL      @_SCI_RxPt$13,XAR4    ; [CPU_FPU] |185| 
-        B         $C$L29,NEQ            ; [CPU_ALU] |185| 
+        MOV       AL,@_RxType$14        ; [CPU_ALU] |185| 
+        B         $C$L29,EQ             ; [CPU_ALU] |185| 
         ; branchcc occurs ; [] |185| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 186,column 17,is_stmt,isa 0
-        B         $C$L27,UNC            ; [CPU_ALU] |186| 
-        ; branch occurs ; [] |186| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 186,column 13,is_stmt,isa 0
+        MOVL      XAR4,@_SCI_RxPt$13    ; [CPU_ALU] |186| 
+        MOV       AL,*XAR4++            ; [CPU_ALU] |186| 
+        CMPB      AL,#10                ; [CPU_ALU] |186| 
+        MOVL      @_SCI_RxPt$13,XAR4    ; [CPU_FPU] |186| 
+        B         $C$L29,NEQ            ; [CPU_ALU] |186| 
+        ; branchcc occurs ; [] |186| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 187,column 17,is_stmt,isa 0
+        B         $C$L27,UNC            ; [CPU_ALU] |187| 
+        ; branch occurs ; [] |187| 
 $C$L23:    
-	.dwpsn	file "../BiomSensor_BLE.c",line 188,column 21,is_stmt,isa 0
-        MOVL      XAR5,#$C$FSL1         ; [CPU_ARAU] |188| 
-        MOVL      XAR4,#_SCI_RxData$12  ; [CPU_ARAU] |188| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 189,column 21,is_stmt,isa 0
+        MOVL      XAR5,#$C$FSL1         ; [CPU_ARAU] |189| 
+        MOVL      XAR4,#_SCI_RxData$12  ; [CPU_ARAU] |189| 
 $C$DW$90	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$90, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$90, DW_AT_name("_strstr")
 	.dwattr $C$DW$90, DW_AT_TI_call
 
-        LCR       #_strstr              ; [CPU_ALU] |188| 
-        ; call occurs [#_strstr] ; [] |188| 
-        MOVL      ACC,XAR4              ; [CPU_ALU] |188| 
-        B         $C$L28,EQ             ; [CPU_ALU] |188| 
-        ; branchcc occurs ; [] |188| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 189,column 25,is_stmt,isa 0
-        MOVW      DP,#_SCI_State        ; [CPU_ARAU] 
-        INC       @_SCI_State           ; [CPU_ALU] |189| 
+        LCR       #_strstr              ; [CPU_ALU] |189| 
+        ; call occurs [#_strstr] ; [] |189| 
+        MOVL      ACC,XAR4              ; [CPU_ALU] |189| 
+        B         $C$L28,EQ             ; [CPU_ALU] |189| 
+        ; branchcc occurs ; [] |189| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 190,column 25,is_stmt,isa 0
-        MOVB      @_SCI_RxAvail,#1,UNC  ; [CPU_ALU] |190| 
+        MOVW      DP,#_SCI_State        ; [CPU_ARAU] 
+        INC       @_SCI_State           ; [CPU_ALU] |190| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 191,column 25,is_stmt,isa 0
-        MOV       AL,@_SCI_State        ; [CPU_ALU] |191| 
-        CMPB      AL,#5                 ; [CPU_ALU] |191| 
-        B         $C$L28,NEQ            ; [CPU_ALU] |191| 
-        ; branchcc occurs ; [] |191| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 191,column 43,is_stmt,isa 0
-        MOVB      @_SCI_Mode,#1,UNC     ; [CPU_ALU] |191| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 193,column 21,is_stmt,isa 0
-        B         $C$L28,UNC            ; [CPU_ALU] |193| 
-        ; branch occurs ; [] |193| 
+        MOVB      @_SCI_RxAvail,#1,UNC  ; [CPU_ALU] |191| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 192,column 25,is_stmt,isa 0
+        MOV       AL,@_SCI_State        ; [CPU_ALU] |192| 
+        CMPB      AL,#5                 ; [CPU_ALU] |192| 
+        B         $C$L28,NEQ            ; [CPU_ALU] |192| 
+        ; branchcc occurs ; [] |192| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 192,column 43,is_stmt,isa 0
+        MOVB      @_SCI_Mode,#1,UNC     ; [CPU_ALU] |192| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 194,column 21,is_stmt,isa 0
+        B         $C$L28,UNC            ; [CPU_ALU] |194| 
+        ; branch occurs ; [] |194| 
 $C$L24:    
-	.dwpsn	file "../BiomSensor_BLE.c",line 195,column 21,is_stmt,isa 0
-        MOVL      XAR5,#$C$FSL2         ; [CPU_ARAU] |195| 
-        MOVL      XAR4,#_SCI_RxData$12  ; [CPU_ARAU] |195| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 196,column 21,is_stmt,isa 0
+        MOVL      XAR5,#$C$FSL2         ; [CPU_ARAU] |196| 
+        MOVL      XAR4,#_SCI_RxData$12  ; [CPU_ARAU] |196| 
 $C$DW$91	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$91, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$91, DW_AT_name("_strstr")
 	.dwattr $C$DW$91, DW_AT_TI_call
 
-        LCR       #_strstr              ; [CPU_ALU] |195| 
-        ; call occurs [#_strstr] ; [] |195| 
-        MOVL      ACC,XAR4              ; [CPU_ALU] |195| 
-        B         $C$L28,EQ             ; [CPU_ALU] |195| 
-        ; branchcc occurs ; [] |195| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 195,column 61,is_stmt,isa 0
+        LCR       #_strstr              ; [CPU_ALU] |196| 
+        ; call occurs [#_strstr] ; [] |196| 
+        MOVL      ACC,XAR4              ; [CPU_ALU] |196| 
+        B         $C$L28,EQ             ; [CPU_ALU] |196| 
+        ; branchcc occurs ; [] |196| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 196,column 61,is_stmt,isa 0
         MOVW      DP,#_SCI_Mode         ; [CPU_ARAU] 
-        MOVB      @_SCI_Mode,#2,UNC     ; [CPU_ALU] |195| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 196,column 21,is_stmt,isa 0
-        B         $C$L28,UNC            ; [CPU_ALU] |196| 
-        ; branch occurs ; [] |196| 
+        MOVB      @_SCI_Mode,#2,UNC     ; [CPU_ALU] |196| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 197,column 21,is_stmt,isa 0
+        B         $C$L28,UNC            ; [CPU_ALU] |197| 
+        ; branch occurs ; [] |197| 
 $C$L25:    
-	.dwpsn	file "../BiomSensor_BLE.c",line 198,column 21,is_stmt,isa 0
-        MOVL      XAR5,#$C$FSL3         ; [CPU_ARAU] |198| 
-        MOVL      XAR4,#_SCI_RxData$12  ; [CPU_ARAU] |198| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 199,column 21,is_stmt,isa 0
+        MOVL      XAR5,#$C$FSL3         ; [CPU_ARAU] |199| 
+        MOVL      XAR4,#_SCI_RxData$12  ; [CPU_ARAU] |199| 
 $C$DW$92	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$92, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$92, DW_AT_name("_strstr")
 	.dwattr $C$DW$92, DW_AT_TI_call
 
-        LCR       #_strstr              ; [CPU_ALU] |198| 
-        ; call occurs [#_strstr] ; [] |198| 
-        MOVL      ACC,XAR4              ; [CPU_ALU] |198| 
-        B         $C$L26,EQ             ; [CPU_ALU] |198| 
-        ; branchcc occurs ; [] |198| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 198,column 61,is_stmt,isa 0
+        LCR       #_strstr              ; [CPU_ALU] |199| 
+        ; call occurs [#_strstr] ; [] |199| 
+        MOVL      ACC,XAR4              ; [CPU_ALU] |199| 
+        B         $C$L26,EQ             ; [CPU_ALU] |199| 
+        ; branchcc occurs ; [] |199| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 199,column 61,is_stmt,isa 0
         MOVW      DP,#_SCI_Mode         ; [CPU_ARAU] 
-        MOVB      @_SCI_Mode,#1,UNC     ; [CPU_ALU] |198| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 198,column 73,is_stmt,isa 0
-        B         $C$L28,UNC            ; [CPU_ALU] |198| 
-        ; branch occurs ; [] |198| 
+        MOVB      @_SCI_Mode,#1,UNC     ; [CPU_ALU] |199| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 199,column 73,is_stmt,isa 0
+        B         $C$L28,UNC            ; [CPU_ALU] |199| 
+        ; branch occurs ; [] |199| 
 $C$L26:    
-	.dwpsn	file "../BiomSensor_BLE.c",line 199,column 26,is_stmt,isa 0
-        MOVL      XAR5,#$C$FSL4         ; [CPU_ARAU] |199| 
-        MOVL      XAR4,#_SCI_RxData$12  ; [CPU_ARAU] |199| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 200,column 26,is_stmt,isa 0
+        MOVL      XAR5,#$C$FSL4         ; [CPU_ARAU] |200| 
+        MOVL      XAR4,#_SCI_RxData$12  ; [CPU_ARAU] |200| 
 $C$DW$93	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$93, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$93, DW_AT_name("_strstr")
 	.dwattr $C$DW$93, DW_AT_TI_call
 
-        LCR       #_strstr              ; [CPU_ALU] |199| 
-        ; call occurs [#_strstr] ; [] |199| 
-        MOVL      ACC,XAR4              ; [CPU_ALU] |199| 
-        B         $C$L28,EQ             ; [CPU_ALU] |199| 
-        ; branchcc occurs ; [] |199| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 199,column 70,is_stmt,isa 0
+        LCR       #_strstr              ; [CPU_ALU] |200| 
+        ; call occurs [#_strstr] ; [] |200| 
+        MOVL      ACC,XAR4              ; [CPU_ALU] |200| 
+        B         $C$L28,EQ             ; [CPU_ALU] |200| 
+        ; branchcc occurs ; [] |200| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 200,column 70,is_stmt,isa 0
         MOVW      DP,#_RxType$14        ; [CPU_ARAU] 
-        MOV       @_RxType$14,#0        ; [CPU_ALU] |199| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 200,column 21,is_stmt,isa 0
-        B         $C$L28,UNC            ; [CPU_ALU] |200| 
-        ; branch occurs ; [] |200| 
+        MOV       @_RxType$14,#0        ; [CPU_ALU] |200| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 201,column 21,is_stmt,isa 0
+        B         $C$L28,UNC            ; [CPU_ALU] |201| 
+        ; branch occurs ; [] |201| 
 $C$L27:    
-	.dwpsn	file "../BiomSensor_BLE.c",line 186,column 17,is_stmt,isa 0
-        MOV       AL,@_SCI_Mode         ; [CPU_ALU] |186| 
-        B         $C$L23,EQ             ; [CPU_ALU] |186| 
-        ; branchcc occurs ; [] |186| 
-        CMPB      AL,#1                 ; [CPU_ALU] |186| 
-        B         $C$L24,EQ             ; [CPU_ALU] |186| 
-        ; branchcc occurs ; [] |186| 
-        CMPB      AL,#2                 ; [CPU_ALU] |186| 
-        B         $C$L25,EQ             ; [CPU_ALU] |186| 
-        ; branchcc occurs ; [] |186| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 187,column 17,is_stmt,isa 0
+        MOV       AL,@_SCI_Mode         ; [CPU_ALU] |187| 
+        B         $C$L23,EQ             ; [CPU_ALU] |187| 
+        ; branchcc occurs ; [] |187| 
+        CMPB      AL,#1                 ; [CPU_ALU] |187| 
+        B         $C$L24,EQ             ; [CPU_ALU] |187| 
+        ; branchcc occurs ; [] |187| 
+        CMPB      AL,#2                 ; [CPU_ALU] |187| 
+        B         $C$L25,EQ             ; [CPU_ALU] |187| 
+        ; branchcc occurs ; [] |187| 
 $C$L28:    
-	.dwpsn	file "../BiomSensor_BLE.c",line 202,column 13,is_stmt,isa 0
-        MOVL      XAR4,#_SCI_RxData$12  ; [CPU_ARAU] |202| 
-        MOVW      DP,#_SCI_RxPt$13      ; [CPU_ARAU] 
-        MOVL      @_SCI_RxPt$13,XAR4    ; [CPU_ALU] |202| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 203,column 13,is_stmt,isa 0
+        MOVL      XAR4,#_SCI_RxData$12  ; [CPU_ARAU] |203| 
+        MOVW      DP,#_SCI_RxPt$13      ; [CPU_ARAU] 
+        MOVL      @_SCI_RxPt$13,XAR4    ; [CPU_ALU] |203| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 204,column 13,is_stmt,isa 0
 $C$DW$94	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$94, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$94, DW_AT_name("_Clean_Reg")
 	.dwattr $C$DW$94, DW_AT_TI_call
 
-        LCR       #_Clean_Reg           ; [CPU_ALU] |203| 
-        ; call occurs [#_Clean_Reg] ; [] |203| 
+        LCR       #_Clean_Reg           ; [CPU_ALU] |204| 
+        ; call occurs [#_Clean_Reg] ; [] |204| 
 $C$L29:    
-	.dwpsn	file "../BiomSensor_BLE.c",line 182,column 5,is_stmt,isa 0
-        MOVL      XAR4,#29211           ; [CPU_ARAU] |182| 
-        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |182| 
-        AND       AL,#7936              ; [CPU_ALU] |182| 
-        ANDB      AH,#0                 ; [CPU_ALU] |182| 
-        TEST      ACC                   ; [CPU_ALU] |182| 
-        B         $C$L22,NEQ            ; [CPU_ALU] |182| 
-        ; branchcc occurs ; [] |182| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 207,column 5,is_stmt,isa 0
-        MOVL      XAR4,#3297            ; [CPU_ARAU] |207| 
-        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |207| 
-        OR        AL,#256               ; [CPU_ALU] |207| 
-        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |207| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 208,column 1,is_stmt,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 183,column 5,is_stmt,isa 0
+        MOVL      XAR4,#29211           ; [CPU_ARAU] |183| 
+        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |183| 
+        AND       AL,#7936              ; [CPU_ALU] |183| 
+        ANDB      AH,#0                 ; [CPU_ALU] |183| 
+        TEST      ACC                   ; [CPU_ALU] |183| 
+        B         $C$L22,NEQ            ; [CPU_ALU] |183| 
+        ; branchcc occurs ; [] |183| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 208,column 5,is_stmt,isa 0
+        MOVL      XAR4,#3297            ; [CPU_ARAU] |208| 
+        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |208| 
+        OR        AL,#256               ; [CPU_ALU] |208| 
+        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |208| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 209,column 1,is_stmt,isa 0
         MOV32     R3H,*--SP             ; [CPU_FPU] 
 	.dwcfi	cfa_offset, -24
 	.dwcfi	restore_reg, 55
@@ -2202,7 +2202,7 @@ $C$DW$95	.dwtag  DW_TAG_TI_branch
         IRET      ; [CPU_ALU] 
         ; return occurs ; [] 
 	.dwattr $C$DW$85, DW_AT_TI_end_file("../BiomSensor_BLE.c")
-	.dwattr $C$DW$85, DW_AT_TI_end_line(0xd0)
+	.dwattr $C$DW$85, DW_AT_TI_end_line(0xd1)
 	.dwattr $C$DW$85, DW_AT_TI_end_column(0x01)
 	.dwendentry
 	.dwendtag $C$DW$85
@@ -2218,10 +2218,10 @@ $C$DW$96	.dwtag  DW_TAG_subprogram
 	.dwattr $C$DW$96, DW_AT_TI_symbol_name("_Config_puertos")
 	.dwattr $C$DW$96, DW_AT_external
 	.dwattr $C$DW$96, DW_AT_TI_begin_file("../BiomSensor_BLE.c")
-	.dwattr $C$DW$96, DW_AT_TI_begin_line(0xd8)
+	.dwattr $C$DW$96, DW_AT_TI_begin_line(0xd9)
 	.dwattr $C$DW$96, DW_AT_TI_begin_column(0x06)
 	.dwattr $C$DW$96, DW_AT_TI_max_frame_size(-2)
-	.dwpsn	file "../BiomSensor_BLE.c",line 216,column 26,is_stmt,address _Config_puertos,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 217,column 26,is_stmt,address _Config_puertos,isa 0
 
 	.dwfde $C$DW$CIE, _Config_puertos
 
@@ -2237,66 +2237,66 @@ $C$DW$96	.dwtag  DW_TAG_subprogram
 _Config_puertos:
 	.dwcfi	cfa_offset, -2
 	.dwcfi	save_reg_to_mem, 26, 0
-	.dwpsn	file "../BiomSensor_BLE.c",line 217,column 5,is_stmt,isa 0
-        MOVL      XAR4,#31968           ; [CPU_ARAU] |217| 
-        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |217| 
-        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |217| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 218,column 5,is_stmt,isa 0
-        MOVL      XAR4,#31942           ; [CPU_ARAU] |218| 
+        MOVL      XAR4,#31968           ; [CPU_ARAU] |218| 
         MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |218| 
-        OR        AH,#5                 ; [CPU_ALU] |218| 
         MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |218| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 219,column 5,is_stmt,isa 0
-        MOVL      XAR4,#31954           ; [CPU_ARAU] |219| 
+        MOVL      XAR4,#31942           ; [CPU_ARAU] |219| 
         MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |219| 
-        OR        AL,#768               ; [CPU_ALU] |219| 
+        OR        AH,#5                 ; [CPU_ALU] |219| 
         MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |219| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 220,column 5,is_stmt,isa 0
-        MOVL      XAR4,#31938           ; [CPU_ARAU] |220| 
+        MOVL      XAR4,#31954           ; [CPU_ARAU] |220| 
         MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |220| 
-        OR        AH,#15                ; [CPU_ALU] |220| 
+        OR        AL,#768               ; [CPU_ALU] |220| 
         MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |220| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 222,column 5,is_stmt,isa 0
-        MOVL      XAR4,#31776           ; [CPU_ARAU] |222| 
-        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |222| 
-        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |222| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 221,column 5,is_stmt,isa 0
+        MOVL      XAR4,#31938           ; [CPU_ARAU] |221| 
+        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |221| 
+        OR        AH,#15                ; [CPU_ALU] |221| 
+        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |221| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 223,column 5,is_stmt,isa 0
-        MOVL      XAR4,#31750           ; [CPU_ARAU] |223| 
+        MOVL      XAR4,#31776           ; [CPU_ARAU] |223| 
         MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |223| 
         MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |223| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 224,column 5,is_stmt,isa 0
-        MOVL      XAR4,#31754           ; [CPU_ARAU] |224| 
+        MOVL      XAR4,#31750           ; [CPU_ARAU] |224| 
         MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |224| 
         MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |224| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 226,column 5,is_stmt,isa 0
-        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |226| 
-        OR        AL,#16384             ; [CPU_ALU] |226| 
-        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |226| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 225,column 5,is_stmt,isa 0
+        MOVL      XAR4,#31754           ; [CPU_ARAU] |225| 
+        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |225| 
+        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |225| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 227,column 5,is_stmt,isa 0
-        MOVL      XAR4,#31778           ; [CPU_ARAU] |227| 
         MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |227| 
+        OR        AL,#16384             ; [CPU_ALU] |227| 
         MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |227| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 228,column 5,is_stmt,isa 0
-        MOVB      ACC,#160              ; [CPU_ALU] |228| 
-        MOVL      XAR4,#31752           ; [CPU_ARAU] |228| 
-        OR        *+XAR4[0],AL          ; [CPU_ALU] |228| 
-        OR        *+XAR4[1],AH          ; [CPU_ALU] |228| 
+        MOVL      XAR4,#31778           ; [CPU_ARAU] |228| 
+        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |228| 
+        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |228| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 229,column 5,is_stmt,isa 0
-        MOVB      ACC,#240              ; [CPU_ALU] |229| 
-        MOVL      XAR4,#31748           ; [CPU_ARAU] |229| 
+        MOVB      ACC,#160              ; [CPU_ALU] |229| 
+        MOVL      XAR4,#31752           ; [CPU_ARAU] |229| 
         OR        *+XAR4[0],AL          ; [CPU_ALU] |229| 
         OR        *+XAR4[1],AH          ; [CPU_ALU] |229| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 231,column 5,is_stmt,isa 0
-        MOVB      ACC,#1                ; [CPU_ALU] |231| 
-        MOVL      XAR4,#28785           ; [CPU_ARAU] |231| 
-        OR        *+XAR4[0],AL          ; [CPU_ALU] |231| 
-        OR        *+XAR4[1],AH          ; [CPU_ALU] |231| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 230,column 5,is_stmt,isa 0
+        MOVB      ACC,#240              ; [CPU_ALU] |230| 
+        MOVL      XAR4,#31748           ; [CPU_ARAU] |230| 
+        OR        *+XAR4[0],AL          ; [CPU_ALU] |230| 
+        OR        *+XAR4[1],AH          ; [CPU_ALU] |230| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 232,column 5,is_stmt,isa 0
-        MOVB      ACC,#22               ; [CPU_ALU] |232| 
-        MOVL      XAR4,#30980           ; [CPU_ARAU] |232| 
+        MOVB      ACC,#1                ; [CPU_ALU] |232| 
+        MOVL      XAR4,#28785           ; [CPU_ARAU] |232| 
         OR        *+XAR4[0],AL          ; [CPU_ALU] |232| 
         OR        *+XAR4[1],AH          ; [CPU_ALU] |232| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 233,column 1,is_stmt,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 233,column 5,is_stmt,isa 0
+        MOVB      ACC,#22               ; [CPU_ALU] |233| 
+        MOVL      XAR4,#30980           ; [CPU_ARAU] |233| 
+        OR        *+XAR4[0],AL          ; [CPU_ALU] |233| 
+        OR        *+XAR4[1],AH          ; [CPU_ALU] |233| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 234,column 1,is_stmt,isa 0
 $C$DW$97	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$97, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$97, DW_AT_TI_return
@@ -2304,7 +2304,7 @@ $C$DW$97	.dwtag  DW_TAG_TI_branch
         LRETR     ; [CPU_ALU] 
         ; return occurs ; [] 
 	.dwattr $C$DW$96, DW_AT_TI_end_file("../BiomSensor_BLE.c")
-	.dwattr $C$DW$96, DW_AT_TI_end_line(0xe9)
+	.dwattr $C$DW$96, DW_AT_TI_end_line(0xea)
 	.dwattr $C$DW$96, DW_AT_TI_end_column(0x01)
 	.dwendentry
 	.dwendtag $C$DW$96
@@ -2320,10 +2320,10 @@ $C$DW$98	.dwtag  DW_TAG_subprogram
 	.dwattr $C$DW$98, DW_AT_TI_symbol_name("_Config_SCIB")
 	.dwattr $C$DW$98, DW_AT_external
 	.dwattr $C$DW$98, DW_AT_TI_begin_file("../BiomSensor_BLE.c")
-	.dwattr $C$DW$98, DW_AT_TI_begin_line(0xee)
+	.dwattr $C$DW$98, DW_AT_TI_begin_line(0xef)
 	.dwattr $C$DW$98, DW_AT_TI_begin_column(0x06)
 	.dwattr $C$DW$98, DW_AT_TI_max_frame_size(-2)
-	.dwpsn	file "../BiomSensor_BLE.c",line 238,column 23,is_stmt,address _Config_SCIB,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 239,column 23,is_stmt,address _Config_SCIB,isa 0
 
 	.dwfde $C$DW$CIE, _Config_SCIB
 
@@ -2339,44 +2339,44 @@ $C$DW$98	.dwtag  DW_TAG_subprogram
 _Config_SCIB:
 	.dwcfi	cfa_offset, -2
 	.dwcfi	save_reg_to_mem, 26, 0
-	.dwpsn	file "../BiomSensor_BLE.c",line 239,column 5,is_stmt,isa 0
-        MOVB      ACC,#0                ; [CPU_ALU] |239| 
-        MOVL      XAR4,#381484          ; [CPU_ARAU] |239| 
-        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |239| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 240,column 5,is_stmt,isa 0
-        MOVB      ACC,#2                ; [CPU_ALU] |240| 
-        MOVL      XAR4,#381744          ; [CPU_ARAU] |240| 
-        OR        *+XAR4[0],AL          ; [CPU_ALU] |240| 
-        OR        *+XAR4[1],AH          ; [CPU_ALU] |240| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 242,column 5,is_stmt,isa 0
-        MOVB      ACC,#7                ; [CPU_ALU] |242| 
-        MOVL      XAR4,#29200           ; [CPU_ARAU] |242| 
-        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |242| 
+        MOVB      ACC,#0                ; [CPU_ALU] |240| 
+        MOVL      XAR4,#381484          ; [CPU_ARAU] |240| 
+        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |240| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 241,column 5,is_stmt,isa 0
+        MOVB      ACC,#2                ; [CPU_ALU] |241| 
+        MOVL      XAR4,#381744          ; [CPU_ARAU] |241| 
+        OR        *+XAR4[0],AL          ; [CPU_ALU] |241| 
+        OR        *+XAR4[1],AH          ; [CPU_ALU] |241| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 243,column 5,is_stmt,isa 0
-        MOVB      ACC,#0                ; [CPU_ALU] |243| 
-        MOVL      XAR4,#29202           ; [CPU_ARAU] |243| 
+        MOVB      ACC,#7                ; [CPU_ALU] |243| 
+        MOVL      XAR4,#29200           ; [CPU_ARAU] |243| 
         MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |243| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 245,column 5,is_stmt,isa 0
-        MOVB      ACC,#10               ; [CPU_ALU] |245| 
-        MOVL      XAR4,#29203           ; [CPU_ARAU] |245| 
-        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |245| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 247,column 5,is_stmt,isa 0
-        MOVL      XAR5,#29210           ; [CPU_ARAU] |247| 
-        MOVL      XAR4,#57345           ; [CPU_ARAU] |247| 
-        MOVL      *+XAR5[0],XAR4        ; [CPU_ALU] |247| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 244,column 5,is_stmt,isa 0
+        MOVB      ACC,#0                ; [CPU_ALU] |244| 
+        MOVL      XAR4,#29202           ; [CPU_ARAU] |244| 
+        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |244| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 246,column 5,is_stmt,isa 0
+        MOVB      ACC,#10               ; [CPU_ALU] |246| 
+        MOVL      XAR4,#29203           ; [CPU_ARAU] |246| 
+        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |246| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 248,column 5,is_stmt,isa 0
-        MOVL      XAR4,#8225            ; [CPU_ARAU] |248| 
-        MOVL      XAR5,#29211           ; [CPU_ARAU] |248| 
+        MOVL      XAR5,#29210           ; [CPU_ARAU] |248| 
+        MOVL      XAR4,#57345           ; [CPU_ARAU] |248| 
         MOVL      *+XAR5[0],XAR4        ; [CPU_ALU] |248| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 249,column 5,is_stmt,isa 0
-        MOVL      XAR4,#29201           ; [CPU_ARAU] |249| 
-        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |249| 
-        AND       AL,#65503             ; [CPU_ALU] |249| 
-        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |249| 
+        MOVL      XAR4,#8225            ; [CPU_ARAU] |249| 
+        MOVL      XAR5,#29211           ; [CPU_ARAU] |249| 
+        MOVL      *+XAR5[0],XAR4        ; [CPU_ALU] |249| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 250,column 5,is_stmt,isa 0
-        MOVB      ACC,#35               ; [CPU_ALU] |250| 
+        MOVL      XAR4,#29201           ; [CPU_ARAU] |250| 
+        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |250| 
+        AND       AL,#65503             ; [CPU_ALU] |250| 
         MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |250| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 252,column 1,is_stmt,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 251,column 5,is_stmt,isa 0
+        MOVB      ACC,#35               ; [CPU_ALU] |251| 
+        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |251| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 253,column 1,is_stmt,isa 0
 $C$DW$99	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$99, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$99, DW_AT_TI_return
@@ -2384,7 +2384,7 @@ $C$DW$99	.dwtag  DW_TAG_TI_branch
         LRETR     ; [CPU_ALU] 
         ; return occurs ; [] 
 	.dwattr $C$DW$98, DW_AT_TI_end_file("../BiomSensor_BLE.c")
-	.dwattr $C$DW$98, DW_AT_TI_end_line(0xfc)
+	.dwattr $C$DW$98, DW_AT_TI_end_line(0xfd)
 	.dwattr $C$DW$98, DW_AT_TI_end_column(0x01)
 	.dwendentry
 	.dwendtag $C$DW$98
@@ -2400,10 +2400,10 @@ $C$DW$100	.dwtag  DW_TAG_subprogram
 	.dwattr $C$DW$100, DW_AT_TI_symbol_name("_Config_I2CA")
 	.dwattr $C$DW$100, DW_AT_external
 	.dwattr $C$DW$100, DW_AT_TI_begin_file("../BiomSensor_BLE.c")
-	.dwattr $C$DW$100, DW_AT_TI_begin_line(0x101)
+	.dwattr $C$DW$100, DW_AT_TI_begin_line(0x102)
 	.dwattr $C$DW$100, DW_AT_TI_begin_column(0x06)
 	.dwattr $C$DW$100, DW_AT_TI_max_frame_size(-2)
-	.dwpsn	file "../BiomSensor_BLE.c",line 257,column 23,is_stmt,address _Config_I2CA,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 258,column 23,is_stmt,address _Config_I2CA,isa 0
 
 	.dwfde $C$DW$CIE, _Config_I2CA
 
@@ -2419,42 +2419,42 @@ $C$DW$100	.dwtag  DW_TAG_subprogram
 _Config_I2CA:
 	.dwcfi	cfa_offset, -2
 	.dwcfi	save_reg_to_mem, 26, 0
-	.dwpsn	file "../BiomSensor_BLE.c",line 258,column 5,is_stmt,isa 0
-        MOVB      ACC,#1                ; [CPU_ALU] |258| 
-        MOVL      XAR4,#381748          ; [CPU_ARAU] |258| 
-        OR        *+XAR4[0],AL          ; [CPU_ALU] |258| 
-        OR        *+XAR4[1],AH          ; [CPU_ALU] |258| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 259,column 5,is_stmt,isa 0
-        MOVB      ACC,#0                ; [CPU_ALU] |259| 
-        MOVL      XAR4,#29452           ; [CPU_ARAU] |259| 
-        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |259| 
+        MOVB      ACC,#1                ; [CPU_ALU] |259| 
+        MOVL      XAR4,#381748          ; [CPU_ARAU] |259| 
+        OR        *+XAR4[0],AL          ; [CPU_ALU] |259| 
+        OR        *+XAR4[1],AH          ; [CPU_ALU] |259| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 260,column 5,is_stmt,isa 0
-        MOVB      ACC,#8                ; [CPU_ALU] |260| 
-        MOVL      XAR4,#29443           ; [CPU_ARAU] |260| 
+        MOVB      ACC,#0                ; [CPU_ALU] |260| 
+        MOVL      XAR4,#29452           ; [CPU_ARAU] |260| 
         MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |260| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 261,column 5,is_stmt,isa 0
-        MOVB      ACC,#3                ; [CPU_ALU] |261| 
-        MOVL      XAR4,#29444           ; [CPU_ARAU] |261| 
+        MOVB      ACC,#8                ; [CPU_ALU] |261| 
+        MOVL      XAR4,#29443           ; [CPU_ARAU] |261| 
         MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |261| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 262,column 5,is_stmt,isa 0
-        MOVL      XAR5,#29472           ; [CPU_ARAU] |262| 
-        MOVL      XAR4,#24576           ; [CPU_ARAU] |262| 
-        MOVL      *+XAR5[0],XAR4        ; [CPU_ALU] |262| 
+        MOVB      ACC,#3                ; [CPU_ALU] |262| 
+        MOVL      XAR4,#29444           ; [CPU_ARAU] |262| 
+        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |262| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 263,column 5,is_stmt,isa 0
-        MOVL      XAR4,#8226            ; [CPU_ARAU] |263| 
-        MOVL      XAR5,#29473           ; [CPU_ARAU] |263| 
+        MOVL      XAR5,#29472           ; [CPU_ARAU] |263| 
+        MOVL      XAR4,#24576           ; [CPU_ARAU] |263| 
         MOVL      *+XAR5[0],XAR4        ; [CPU_ALU] |263| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 267,column 5,is_stmt,isa 0
-        MOVB      ACC,#32               ; [CPU_ALU] |267| 
-        MOVL      XAR4,#29449           ; [CPU_ARAU] |267| 
-        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |267| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 264,column 5,is_stmt,isa 0
+        MOVL      XAR4,#8226            ; [CPU_ARAU] |264| 
+        MOVL      XAR5,#29473           ; [CPU_ARAU] |264| 
+        MOVL      *+XAR5[0],XAR4        ; [CPU_ALU] |264| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 268,column 5,is_stmt,isa 0
-        MOVL      XAR4,#29442           ; [CPU_ARAU] |268| 
+        MOVB      ACC,#32               ; [CPU_ALU] |268| 
+        MOVL      XAR4,#29449           ; [CPU_ARAU] |268| 
+        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |268| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 269,column 5,is_stmt,isa 0
+        MOVL      XAR4,#29442           ; [CPU_ARAU] |269| 
 $C$L30:    
-        TBIT      *+XAR4[0],#12         ; [CPU_ALU] |268| 
-        B         $C$L30,TC             ; [CPU_ALU] |268| 
-        ; branchcc occurs ; [] |268| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 269,column 1,is_stmt,isa 0
+        TBIT      *+XAR4[0],#12         ; [CPU_ALU] |269| 
+        B         $C$L30,TC             ; [CPU_ALU] |269| 
+        ; branchcc occurs ; [] |269| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 270,column 1,is_stmt,isa 0
 $C$DW$101	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$101, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$101, DW_AT_TI_return
@@ -2462,7 +2462,7 @@ $C$DW$101	.dwtag  DW_TAG_TI_branch
         LRETR     ; [CPU_ALU] 
         ; return occurs ; [] 
 	.dwattr $C$DW$100, DW_AT_TI_end_file("../BiomSensor_BLE.c")
-	.dwattr $C$DW$100, DW_AT_TI_end_line(0x10d)
+	.dwattr $C$DW$100, DW_AT_TI_end_line(0x10e)
 	.dwattr $C$DW$100, DW_AT_TI_end_column(0x01)
 	.dwendentry
 	.dwendtag $C$DW$100
@@ -2478,10 +2478,10 @@ $C$DW$102	.dwtag  DW_TAG_subprogram
 	.dwattr $C$DW$102, DW_AT_TI_symbol_name("_Config_PIE")
 	.dwattr $C$DW$102, DW_AT_external
 	.dwattr $C$DW$102, DW_AT_TI_begin_file("../BiomSensor_BLE.c")
-	.dwattr $C$DW$102, DW_AT_TI_begin_line(0x112)
+	.dwattr $C$DW$102, DW_AT_TI_begin_line(0x113)
 	.dwattr $C$DW$102, DW_AT_TI_begin_column(0x06)
 	.dwattr $C$DW$102, DW_AT_TI_max_frame_size(-2)
-	.dwpsn	file "../BiomSensor_BLE.c",line 274,column 22,is_stmt,address _Config_PIE,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 275,column 22,is_stmt,address _Config_PIE,isa 0
 
 	.dwfde $C$DW$CIE, _Config_PIE
 
@@ -2497,34 +2497,34 @@ $C$DW$102	.dwtag  DW_TAG_subprogram
 _Config_PIE:
 	.dwcfi	cfa_offset, -2
 	.dwcfi	save_reg_to_mem, 26, 0
-	.dwpsn	file "../BiomSensor_BLE.c",line 275,column 5,is_stmt,isa 0
-        MOVB      ACC,#1                ; [CPU_ALU] |275| 
-        MOVL      XAR4,#3296            ; [CPU_ARAU] |275| 
-        OR        *+XAR4[0],AL          ; [CPU_ALU] |275| 
-        OR        *+XAR4[1],AH          ; [CPU_ALU] |275| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 276,column 5,is_stmt,isa 0
-        MOVL      XAR4,#3297            ; [CPU_ARAU] |276| 
-        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |276| 
-        OR        AL,#385               ; [CPU_ALU] |276| 
-        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |276| 
+        MOVB      ACC,#1                ; [CPU_ALU] |276| 
+        MOVL      XAR4,#3296            ; [CPU_ARAU] |276| 
+        OR        *+XAR4[0],AL          ; [CPU_ALU] |276| 
+        OR        *+XAR4[1],AH          ; [CPU_ALU] |276| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 277,column 5,is_stmt,isa 0
-        MOVB      ACC,#16               ; [CPU_ALU] |277| 
-        MOVL      XAR4,#3298            ; [CPU_ARAU] |277| 
-        OR        *+XAR4[0],AL          ; [CPU_ALU] |277| 
-        OR        *+XAR4[1],AH          ; [CPU_ALU] |277| 
+        MOVL      XAR4,#3297            ; [CPU_ARAU] |277| 
+        MOVL      ACC,*+XAR4[0]         ; [CPU_ALU] |277| 
+        OR        AL,#385               ; [CPU_ALU] |277| 
+        MOVL      *+XAR4[0],ACC         ; [CPU_ALU] |277| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 278,column 5,is_stmt,isa 0
-        MOVB      ACC,#2                ; [CPU_ALU] |278| 
-        MOVL      XAR4,#3312            ; [CPU_ARAU] |278| 
+        MOVB      ACC,#16               ; [CPU_ALU] |278| 
+        MOVL      XAR4,#3298            ; [CPU_ARAU] |278| 
         OR        *+XAR4[0],AL          ; [CPU_ALU] |278| 
         OR        *+XAR4[1],AH          ; [CPU_ALU] |278| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 279,column 5,is_stmt,isa 0
-        MOVB      ACC,#12               ; [CPU_ALU] |279| 
-        MOVL      XAR4,#3314            ; [CPU_ARAU] |279| 
+        MOVB      ACC,#2                ; [CPU_ALU] |279| 
+        MOVL      XAR4,#3312            ; [CPU_ARAU] |279| 
         OR        *+XAR4[0],AL          ; [CPU_ALU] |279| 
         OR        *+XAR4[1],AH          ; [CPU_ALU] |279| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 280,column 5,is_stmt,isa 0
-        OR        IER,#0x0181           ; [CPU_ALU] |280| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 281,column 1,is_stmt,isa 0
+        MOVB      ACC,#12               ; [CPU_ALU] |280| 
+        MOVL      XAR4,#3314            ; [CPU_ARAU] |280| 
+        OR        *+XAR4[0],AL          ; [CPU_ALU] |280| 
+        OR        *+XAR4[1],AH          ; [CPU_ALU] |280| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 281,column 5,is_stmt,isa 0
+        OR        IER,#0x0181           ; [CPU_ALU] |281| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 282,column 1,is_stmt,isa 0
 $C$DW$103	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$103, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$103, DW_AT_TI_return
@@ -2532,7 +2532,7 @@ $C$DW$103	.dwtag  DW_TAG_TI_branch
         LRETR     ; [CPU_ALU] 
         ; return occurs ; [] 
 	.dwattr $C$DW$102, DW_AT_TI_end_file("../BiomSensor_BLE.c")
-	.dwattr $C$DW$102, DW_AT_TI_end_line(0x119)
+	.dwattr $C$DW$102, DW_AT_TI_end_line(0x11a)
 	.dwattr $C$DW$102, DW_AT_TI_end_column(0x01)
 	.dwendentry
 	.dwendtag $C$DW$102
@@ -2548,10 +2548,10 @@ $C$DW$104	.dwtag  DW_TAG_subprogram
 	.dwattr $C$DW$104, DW_AT_TI_symbol_name("_main")
 	.dwattr $C$DW$104, DW_AT_external
 	.dwattr $C$DW$104, DW_AT_TI_begin_file("../BiomSensor_BLE.c")
-	.dwattr $C$DW$104, DW_AT_TI_begin_line(0x11e)
+	.dwattr $C$DW$104, DW_AT_TI_begin_line(0x11f)
 	.dwattr $C$DW$104, DW_AT_TI_begin_column(0x06)
 	.dwattr $C$DW$104, DW_AT_TI_max_frame_size(-2)
-	.dwpsn	file "../BiomSensor_BLE.c",line 286,column 16,is_stmt,address _main,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 287,column 16,is_stmt,address _main,isa 0
 
 	.dwfde $C$DW$CIE, _main
 
@@ -2567,101 +2567,101 @@ $C$DW$104	.dwtag  DW_TAG_subprogram
 _main:
 	.dwcfi	cfa_offset, -2
 	.dwcfi	save_reg_to_mem, 26, 0
-	.dwpsn	file "../BiomSensor_BLE.c",line 287,column 5,is_stmt,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 288,column 5,is_stmt,isa 0
  setc INTM
-	.dwpsn	file "../BiomSensor_BLE.c",line 289,column 5,is_stmt,isa 0
-        EALLOW    ; [CPU_ALU] |289| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 290,column 9,is_stmt,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 290,column 5,is_stmt,isa 0
+        EALLOW    ; [CPU_ALU] |290| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 291,column 9,is_stmt,isa 0
         SPM       #0                    ; [CPU_ALU] 
 $C$DW$105	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$105, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$105, DW_AT_name("_Config_puertos")
 	.dwattr $C$DW$105, DW_AT_TI_call
 
-        LCR       #_Config_puertos      ; [CPU_ALU] |290| 
-        ; call occurs [#_Config_puertos] ; [] |290| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 291,column 9,is_stmt,isa 0
+        LCR       #_Config_puertos      ; [CPU_ALU] |291| 
+        ; call occurs [#_Config_puertos] ; [] |291| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 292,column 9,is_stmt,isa 0
 $C$DW$106	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$106, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$106, DW_AT_name("_Config_SCIB")
 	.dwattr $C$DW$106, DW_AT_TI_call
 
-        LCR       #_Config_SCIB         ; [CPU_ALU] |291| 
-        ; call occurs [#_Config_SCIB] ; [] |291| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 292,column 9,is_stmt,isa 0
+        LCR       #_Config_SCIB         ; [CPU_ALU] |292| 
+        ; call occurs [#_Config_SCIB] ; [] |292| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 293,column 9,is_stmt,isa 0
 $C$DW$107	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$107, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$107, DW_AT_name("_Config_I2CA")
 	.dwattr $C$DW$107, DW_AT_TI_call
 
-        LCR       #_Config_I2CA         ; [CPU_ALU] |292| 
-        ; call occurs [#_Config_I2CA] ; [] |292| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 294,column 9,is_stmt,isa 0
-        MOVL      XAR4,#_Inter_GPIO22   ; [CPU_ARAU] |294| 
-        MOVL      XAR5,#3400            ; [CPU_ARAU] |294| 
-        MOVL      *+XAR5[0],XAR4        ; [CPU_ALU] |294| 
+        LCR       #_Config_I2CA         ; [CPU_ALU] |293| 
+        ; call occurs [#_Config_I2CA] ; [] |293| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 295,column 9,is_stmt,isa 0
-        MOVL      XAR4,#_Inter_I2CA     ; [CPU_ARAU] |295| 
-        MOVL      XAR5,#3506            ; [CPU_ARAU] |295| 
+        MOVL      XAR4,#_Inter_GPIO22   ; [CPU_ARAU] |295| 
+        MOVL      XAR5,#3400            ; [CPU_ARAU] |295| 
         MOVL      *+XAR5[0],XAR4        ; [CPU_ALU] |295| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 296,column 9,is_stmt,isa 0
-        MOVL      XAR4,#_Inter_SCIBRX   ; [CPU_ARAU] |296| 
-        MOVL      XAR5,#3524            ; [CPU_ARAU] |296| 
+        MOVL      XAR4,#_Inter_I2CA     ; [CPU_ARAU] |296| 
+        MOVL      XAR5,#3506            ; [CPU_ARAU] |296| 
         MOVL      *+XAR5[0],XAR4        ; [CPU_ALU] |296| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 297,column 9,is_stmt,isa 0
-        MOVL      XAR4,#_Inter_SCIBTX   ; [CPU_ARAU] |297| 
-        MOVL      XAR5,#3526            ; [CPU_ARAU] |297| 
+        MOVL      XAR4,#_Inter_SCIBRX   ; [CPU_ARAU] |297| 
+        MOVL      XAR5,#3524            ; [CPU_ARAU] |297| 
         MOVL      *+XAR5[0],XAR4        ; [CPU_ALU] |297| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 299,column 9,is_stmt,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 298,column 9,is_stmt,isa 0
+        MOVL      XAR4,#_Inter_SCIBTX   ; [CPU_ARAU] |298| 
+        MOVL      XAR5,#3526            ; [CPU_ARAU] |298| 
+        MOVL      *+XAR5[0],XAR4        ; [CPU_ALU] |298| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 300,column 9,is_stmt,isa 0
 $C$DW$108	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$108, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$108, DW_AT_name("_Config_PIE")
 	.dwattr $C$DW$108, DW_AT_TI_call
 
-        LCR       #_Config_PIE          ; [CPU_ALU] |299| 
-        ; call occurs [#_Config_PIE] ; [] |299| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 300,column 5,is_stmt,isa 0
-        EDIS      ; [CPU_ALU] |300| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 302,column 5,is_stmt,isa 0
- clrc INTM
+        LCR       #_Config_PIE          ; [CPU_ALU] |300| 
+        ; call occurs [#_Config_PIE] ; [] |300| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 301,column 5,is_stmt,isa 0
+        EDIS      ; [CPU_ALU] |301| 
 	.dwpsn	file "../BiomSensor_BLE.c",line 303,column 5,is_stmt,isa 0
-        MOVW      DP,#_SCI_TxAvail      ; [CPU_ARAU] 
-        MOVB      @_SCI_TxAvail,#1,UNC  ; [CPU_ALU] |303| 
+ clrc INTM
 	.dwpsn	file "../BiomSensor_BLE.c",line 304,column 5,is_stmt,isa 0
+        MOVW      DP,#_SCI_TxAvail      ; [CPU_ARAU] 
+        MOVB      @_SCI_TxAvail,#1,UNC  ; [CPU_ALU] |304| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 305,column 5,is_stmt,isa 0
         SPM       #0                    ; [CPU_ALU] 
 $C$DW$109	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$109, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$109, DW_AT_name("_HM10_Config")
 	.dwattr $C$DW$109, DW_AT_TI_call
 
-        LCR       #_HM10_Config         ; [CPU_ALU] |304| 
-        ; call occurs [#_HM10_Config] ; [] |304| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 305,column 11,is_stmt,isa 0
+        LCR       #_HM10_Config         ; [CPU_ALU] |305| 
+        ; call occurs [#_HM10_Config] ; [] |305| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 306,column 11,is_stmt,isa 0
         MOVW      DP,#_SCI_Mode         ; [CPU_ARAU] 
-        MOV       AL,@_SCI_Mode         ; [CPU_ALU] |305| 
-        CMPB      AL,#2                 ; [CPU_ALU] |305| 
-        B         $C$L32,EQ             ; [CPU_ALU] |305| 
-        ; branchcc occurs ; [] |305| 
+        MOV       AL,@_SCI_Mode         ; [CPU_ALU] |306| 
+        CMPB      AL,#2                 ; [CPU_ALU] |306| 
+        B         $C$L32,EQ             ; [CPU_ALU] |306| 
+        ; branchcc occurs ; [] |306| 
 $C$L31:    
-        MOV       AL,@_SCI_Mode         ; [CPU_ALU] |305| 
-        CMPB      AL,#2                 ; [CPU_ALU] |305| 
-        B         $C$L31,NEQ            ; [CPU_ALU] |305| 
-        ; branchcc occurs ; [] |305| 
+        MOV       AL,@_SCI_Mode         ; [CPU_ALU] |306| 
+        CMPB      AL,#2                 ; [CPU_ALU] |306| 
+        B         $C$L31,NEQ            ; [CPU_ALU] |306| 
+        ; branchcc occurs ; [] |306| 
 $C$L32:    
-	.dwpsn	file "../BiomSensor_BLE.c",line 306,column 5,is_stmt,isa 0
+	.dwpsn	file "../BiomSensor_BLE.c",line 307,column 5,is_stmt,isa 0
 $C$DW$110	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$110, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$110, DW_AT_name("_Biom_Config")
 	.dwattr $C$DW$110, DW_AT_TI_call
 
-        LCR       #_Biom_Config         ; [CPU_ALU] |306| 
-        ; call occurs [#_Biom_Config] ; [] |306| 
-	.dwpsn	file "../BiomSensor_BLE.c",line 307,column 11,is_stmt,isa 0
+        LCR       #_Biom_Config         ; [CPU_ALU] |307| 
+        ; call occurs [#_Biom_Config] ; [] |307| 
+	.dwpsn	file "../BiomSensor_BLE.c",line 308,column 11,is_stmt,isa 0
 $C$L33:    
-        B         $C$L33,UNC            ; [CPU_ALU] |307| 
-        ; branch occurs ; [] |307| 
+        B         $C$L33,UNC            ; [CPU_ALU] |308| 
+        ; branch occurs ; [] |308| 
 	.dwattr $C$DW$104, DW_AT_TI_end_file("../BiomSensor_BLE.c")
-	.dwattr $C$DW$104, DW_AT_TI_end_line(0x135)
+	.dwattr $C$DW$104, DW_AT_TI_end_line(0x136)
 	.dwattr $C$DW$104, DW_AT_TI_end_column(0x01)
 	.dwendentry
 	.dwendtag $C$DW$104

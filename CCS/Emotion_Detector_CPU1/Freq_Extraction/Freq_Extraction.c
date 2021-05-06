@@ -36,7 +36,7 @@ void Freq_Extraction(float* InputX, float* InputY, uint16_t Type){ //Takes 1.133
         EDIS;
 
         Ptr = PSD_Periodogram(Ptr);         //freq_res=1/(Ts*NFFT)
-        for(i=1;i<101;i++){                 //Resolution=8[Hz]/2048
+        for(i=1;i<103;i++){                 //Resolution=8[Hz]/2048
             if(i<11){
                 Aux1+=Ptr[i];
             }

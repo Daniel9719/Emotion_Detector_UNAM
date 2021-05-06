@@ -27,9 +27,6 @@ extern uint16_t Emotion;
 extern struct Features_Value Feat_Val;
 extern volatile uint16_t Modality;
 
-extern volatile int16_t CS_UpN;
-extern volatile float CS_UpAcum;
-
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%%%%    CONFIGURATION PIE    %%%%%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
@@ -84,7 +81,7 @@ Disconnect:
         if(SCI_Mode!=2){
             goto Disconnect;
         }
-//        CPUSYS_LPMCR_R&=0xFFFFFFFC;         //IDLE MODE
-//        IDLE;
+        CPUSYS_LPMCR_R&=0xFFFFFFFC;         //IDLE MODE
+        IDLE;
     }
 }

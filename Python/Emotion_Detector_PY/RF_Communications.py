@@ -43,7 +43,7 @@ class RF_COMS:
         self.Auto = False
         
         # RF COMS VARIABLES
-        self.Config = 0x05
+        self.Config = 0x81
         self.No_Emotions = 0x01
         
         self.CC_Config = 0x00
@@ -118,6 +118,7 @@ class RF_COMS:
                 if length == None:
                     length = (TxData.bit_length() + 7) // 8
                 Data=TxData.to_bytes(length, byteorder='little', signed=False)
+                # print(f"DatoTx: {hex(TxData)}    Longitud:{length}")
                 await self.client.write_gatt_char(self.UUID_characteristic, Data)
             elif type(TxData)==str:
                 TxData = TxData+"\n"
@@ -246,7 +247,7 @@ class RF_COMS:
             elif self.index == 1:
                 self.str = 'NN50'
             elif self.index == 2:
-                self.str = 'RRmed'
+                self.str = 'PPImed'
             elif self.index == 3:
                 self.str = 'SDNN'
             elif self.index == 4:

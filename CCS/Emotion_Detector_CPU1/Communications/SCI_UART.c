@@ -26,14 +26,6 @@ void SCIB_WData(uint16_t SCI_TxData){                   //It always sends 2 byte
 }
 
 //--------------------------------------------------------------------
-//%%%%%%%%%%%%%%%%%    READING DATA FROM SCIB    %%%%%%%%%%%%%%%%%%%%%
-//char* RxData_Pt: Pointer to string where data is going to be stored
-//--------------------------------------------------------------------
-void SCIB_Read(char* RxData_Pt){
-    *(RxData_Pt)=SCIB_RXBUF_R&0xFF;
-}
-
-//--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%    CLEANING STRING TO ZEROS    %%%%%%%%%%%%%%%%%%
 //char* Reg_Pt: Pointer to string where data is stored
 //--------------------------------------------------------------------

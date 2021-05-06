@@ -60,8 +60,8 @@ __interrupt void Inter_I2CA (void){
             Clb_Min=__min(Clb_Min,Raw.GR_LED);
         }
         if(Clb_Mode==0){
-//            Biom1.LED_V[i]=FIR_PPG(Raw.GR_LED);
-            Biom1.LED_V[i]=Raw.GR_LED;
+            Biom1.LED_V[i]=FIR_PPG(Raw.GR_LED);
+//            Biom1.LED_V[i]=Raw.GR_LED;
             i++;
         }
     }
@@ -76,8 +76,8 @@ __interrupt void Inter_I2CA (void){
         if(Clb_Mode==0){
             k++;
             if(k%4==0){
-                Biom1.EDA[j]=FIR_EDA(Raw.int_EDA);
-//                Biom1.EDA[j]=Raw.int_EDA;
+//                Biom1.EDA[j]=FIR_EDA(Raw.int_EDA);
+                Biom1.EDA[j]=Raw.int_EDA;
                 j^=1;
                 k=0;
             }

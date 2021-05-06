@@ -32,7 +32,7 @@ void TFeat_Estimation(float* PPI, int* num_PPI, float* pre_NN50, float* sum_PPI,
     *sum_PPI += PPI[0];
 
     //Mean
-    Feat_Val.RRmed = *sum_PPI/(*num_PPI + 1);
+    Feat_Val.PPImed = *sum_PPI/(*num_PPI + 1);
 
     //Root mean square
     Feat_Val.RMSSD= __sqrt(*pre_RMSSD/(*num_PPI));
@@ -79,7 +79,6 @@ void Time_Features(float* PPI, uint16_t sum_flg){
           TFeat_Estimation(PPI, &num_PPI4, &pre_NN50_4, &sum4_PPI, &pre_SDNN4, &pre_RMSSD4);
           sum_count = 0;
         }
-        sum_flg--;
     }
     else{
 

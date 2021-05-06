@@ -22,7 +22,8 @@ float* PSD_Periodogram(float* Ptr){
     float* PSDpt;
 
     PSDpt = fft_float(Ptr, NFFT);
-    for(k=0;k<101;k++){
+    PSDpt[0]/=2.0;
+    for(k=0;k<103;k++){
         PSDpt[k] = 10*log10(PSDpt[k]/((float)(NFFT)*1.5));      //Origin of 1.5 constant is unknown but gives same result as MATLAB
     }
     return PSDpt;

@@ -38,9 +38,16 @@
 void SCIB_WText(char*);
 void SCIB_WData(uint16_t);
 void SCIB_WLongData(void);
-void SCIB_Read(char*);
 void Clean_Reg(char*);
 void ComandoAT(char*,char*);
 void HM10_Config(void);
+
+//--------------------------------------------------------------------
+//%%%%%%%%%%%%%%%%%    READING DATA FROM SCIB    %%%%%%%%%%%%%%%%%%%%%
+//char* RxData_Pt: Pointer to string where data is going to be stored
+//--------------------------------------------------------------------
+inline void SCIB_Read(char* RxData_Pt){
+    *(RxData_Pt)=SCIB_RXBUF_R&0xFF;
+}
 
 #endif /* HM10_BLE_H_ */

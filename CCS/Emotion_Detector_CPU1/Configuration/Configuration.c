@@ -61,7 +61,7 @@ void Write_Emotion(void){
 // uint16_t Number: Assignation of the feature to send via UART
 //  0x00: pNN50         0x08: PRV_LF        0x10: ctl25
 //  0x01: NN50          0x09: PRV_HF        0x11: ctl50
-//  0x02: RRmed         0x0A: SD1           0x12: ctl75
+//  0x02: PPImed        0x0A: SD1           0x12: ctl75
 //  0x03: SDNN          0x0B: SD2           0x13: ctl90
 //  0x04: RMSSD         0x0C: NumSCR        0x14: EDA_HF
 //  0x05: SD1/SD2       0x0D: AmpSCR

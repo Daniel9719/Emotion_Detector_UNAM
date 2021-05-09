@@ -50,7 +50,7 @@ bool PPI_Estimation(int x_PPG, float* Y, float* X){
 
         if(detected_peaks == 2){
             //Adaptive time threshold
-            if((indx_dist/f_s < 1.5*temp_meanPPI) && (indx_dist/f_s > 0.75*temp_meanPPI) || PPI_indx == 0){
+            if((indx_dist/f_s < 1.25*temp_meanPPI) && (indx_dist/f_s > 0.75*temp_meanPPI) || PPI_indx == 0){
                 if((DMA_CH1_CONTROL_R&0x2000)==0x2000){                 //If DMA Channel 1 is running
                    Y_buff[buff_indx] = indx_dist/f_s;
                    X_buff[buff_indx] = Y_buff[buff_indx] + missed_PPI;

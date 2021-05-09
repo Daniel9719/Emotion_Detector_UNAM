@@ -80,7 +80,7 @@ bool PPI_Estimation(int x_PPG, float* Y, float* X){
                    XY_indx++;
                }
 
-               if(Acum >= 320.0){
+               if(Acum >= CS_UpLim){
                    CS_UpAcum = Acum;
                    CS_UpN = XY_indx-1;
                    Acum -= 64;

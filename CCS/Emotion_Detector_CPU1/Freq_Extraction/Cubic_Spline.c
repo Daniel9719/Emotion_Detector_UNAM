@@ -74,7 +74,7 @@ float* Cubic_Spline(float* h, float* Y){  //Takes 0.2198 seg = 2198528 clock cyc
             Thrs=Thrs-tq;
             j--;
         }
-        if(i>0){
+        if(i>0){        //Condition only happening on the first window of 256 s
             Thrs=h[i-1]+Thrs;
         }
         if(Thrs<0 && j>=0){

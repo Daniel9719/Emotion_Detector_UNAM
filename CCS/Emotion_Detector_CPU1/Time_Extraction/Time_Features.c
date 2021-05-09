@@ -50,6 +50,11 @@ void TFeat_Estimation(float* PPI, int* num_PPI, float* pre_NN50, float* sum_PPI,
     Send_Feature(0x03);
     Send_Feature(0x04);
 
+    *pre_NN50 = 0;
+    *pre_SDNN = 0;
+    *pre_RMSSD = 0;
+    *sum_PPI = 0;
+
     *num_PPI = 0;
 }
 

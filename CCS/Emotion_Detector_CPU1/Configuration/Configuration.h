@@ -19,7 +19,7 @@ struct Features_Asignation{
 struct Features_Value{
     float pNN50;
     float NN50;
-    float RRmed;
+    float PPImed;
     float SDNN;
     float RMSSD;
     float SD1_SD2;
@@ -37,7 +37,6 @@ struct Features_Value{
     float ctl50;
     float ctl75;
     float ctl90;
-    float EDA_LF;
     float EDA_HF;
 };
 

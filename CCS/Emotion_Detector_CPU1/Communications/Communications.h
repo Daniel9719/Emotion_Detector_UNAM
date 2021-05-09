@@ -16,6 +16,7 @@
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%    COMMUNICATIONS FUNCTIONS   %%%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
+__interrupt void Inter_DMACH3 (void);
 __interrupt void Inter_XINT2 (void);
 __interrupt void Inter_I2CA (void);
 __interrupt void Inter_SCIBRX (void);

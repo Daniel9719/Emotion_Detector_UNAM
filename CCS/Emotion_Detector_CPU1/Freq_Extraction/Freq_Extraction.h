@@ -9,9 +9,10 @@
 #define FREQ_EXTRACTION_FREQ_EXTRACTION_H_
 
 #define PRVSig 1
-#define EDASig 0
+#define SCRSig 0
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <tms320f28379d.h>
 
 //--------------------------------------------------------------------

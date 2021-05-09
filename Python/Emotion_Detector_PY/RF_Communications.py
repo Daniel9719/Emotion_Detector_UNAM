@@ -16,11 +16,6 @@ HM10_address = "88:25:83:F1:39:75"
 class RF_COMS:
     
     client: BleakClient = None
-    # Mode = {
-    #     "Training": 0,
-    #     "Test": 1,
-    #     "Correction": 2
-    # }
     
     # CONSTRUCTOR
     def __init__(
@@ -48,27 +43,23 @@ class RF_COMS:
         self.Auto = False
         
         # RF COMS VARIABLES
-        self.Config = 0x06
+        self.Config = 0x81
         self.No_Emotions = 0x01
         
         self.CC_Config = 0x00
         self.Chars_Asig = None
         
         self.FLD_W_Config = 0x00
-        self.FLD_W = None     # Cada matriz cambia de dimensión 22x1
+        self.FLD_W = None     # Every matrix changes of dimension 21x1
         
         self.Vect_Config = 0x00
         self.Pik_Vect = None
         self.Mean_Vect = None
         self.Cov_S_Inv = None
-        
-        # self.Measure = False
-        # self.Modality = self.Mode["Training"]
-        # self.Hab_RGB = True
-        # self.PS_Selector = 0
+    
         
         self.Emotion = 7
-        self.Chars_Val = np.zeros(22, dtype=float)
+        self.Chars_Val = np.zeros(21, dtype=float)
 
     # BLE METHODS
     async def manager(self):
@@ -115,7 +106,6 @@ class RF_COMS:
                     Addr = Byte
                 else:
                     self.Rx_Menu(Addr, Byte)
-                # data=data>>8
                 self.FirstByte = not self.FirstByte
             else:
                 Addr += 1
@@ -128,6 +118,7 @@ class RF_COMS:
                 if length == None:
                     length = (TxData.bit_length() + 7) // 8
                 Data=TxData.to_bytes(length, byteorder='little', signed=False)
+                # print(f"DatoTx: {hex(TxData)}    Longitud:{length}")
                 await self.client.write_gatt_char(self.UUID_characteristic, Data)
             elif type(TxData)==str:
                 TxData = TxData+"\n"
@@ -171,7 +162,7 @@ class RF_COMS:
         
         # Sending FLD_W Matrix
         for i in range(0,len(self.FLD_W)):
-            for j in range(0,22):
+            for j in range(0,21):
                 self.FLD_W_Config = 0x80 | (i<<5) | j
                 if j < len(self.FLD_W[i][0]):
                     Data = ( ( int(self.FLD_W[i][3][j,0])<<40)
@@ -232,9 +223,7 @@ class RF_COMS:
         None
         
     def Rx_Menu(self, Addr: int, Data: int):
-        print(f"Addr={hex(Addr)}   Data:{hex(Data)}")
         if Addr == 0x10:
-
             self.Emotion = Data & 0x7
             if self.Emotion == 7:       #Neutral
                 self.emo_df.loc[self.emo_index]=['1','0','0']
@@ -248,8 +237,8 @@ class RF_COMS:
                 self.emo_df.loc[self.emo_index]=['0','1','1']  
             self.emo_index += 1
             self.emo_df.to_csv("Emotions.csv", index=False)
+            
         elif Addr == 0x11:
-
             self.index = Data & 0x1F
             if Data & 0x20:
                 self.Auto = True
@@ -258,7 +247,7 @@ class RF_COMS:
             elif self.index == 1:
                 self.str = 'NN50'
             elif self.index == 2:
-                self.str = 'RRmed'
+                self.str = 'PPImed'
             elif self.index == 3:
                 self.str = 'SDNN'
             elif self.index == 4:
@@ -294,24 +283,24 @@ class RF_COMS:
             elif self.index == 19:
                 self.str = 'ctl90'
             elif self.index == 20:
-                self.str = 'EDA_LF'
-            elif self.index == 21:
                 self.str = 'EDA_HF'
                 self.feat_index += 1
                 
         elif Addr == 0x12:
             self.DataQ16 = (self.DataQ16 & 0xFFFFFF00)|Data;
+            
         elif Addr == 0x13:
             self.DataQ16 = (self.DataQ16 & 0xFFFF00FF)|(Data<<8)
+            
         elif Addr == 0x14:
             self.DataQ16 = (self.DataQ16 & 0xFF00FFFF)|(Data<<16)
+            
         elif Addr == 0x15:
             Q16 = 65536
             self.DataQ16 = (self.DataQ16 & 0x00FFFFFF)|(Data<<24)
             self.Chars_Val[self.index] = float(self.DataQ16)/Q16
             
             self.feat_df.loc[self.feat_index, self.str] = self.Chars_Val[self.index]
-            print(f"{self.feat_df.head()}")
             self.feat_df.to_csv("Features.csv", index=False)
             self.Auto = False
         

@@ -12,8 +12,9 @@
 #include <tms320f28379d.h>
 
 #define N 853
-//#define N 11
 #define lenCS 2048
+#define CS_UpLim 256.0
+#define CS_LowLim 64.0
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%    CUBIC SPLINE FUNCTIONS    %%%%%%%%%%%%%%%%%%%%

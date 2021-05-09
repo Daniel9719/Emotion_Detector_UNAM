@@ -184,7 +184,7 @@ def declarar_widgets(rf_coms, root, loop):
     
     #-------------------TEXTO NOTA------------------------#
     #Nota
-    nota_l = tk.Label(root, fg= "#FFFFFF", text="Nota: Antes de presionar el botón de iniciar medición debe colocar el dedo sobre el sensor \n hasta que se apague el LED blanco", font="Helvetica 10 bold", bg='#2E5D94')
+    nota_l = tk.Label(root, fg= "#FFFFFF", text="Nota: Antes de presionar el botón de iniciar medición debe colocar el dedo sobre el sensor \n hasta que se apague el LED cyan", font="Helvetica 10 bold", bg='#2E5D94')
     nota_l.place(relx = 0.53, rely = 0.125, anchor=tk.CENTER)
     
 #------------------FUNCIONES BOTONES CONECTAR Y MEDIR------------------------#
@@ -237,14 +237,14 @@ def medir(rf_coms, loop):
        enviar_parametros_clasific_btn['state'] = tk.DISABLED
        toggle_medir = 0
        #Activa bit 3 de configuración (Iniciar medición)
-       rf_coms.Config |= 0x08 
+       rf_coms.Config |= 0x0C 
     else:
        medir_btn['text']="Iniciar medición"
        medir_btn['bg'] = "white"
        enviar_parametros_config_btn['state'] = tk.ACTIVE
        toggle_medir = 1
        #Desactiva bit 3 de configuración (Detener medición)
-       rf_coms.Config &= 0xF7 
+       rf_coms.Config &= 0xF3 
 
        
     #Send Config register to start measurement

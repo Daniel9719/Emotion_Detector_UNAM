@@ -1,6 +1,6 @@
 #include <Communications/SCI_UART.h>
 
-volatile int SCI_State=0;
+volatile int HM10_State=0;
 volatile bool SCI_RxAvail=true;
 bool SCI_TxAvail=true;
 uint16_t SCI_Mode=0;                             //(0) AT Mode   (1) Connection Mode  (2) Standby Mode
@@ -23,14 +23,6 @@ void SCIB_WData(uint16_t SCI_TxData){                   //It always sends 2 byte
     //While the TxFIFO is not full
     while((SCIB_FFTX_R&0x1F00)==0x1000){}
     SCIB_TXBUF_R=SCI_TxData&0xFF;                       //Writing to TXBUF the data pointed with SCI_StartPt and points foward
-}
-
-//--------------------------------------------------------------------
-//%%%%%%%%%%%%%%%%%    READING DATA FROM SCIB    %%%%%%%%%%%%%%%%%%%%%
-//char* RxData_Pt: Pointer to string where data is going to be stored
-//--------------------------------------------------------------------
-void SCIB_Read(char* RxData_Pt){
-    *(RxData_Pt)=SCIB_RXBUF_R&0xFF;
 }
 
 //--------------------------------------------------------------------
@@ -59,11 +51,11 @@ void ATCommand(char *Command, char *Option){
 //%%%%%%%%%%%%%%%%    HM10 MODULE CONFIGURATION    %%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 void HM10_Config(void){
-    SCI_State=0;
+    HM10_State=0;
     SCI_RxAvail=true;
-    while(SCI_State<5){                                 //While all the conditions (cases) aren't completed
+    while(HM10_State<5){                                 //While all the conditions (cases) aren't completed
         if(SCI_RxAvail){                                  //If an "OK" statement has arrived
-            switch(SCI_State){
+            switch(HM10_State){
             case 0:
                 ATCommand(AT_NAME,"EmoDet_UNAM");       //Setting name for HM10 Module to EmoDet_UNAM
                 SCI_RxAvail=false;

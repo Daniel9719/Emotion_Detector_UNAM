@@ -5,7 +5,7 @@
  *      Author: danie
  */
 #include<Char_extraction/PSD_Burg.h>
-#include<Char_extraction/Cubic_Spline.h>
+//#include<Char_extraction/Cubic_Spline.h>
 
 //float AR[ARorder];
 float ef[1024]={0};

@@ -2,6 +2,7 @@
 #define _FILTRO_H_
 
 #include "Coef.h"
+//#include "Coef_Noise.h"
 
 #ifdef __cplusplus
 extern "C" {

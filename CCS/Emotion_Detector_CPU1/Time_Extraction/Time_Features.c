@@ -32,7 +32,7 @@ void TFeat_Estimation(float* PPI, int* num_PPI, float* pre_NN50, float* sum_PPI,
     *sum_PPI += PPI[0];
 
     //Mean
-    Feat_Val.RRmed = *sum_PPI/(*num_PPI + 1);
+    Feat_Val.PPImed = *sum_PPI/(*num_PPI + 1);
 
     //Root mean square
     Feat_Val.RMSSD= __sqrt(*pre_RMSSD/(*num_PPI));
@@ -44,7 +44,17 @@ void TFeat_Estimation(float* PPI, int* num_PPI, float* pre_NN50, float* sum_PPI,
     //Standard deviation
     Feat_Val.SDNN = __sqrt(*pre_SDNN);
 
-    (*sum_count)++;
+    Send_Feature(0x00);
+    Send_Feature(0x01);
+    Send_Feature(0x02);
+    Send_Feature(0x03);
+    Send_Feature(0x04);
+
+    *pre_NN50 = 0;
+    *pre_SDNN = 0;
+    *pre_RMSSD = 0;
+    *sum_PPI = 0;
+
     *num_PPI = 0;
 }
 
@@ -60,18 +70,20 @@ void Time_Features(float* PPI, uint16_t sum_flg){
 
         if(sum_count == 0){
           TFeat_Estimation(PPI, &num_PPI1, &pre_NN50_1, &sum1_PPI, &pre_SDNN1, &pre_RMSSD1);
+          sum_count++;
         }
         else if(sum_count == 1){
           TFeat_Estimation(PPI, &num_PPI2, &pre_NN50_2, &sum2_PPI, &pre_SDNN2, &pre_RMSSD2);
+          sum_count++;
         }
         else if(sum_count == 2){
           TFeat_Estimation(PPI, &num_PPI3, &pre_NN50_3, &sum3_PPI, &pre_SDNN3, &pre_RMSSD3);
+          sum_count++;
         }
         else{
           TFeat_Estimation(PPI, &num_PPI4, &pre_NN50_4, &sum4_PPI, &pre_SDNN4, &pre_RMSSD4);
           sum_count = 0;
         }
-        sum_flg--;
     }
     else{
 

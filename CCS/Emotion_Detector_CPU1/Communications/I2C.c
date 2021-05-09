@@ -25,27 +25,4 @@ void I2C_StartWR(int Slave_Add, int Cont, bool WR){
     }
 }
 
-//--------------------------------------------------------------------
-//%%%%%%%%%%%%%%%    WRITING BYTE TO TX BUFFER/FIFO    %%%%%%%%%%%%%%%
-//int Byte: Byte to write into Tx Buffer or FIFO
-//--------------------------------------------------------------------
-void I2C_Write_Byte(int Byte){
-    I2CA_DXR_R=Byte&0xFF;                            //Send Byte of data
-}
-
-//--------------------------------------------------------------------
-//%%%%%%%%%%%%%    READING BYTE FROM RX BUFFER/FIFO    %%%%%%%%%%%%%%%
-//return int: Data Byte read from bus
-//--------------------------------------------------------------------
-int I2C_Read_Byte(void){
-    return I2CA_DRR_R&0xFF;
-}
-
-//--------------------------------------------------------------------
-//%%%%%%%%%%%%%%    SETTING STOP COMMAND ON I2C BUS    %%%%%%%%%%%%%%%
-//--------------------------------------------------------------------
-void I2C_Stop(void){
-    I2CA_MDR_R|=0x800;                              //STOP Write
-}
-
 

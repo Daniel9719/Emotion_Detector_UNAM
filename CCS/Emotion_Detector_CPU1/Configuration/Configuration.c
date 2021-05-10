@@ -67,7 +67,7 @@ void Write_Emotion(void){
 //  VLF           sdAmpl
 //--------------------------------------------------------------------
 void Send_Feature(enum Features_Labels Number){
-    static uint32_t Features=0xFF000;
+    static uint32_t Features=0;
     uint16_t i=0;
     Features|=Number;
     if(AutoTx && Features==0x1FFFFF){
@@ -80,7 +80,7 @@ void Send_Feature(enum Features_Labels Number){
                 VariablesMap(0x94,0);
                 VariablesMap(0x95,0);
             }
-            Features=0xFF000;
+            Features=0x0;
         }
     }
 }

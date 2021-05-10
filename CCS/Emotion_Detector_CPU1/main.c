@@ -77,6 +77,7 @@ Disconnect:
                 Write_Emotion();
             }
             Main_Running=false;
+            Send_Feature(ALL);
         }
         if(SCI_Mode!=2){
             goto Disconnect;

@@ -268,7 +268,7 @@ def selec_modo():
 def verif_config(rf_coms, loop):
         #Se llama función para modificar el registro de configuración 
         enviar_config(rf_coms, loop)
-        messagebox.showinfo("Mensaje de parámetros", "Parámetros enviados")
+        messagebox.showinfo("Mensaje de parámetros", "¿Desea enviar los datos?")
         modo_texto.config(text="Modo " + modo.get())
             
 def enviar_config(rf_coms, loop):   
@@ -342,7 +342,7 @@ def entrenar(rf_coms):
 def param_entrena(rf_coms, loop):
      #Send classification parameters
      loop.create_task(rf_coms.Send_Clasif_Parameters(), name="Task6")
-     messagebox.showinfo("Mensaje de parametros", "Parámetros enviados" )
+     messagebox.showinfo("Mensaje de parametros", "¿Desea enviar los datos?" )
      
      
 #-------------------FUNCIONES BOTONES GRÁFICA Y MANIQUÍ------------------------#

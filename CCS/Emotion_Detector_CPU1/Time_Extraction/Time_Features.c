@@ -44,11 +44,11 @@ void TFeat_Estimation(float* PPI, int* num_PPI, float* pre_NN50, float* sum_PPI,
     //Standard deviation
     Feat_Val.SDNN = __sqrt(*pre_SDNN);
 
-    Send_Feature(0x00);
-    Send_Feature(0x01);
-    Send_Feature(0x02);
-    Send_Feature(0x03);
-    Send_Feature(0x04);
+    Send_Feature(pNN50);
+    Send_Feature(NN50);
+    Send_Feature(PPImed);
+    Send_Feature(SDNN);
+    Send_Feature(RMSSD);
 
     *pre_NN50 = 0;
     *pre_SDNN = 0;

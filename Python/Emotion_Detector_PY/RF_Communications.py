@@ -284,7 +284,6 @@ class RF_COMS:
                 self.str = 'ctl90'
             elif self.index == 20:
                 self.str = 'EDA_HF'
-                self.feat_index += 1
                 
         elif Addr == 0x12:
             self.DataQ16 = (self.DataQ16 & 0xFFFFFF00)|Data;
@@ -297,10 +296,13 @@ class RF_COMS:
             
         elif Addr == 0x15:
             Q16 = 65536
-            self.DataQ16 = (self.DataQ16 & 0x00FFFFFF)|(Data<<24)
+            self.DataQ16 = int((self.DataQ16 & 0x00FFFFFF)|(Data<<24))
+            if self.DataQ16>0x7FFFFFFF:
+                self.DataQ16=self.DataQ16-0x100000000
             self.Chars_Val[self.index] = float(self.DataQ16)/Q16
             
             self.feat_df.loc[self.feat_index, self.str] = self.Chars_Val[self.index]
-            self.feat_df.to_csv("Features.csv", index=False)
+            self.feat_df.to_csv("features.csv", index=False)
+            if self.index == 20:
+                self.feat_index += 1
             self.Auto = False
-        

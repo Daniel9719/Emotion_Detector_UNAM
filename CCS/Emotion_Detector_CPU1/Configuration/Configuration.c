@@ -2,13 +2,11 @@
 #include "Communications/Biom_AS7026GG.h"
 #include "Communications/SCI_UART.h"
 
-#define Q16 65536
-
 //%%%%%%%%%%%%%%%%%%%    CLASSIFICATION VARIABLES    %%%%%%%%%%%%%%%%%%
 extern float MeanVect[8];
 extern float ApriVect[8];
 extern float Cov_S[4];
-extern float FLD_W[4][21];
+extern float FLD_W[4][FEAT_LENGTH];
 
 //%%%%%%%%%%%%%%%%%%%    CONFIGURATION VARIABLES    %%%%%%%%%%%%%%%%%%
 volatile uint16_t Clb_Mode=0;
@@ -58,26 +56,31 @@ void Write_Emotion(void){
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%%%%%%%   SENDING FEATURES   %%%%%%%%%%%%%%%%%%%%%%
-// uint16_t Number: Assignation of the feature to send via UART
-//  0x00: pNN50         0x08: PRV_LF        0x10: ctl25
-//  0x01: NN50          0x09: PRV_HF        0x11: ctl50
-//  0x02: PPImed        0x0A: SD1           0x12: ctl75
-//  0x03: SDNN          0x0B: SD2           0x13: ctl90
-//  0x04: RMSSD         0x0C: NumSCR        0x14: EDA_HF
-//  0x05: SD1/SD2       0x0D: AmpSCR
-//  0x06: LF/HF         0x0E: mTL
-//  0x07: VLF           0x0F: sdAmpl
+// enum Features_Labels Number: Assignation of the feature to send via UART
+//  pNN50         PRV_LF        ctl25
+//  NN50          PRV_HF        ctl50
+//  PPImed        SD1           ctl75
+//  SDNN          SD2           ctl90
+//  RMSSD         NumSCR        EDA_HF
+//  SD1/SD2       AmpSCR
+//  LF/HF         mTL
+//  VLF           sdAmpl
 //--------------------------------------------------------------------
-void Send_Feature(uint16_t Number){
-    if(AutoTx){
-        if(Number<0x15){
-            if(Modality==0){
-                VariablesMap(0x11,Number);      //Selecting the Vector to transmit in Variables Map
-                VariablesMap(0x92,0);           //Requesting a reading from Vector data in Variables Map
+void Send_Feature(enum Features_Labels Number){
+    static uint32_t Features=0xFF000;
+    uint16_t i=0;
+    Features|=Number;
+    if(AutoTx && Features==0x1FFFFF){
+        if(Modality==0){
+            for(i=0;i<FEAT_LENGTH;i++){
+                VariablesMap(0x11,i);      //Selecting the Vector to transmit in Variables Map
+                VariablesMap(0x91,0);      //Requesting a reading from Vector data in Variables Map
+                VariablesMap(0x92,0);
                 VariablesMap(0x93,0);
                 VariablesMap(0x94,0);
                 VariablesMap(0x95,0);
             }
+            Features=0xFF000;
         }
     }
 }
@@ -128,19 +131,19 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
                     SCIB_WData(Buffer);
                     break;
                 case 0x07:       //----------------FLD MATRIX Wn 1--------------//
-                    DataQ16=(uint16_t)(FLD_W_Pt[W_Row*21+W_Col]*Q16);
+                    DataQ16=(uint32_t)(FLD_W_Pt[W_Row*FEAT_LENGTH+W_Col]*Q16);
                     SCIB_WData(DataQ16);
                     break;
                 case 0x08:       //----------------FLD MATRIX Wn 2--------------//
-                    DataQ16=(uint16_t)(FLD_W_Pt[W_Row*21+W_Col]*Q16);
+                    DataQ16=(uint32_t)(FLD_W_Pt[W_Row*FEAT_LENGTH+W_Col]*Q16);
                     SCIB_WData(DataQ16>>8);
                     break;
                 case 0x09:       //----------------FLD MATRIX Wn 3--------------//
-                    DataQ16=(uint16_t)(FLD_W_Pt[W_Row*21+W_Col]*Q16);
+                    DataQ16=(uint32_t)(FLD_W_Pt[W_Row*FEAT_LENGTH+W_Col]*Q16);
                     SCIB_WData(DataQ16>>16);
                     break;
                 case 0x0A:       //----------------FLD MATRIX Wn 4--------------//
-                    DataQ16=(uint16_t)(FLD_W_Pt[W_Row*21+W_Col]*Q16);
+                    DataQ16=(int32_t)(FLD_W_Pt[W_Row*FEAT_LENGTH+W_Col]*Q16);
                     SCIB_WData(DataQ16>>24);
                     break;
                 case 0x0B:       //----------------VECT CONFIG------------------//
@@ -148,42 +151,41 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
                     SCIB_WData(Buffer);
                     break;
                 case 0x0C:       //----------------mk/pik/S VECTOR 1------------//
-                    DataQ16=(uint16_t)(Pointer1[Vect_Col]*Q16);
+                    DataQ16=(uint32_t)(Pointer1[Vect_Col]*Q16);
                     SCIB_WData(DataQ16);
                     break;
                 case 0x0D:       //----------------mk/pik/S VECTOR 2------------//
-                    DataQ16=(uint16_t)(Pointer1[Vect_Col]*Q16);
+                    DataQ16=(uint32_t)(Pointer1[Vect_Col]*Q16);
                     SCIB_WData(DataQ16>>8);
                     break;
                 case 0x0E:       //----------------mk/pik/S VECTOR 3------------//
-                    DataQ16=(uint16_t)(Pointer1[Vect_Col]*Q16);
+                    DataQ16=(uint32_t)(Pointer1[Vect_Col]*Q16);
                     SCIB_WData(DataQ16>>16);
                     break;
                 case 0x0F:       //----------------mk/pik/S VECTOR 4------------//
-                    DataQ16=(uint16_t)(Pointer1[Vect_Col]*Q16);
+                    DataQ16=(int32_t)(Pointer1[Vect_Col]*Q16);
                     SCIB_WData(DataQ16>>24);
                     break;
                 case 0x10:       //-------------------EMOTION-------------------//
                     SCIB_WData(Emotion);
                     break;
                 case 0x11:       //----------------CHARACT CONFIG---------------//
-                    Buffer=Feat_Row;
-                    SCIB_WData(Buffer);
+                    SCIB_WData(Feat_Row);
                      break;
                 case 0x12:       //----------------CHARACT VALUE 1--------------//
-                    DataQ16=(uint16_t)(Pointer2[Feat_Row]*Q16);
+                    DataQ16=(int32_t)(Pointer2[Feat_Row]*Q16);
                     SCIB_WData(DataQ16);
                     break;
                 case 0x13:       //----------------CHARACT VALUE 2--------------//
-                    DataQ16=(uint16_t)(Pointer2[Feat_Row]*Q16);
+                    DataQ16=(int32_t)(Pointer2[Feat_Row]*Q16);
                     SCIB_WData(DataQ16>>8);
                     break;
                 case 0x14:       //----------------CHARACT VALUE 3--------------//
-                    DataQ16=(uint16_t)(Pointer2[Feat_Row]*Q16);
+                    DataQ16=(int32_t)(Pointer2[Feat_Row]*Q16);
                     SCIB_WData(DataQ16>>16);
                     break;
                 case 0x15:       //----------------CHARACT VALUE 4--------------//
-                    DataQ16=(uint16_t)(Pointer2[Feat_Row]*Q16);
+                    DataQ16=(int32_t)(Pointer2[Feat_Row]*Q16);
                     SCIB_WData(DataQ16>>24);
                     Config_Auto=0;
                     break;
@@ -249,7 +251,7 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
                 break;
             case 0x0A:       //----------------FLD MATRIX Wn 4--------------//
                 DataQ16=(DataQ16 & 0x00FFFFFF)|((int32_t)(Data)<<24);
-                FLD_W_Pt[W_Row*21+W_Col]=(float)(DataQ16)/Q16;
+                FLD_W_Pt[W_Row*FEAT_LENGTH+W_Col]=(float)(DataQ16)/Q16;
                 Config_Auto=0;
                 break;
             case 0x0B:       //----------------VECT CONFIG------------------//

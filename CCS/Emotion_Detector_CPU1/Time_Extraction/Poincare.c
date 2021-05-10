@@ -35,9 +35,9 @@ void PFeat_Estimation(uint16_t* num_PPI, float* sum_prj_SD1, float* sum_prj_SD2,
     //SD1/SD2 ratio
     Feat_Val.SD1_SD2 = (Feat_Val.SD1)/(Feat_Val.SD2);
 
-    Send_Feature(0x05);
-    Send_Feature(0x0A);
-    Send_Feature(0x0B);
+    Send_Feature(SD1_SD2);
+    Send_Feature(SD1);
+    Send_Feature(SD2);
 
     *sum_prj_SD1 = 0;
     *sum_prj_SD2 = 0;

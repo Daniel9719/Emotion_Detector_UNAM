@@ -4,8 +4,7 @@ Created on Mon Oct 12 14:54:25 2020
 
 @author: Samuel Osorio Gutiérrez
 """
-#import ML.LDA as LDA
-import LDA
+import ML.LDA as LDA
 import numpy as np
 
 def SFFS_wrapper(features_train, features_test, targets_train, targets_test, pLDA):

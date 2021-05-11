@@ -4,12 +4,9 @@ Created on Sat Oct 10 15:28:50 2020
 
 @author: Samuel Osorio Gutiérrez
 """
-# import ML.FLD as FLD
-# import ML.SFFS as SFFS
-# import ML.LDA as LDA
-import FLD
-import SFFS
-import LDA
+import ML.FLD as FLD
+import ML.SFFS as SFFS
+import ML.LDA as LDA
 from time import time
 import random
 import numpy as np

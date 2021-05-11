@@ -136,8 +136,8 @@ def covariance (features_train,K,OmegaK,D,m_k, N, pLDA):
 
     Returns
     -------
-    S_inv : array
-        Inverse covariance matrix 
+    S : array
+        Covariance matrix 
     """
     S=np.zeros([D,D]) 
     for k in range(K+1):
@@ -149,21 +149,22 @@ def covariance (features_train,K,OmegaK,D,m_k, N, pLDA):
             Sk+=np.matmul(a,np.transpose(a))
         S+=Sk 
     S/=(N-K)
-    if pLDA:
-        S_inv=pseudoinverseLDA(S,D)
-    else:
-        S_inv=np.linalg.inv(S)
-    return S_inv
+    # if pLDA:
+    #     S_inv=pseudoinverseLDA(S,D)
+    # else:
+    #     S_inv=np.linalg.inv(S)
+    #return S_inv
+    return S
 
 
-def classification(S_inv,m_k,pi_k,features_entry):
+def classification(S,m_k,pi_k,features_entry):
     """
     Classification of features vectors
 
     Parameters
     ----------
-    S_inv : array
-        Inverse covariance matrix 
+    S : array
+        Covariance matrix 
     m_k : array
         Means of features vectors with same target
     pi_k : array
@@ -183,7 +184,7 @@ def classification(S_inv,m_k,pi_k,features_entry):
         delta=[]
         for k in range(K):
             a=features_entry[n,:]-m_k[k,:]
-            delta_temp=(-1/2)*np.matmul(np.matmul(a,S_inv),np.transpose(a))+np.log(pi_k[k,:])
+            delta_temp=(-1/2)*np.matmul(np.matmul(a,np.linalg.inv(S)),np.transpose(a))+np.log(pi_k[k,:])
             delta.append(delta_temp)
         maxValue=max(delta)
         prediction[n]=delta.index(maxValue)
@@ -206,8 +207,8 @@ def train(features_train,targets_train, pLDA=False, Terminal=False):
 
     Returns
     -------
-    S_inv : array
-        Inverse covariance matrix 
+    S : array
+        Covariance matrix 
     m_k : array
         Means of features vectors with same target
     pi_k : array
@@ -216,15 +217,15 @@ def train(features_train,targets_train, pLDA=False, Terminal=False):
     K,N,OmegaK=indexTargets(targets_train)
     pi_k=Apriori(features_train, K, OmegaK)
     m_k,D=average(features_train,K,OmegaK)
-    S_inv=covariance (features_train,K,OmegaK,D,m_k, N, pLDA)
+    S=covariance (features_train,K,OmegaK,D,m_k, N, pLDA)
     if Terminal:
-        print("\nS_inv:")
-        print(S_inv)
+        print("\nS:")
+        print(S)
         print("\nm_k:")
         print(m_k)
         print("\npi_k:")
         print(pi_k)
-    return S_inv,m_k,pi_k
+    return S,m_k,pi_k
 
 def accuracy(prediction, targets):
     """
@@ -269,8 +270,8 @@ def LOOCV(features_train,targets_train,pLDA):
         sample_feature=features_train[i,:]
         sample_target=targets_train[i]
         sample_feature=sample_feature.reshape((1,-1))
-        S_inv,m_k,pi_k=train(temp_features_train,temp_targets_train, pLDA,Terminal=False)
-        prediction=classification(S_inv,m_k,pi_k, sample_feature)
+        S,m_k,pi_k=train(temp_features_train,temp_targets_train, pLDA,Terminal=False)
+        prediction=classification(S,m_k,pi_k, sample_feature)
         acc+=accuracy(prediction,sample_target)
     acc/=samples
     return acc

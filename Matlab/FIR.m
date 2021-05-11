@@ -4,12 +4,12 @@ Fs_EDA = 32;     %Sampling frequency of EDA 32 Hz
 Fs_PPG = 128;     %Sampling frequency of PPG 128 Hz
 
 n_EDABand=200;
-f_EDALow = 0.16;      %Cut-off frequency of EDA_SCR
-f_EDAHigh = 2.1;         %Cut-off frequency of EDA_SCR
+f_EDALow = 0.095;      %Cut-off frequency of EDA_SCR
+f_EDAHigh = 2.16;         %Cut-off frequency of EDA_SCR
 
 n_PPGBand=200;
-f_PPGLow = 0.6;      %Cut-off frequency of PPG
-f_PPGHigh = 3.7;         %Cut-off frequency of PPG
+f_PPGLow = 0.4;      %Cut-off frequency of PPG
+f_PPGHigh = 3.58;         %Cut-off frequency of PPG
 
 wnBand_EDA = [(f_EDALow)/(Fs_EDA/2) (f_EDAHigh)/(Fs_EDA/2)]; 
 h_EDABand = fir1(n_EDABand,wnBand_EDA);
@@ -37,7 +37,7 @@ h_PPGBand=int16(h_PPGBand);
 
 %% Tables
 Tab=table(h_EDABand);
-writetable(Tab,'h_EDA');
+writetable(Tab,'h_EDA.dat');
 
 Tab=table(h_PPGBand);
-writetable(Tab,'h_PPG');
+writetable(Tab,'h_PPG.dat');

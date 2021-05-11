@@ -207,7 +207,7 @@ def reductionMatrix(val_p,vect_p,K,D):
         W[:,i]=vect_p[:,index]   
     return W
 
-def train(features_train,targets_train,K, pLDA=False, plot=False, Terminal=False, Binary=False):
+def train(features_train,targets_train, K, pLDA=False, plot=False, Terminal=False):
     """
     Train of FLD
 
@@ -234,10 +234,15 @@ def train(features_train,targets_train,K, pLDA=False, plot=False, Terminal=False
     C,OmegaC=indexTarget(targets_train)
     mc,m,D=average(features_train,C,OmegaC)
     Sw,Sb= covariance(features_train,C,OmegaC,D,mc,m)
-    
-    if Binary:
+    if mc.shape[0]==2:
         W=mc[1,:]-mc[0,:]
-        W=np.matmul(np.linalg.inv(Sw),W)
+        val_p=0
+        vect_p=0
+        if pLDA:
+            Swpseudo,Sbpseudo=pseudoinverseLDA(Sw,Sb,D)
+            W=np.matmul(Swpseudo,W)
+        else:
+            W=np.matmul(np.linalg.inv(Sw),W)
         W=W.reshape((-1, 1))
     else:
         val_p,vect_p=eigen(Sw,Sb,D,pLDA)

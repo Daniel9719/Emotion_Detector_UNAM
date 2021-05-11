@@ -73,9 +73,17 @@ def declarar_widgets(rf_coms, root, loop):
     global rgb 
     rgb = tk.IntVar()
     
+    #Variable para la activación/desactivación de la transmisión automática (tipo entero)
+    global ta 
+    ta = tk.IntVar()
+    
     #Activar/Desactivar LED RGB
     ck_rgb = tk.Checkbutton(frame, text="Habilitar RGB", bg='#2E5D94', fg= "#FFFFFF", selectcolor="black", activebackground ='#2E5D94', variable = rgb)
-    ck_rgb.place(relx = 0.5, rely = 0.3)
+    ck_rgb.place(relx = 0.5, rely = 0.2)
+    
+    #Activar/Desactivar transmisión automática
+    ck_ta = tk.Checkbutton(frame, text="Transmisión Automática", bg='#2E5D94', fg= "#FFFFFF", selectcolor="black", activebackground ='#2E5D94', variable = ta)
+    ck_ta.place(relx = 0.5, rely = 0.35)
     
     #Boton para enviar parámetros configuración
     global enviar_parametros_config_btn
@@ -176,7 +184,7 @@ def declarar_widgets(rf_coms, root, loop):
     
     #-------------------TEXTO NOTA------------------------#
     #Nota
-    nota_l = tk.Label(root, fg= "#FFFFFF", text="Nota: Antes de presionar el botón de iniciar medición debe colocar el dedo sobre el sensor \n hasta que se apague el LED blanco", font="Helvetica 10 bold", bg='#2E5D94')
+    nota_l = tk.Label(root, fg= "#FFFFFF", text="Nota: Antes de presionar el botón de iniciar medición debe colocar el dedo sobre el sensor \n hasta que se apague el LED cyan", font="Helvetica 10 bold", bg='#2E5D94')
     nota_l.place(relx = 0.53, rely = 0.125, anchor=tk.CENTER)
     
 #------------------FUNCIONES BOTONES CONECTAR Y MEDIR------------------------#
@@ -229,14 +237,14 @@ def medir(rf_coms, loop):
        enviar_parametros_clasific_btn['state'] = tk.DISABLED
        toggle_medir = 0
        #Activa bit 3 de configuración (Iniciar medición)
-       rf_coms.Config |= 0x08 
+       rf_coms.Config |= 0x0C 
     else:
        medir_btn['text']="Iniciar medición"
        medir_btn['bg'] = "white"
        enviar_parametros_config_btn['state'] = tk.ACTIVE
        toggle_medir = 1
        #Desactiva bit 3 de configuración (Detener medición)
-       rf_coms.Config &= 0xF7 
+       rf_coms.Config &= 0xF3 
 
        
     #Send Config register to start measurement
@@ -260,7 +268,7 @@ def selec_modo():
 def verif_config(rf_coms, loop):
         #Se llama función para modificar el registro de configuración 
         enviar_config(rf_coms, loop)
-        messagebox.showinfo("Mensaje de parámetros", "Parámetros enviados")
+        messagebox.showinfo("Mensaje de parámetros", "¿Desea enviar los datos?")
         modo_texto.config(text="Modo " + modo.get())
             
 def enviar_config(rf_coms, loop):   
@@ -277,6 +285,12 @@ def enviar_config(rf_coms, loop):
     else:
     #prueba -> 1
         rf_coms.Config |= 0x02
+        
+    #Bit 4 de configuración activar/desactivar Transmisión Automática
+    if ta.get() == 1:
+       rf_coms.Config |= 0x10
+    else:
+       rf_coms.Config &= 0xEF
             
     #Send Configuration register
     loop.create_task(rf_coms.Send_Config(), name="Task5")
@@ -328,7 +342,7 @@ def entrenar(rf_coms):
 def param_entrena(rf_coms, loop):
      #Send classification parameters
      loop.create_task(rf_coms.Send_Clasif_Parameters(), name="Task6")
-     messagebox.showinfo("Mensaje de parametros", "Parámetros enviados" )
+     messagebox.showinfo("Mensaje de parametros", "¿Desea enviar los datos?" )
      
      
 #-------------------FUNCIONES BOTONES GRÁFICA Y MANIQUÍ------------------------#

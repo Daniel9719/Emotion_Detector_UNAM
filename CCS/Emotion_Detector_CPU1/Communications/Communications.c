@@ -1,12 +1,19 @@
+#include <driverlib/cpu.h>
+
 #include "Communications/Communications.h"
 #include "Communications/I2C.h"
 #include "Communications/SCI_UART.h"
 #include "Communications/Biom_AS7026GG.h"
 #include "Configuration/Configuration.h"
+#include "Freq_Extraction/Cubic_Spline.h"
+#include "Time_Extraction/PPI_Estimation.h"
 #include "Conditioning/FIR_filter.h"
 
+//%%%%%%%%%%%%%%%%%%    MAIN VARIABLES    %%%%%%%%%%%%%%%%%%
+extern volatile bool Main_Running;
+
 //%%%%%%%%%%%%%%%%%%    SCI_UART VARIABLES    %%%%%%%%%%%%%%%%%%
-extern int SCI_State;
+extern int HM10_State;
 extern volatile bool SCI_RxAvail;
 extern uint16_t SCI_Mode;                             //(0) AT Mode   (1) Connection Mode  (2) Standby Mode
 
@@ -18,20 +25,45 @@ extern volatile uint16_t Clb_Mode;
 
 //%%%%%%%%%%%%%%%%%%    COMMUNICATIONS VARIABLES    %%%%%%%%%%%%%%%%%%
 struct Biometric_Sensor{
-    int16_t LED_V;
+    int16_t GR_LED;
     int16_t int_EDA;
 };
 struct Biometric_Sensor Biom1;
 
-float PPG[384];
-float EDA[2048];
+int16_t PPG;
+float PRV_h[852];
+float PRV_y[853];
+float SCR[2208];    //2048 points for 64s of signal + 160 points for buffer of 5s
 
 bool TxSwitch;
+bool Clb_Peak=false;
 
 //%%%%%%%%%%%%%%%%%%    FREQUENCY EXTRACTION VARIABLES    %%%%%%%%%%%%%%%%%%
-extern volatile float Gauss[];
-extern volatile float d[];
+extern volatile float Coeff_A[];
+extern volatile float Const_B[];
 extern volatile float S[];
+extern volatile float CubSpl[];
+extern volatile bool SCRShift, PRVShift;
+extern volatile int16_t CS_SHIFT;
+
+//%%%%%%%%%%%%%%%%%%    TIME EXTRACTION VARIABLES    %%%%%%%%%%%%%%%%%%
+extern volatile uint16_t sum_flg;
+extern volatile uint16_t XY_indx;
+
+//--------------------------------------------------------------------
+//%%%%%%%%%%%%%%%%%%     DMA CH3 INTERRUPT   %%%%%%%%%%%%%%%%%%
+// Switching between SCR & CubSpl signals for shifting process
+//--------------------------------------------------------------------
+__interrupt void Inter_DMACH3 (void){
+    PIE_ACK_R|=0x40;                                //Clean flag interrupt from Group 7
+    DMA_CH3_TRANSFERSIZE_R=3071;                    //Transfer Size=Size+1 bursts per transfer
+    DMA_CH3_DSTBEGADDRSHADOW_R=(uint32_t)(&CubSpl[0]);
+    DMA_CH3_DSTADDRESHADOW_R=(uint32_t)(&CubSpl[0]);
+    DMA_CH3_SRCBEGADDRSHADOW_R=(uint32_t)(&CubSpl[512]);
+    DMA_CH3_SRCADDRSHADOW_R=(uint32_t)(&CubSpl[512]);
+    DMA_CH3_MODE_R&=~0x8000;                        //CHINTE: Disable interrupt
+    DMA_CH3_CONTROL_R|=0x9;                         //RUN: Enable CH3 PERINTFRC:Force peripheral event from CH3 (CubSpl)
+}
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%     XINT2 INTERRUPT (GPIO 22)    %%%%%%%%%%%%%%%%%%
@@ -39,7 +71,7 @@ extern volatile float S[];
 //--------------------------------------------------------------------
 __interrupt void Inter_XINT2 (void){
     PIE_ACK_R|=0x1;                                 //Clean flag interrupt from Group 1
-    while(I2CA_STR_R&0x1000){};                     //Mientras el controlador esté ocupado BB
+    while(I2CA_STR_R&0x1000){};                     //While the controller is occupied BB
     I2C_Write_Byte(AS7026GG_FIFOL);
     I2C_StartWR(AS7026GG_ADD, 1, WRITE);
     I2C_StartWR(AS7026GG_ADD, 2, READ);
@@ -51,45 +83,103 @@ __interrupt void Inter_XINT2 (void){
 //--------------------------------------------------------------------
 __interrupt void Inter_I2CA (void){
     static char Conmut=1;
-    static uint16_t i=0, j=0, k=0;
+    static uint16_t i=0, j=3, k=0;
     //-------Calibration variables---------//
-    static uint16_t Clb_Windw=0, Offset=10, Current=0;
+    static uint16_t Clb_Windw=0, Offset=7, Current=0;
     static int32_t Clb_Max=0, Clb_Min=16383, Clb_Ampl=0;
+    static uint16_t Clb_Delay=0;
+    //-------Shifting variables---------//
+    static bool WDW_ready=false;
+    uint16_t Size;
 
     if(Conmut){
-        //OFE1 LED VERDE o LED IR
-        Biom1.LED_V=(I2C_Read_Byte())>>2;
-        Biom1.LED_V|=((I2C_Read_Byte())<<6);
+        //OFE1 GREEN LED
+        Biom1.GR_LED=(I2C_Read_Byte())>>2;
+        Biom1.GR_LED|=((I2C_Read_Byte())<<6);       //PPG Signal After OFE1
         if(Clb_Mode==2){                            //Amplitude Check
-            Clb_Max=__max(Clb_Max,Biom1.LED_V);     //PPG Signal Pregain or PPG Signal After OFE1
-            Clb_Min=__min(Clb_Min,Biom1.LED_V);
+            Clb_Max=__max(Clb_Max,Biom1.GR_LED);    //PPG Signal After OFE1
+            Clb_Min=__min(Clb_Min,Biom1.GR_LED);
         }
         if(Clb_Mode==0){
-            PPG[i]=FIR_PPG(Biom1.LED_V);
+            PPG=FIR_PPG(Biom1.GR_LED);
+            if(Clb_Delay>=800){                     //Delay of 800 samples/128 Hz=6.25 s due to FIR filter
+                                                    //(Value at 6.25 due to worst case scenario for EDA with 200 samples/32 Hz)
+                if(PRVShift==true){
+                    Size=(XY_indx<<1)-1;
+                    EALLOW;
+
+                    DMA_CH1_TRANSFERSIZE_R=Size;        //Transfer Size=Size+1 bursts per transfer
+                    DMA_CH2_TRANSFERSIZE_R=Size;        //Transfer Size=Size+1 bursts per transfer
+                    DMA_CH1_CONTROL_R|=0x9;             //RUN: Enable CH1 PERINTFRC:Force peripheral event from CH1 (PRV_h)
+                    DMA_CH2_CONTROL_R|=0x9;             //RUN: Enable CH2 PERINTFRC:Force peripheral event from CH2 (PRV_y)
+
+                    EDIS;
+                    PRVShift=false;
+                    XY_indx = XY_indx - CS_SHIFT;
+                }
+                WDW_ready|=PPI_Estimation(PPG, PRV_y, PRV_h);
+            }
+            else{
+                Clb_Delay++;
+            }
         }
     }
     else{
         //EAF EDA
         Biom1.int_EDA=(I2C_Read_Byte())>>2;
-        Biom1.int_EDA|=((I2C_Read_Byte())<<6);
+        Biom1.int_EDA|=((I2C_Read_Byte())<<6);      //PPG Signal Pregain or EDA Electrical Front End
         if(Clb_Mode==1){                            //Range Check
-            Clb_Max=__max(Clb_Max,Biom1.int_EDA);   //PPG Signal Pregain or PPG Signal After OFE1
+            Clb_Max=__max(Clb_Max,Biom1.int_EDA);   //PPG Signal Pregain
             Clb_Min=__min(Clb_Min,Biom1.int_EDA);
         }
-        if(Clb_Mode==0){
-            k++;
-            if(k%4==0){
-            EDA[j]=FIR_EDA(Biom1.int_EDA);
-                j=j<2048? j+1:0;
-                k=0;
+        if(Clb_Mode==0 && Clb_Peak==true){
+            j++;
+            if(j%4==0){
+                if(i==2048){
+                    sum_flg++;
+                    if(sum_flg<=3){
+                        i=0;
+                    }
+                }
+                if(sum_flg>=3){
+                    SCR[i]=FIR_EDA(Biom1.int_EDA);
+                    if(WDW_ready==true){
+                        Main_Running=true;
+                        WDW_ready=false;
+                    }
+                    if(i>2048){
+                        k++;
+                    }
+                    if(SCRShift==true){
+                        Size=(k<<1)-1;
+                        EALLOW;
+
+                        DMA_CH3_TRANSFERSIZE_R=Size;        //Transfer Size=Size+1 bursts per transfer
+                        DMA_CH3_DSTBEGADDRSHADOW_R=(uint32_t)(&SCR[0]);
+                        DMA_CH3_DSTADDRESHADOW_R=(uint32_t)(&SCR[0]);
+                        DMA_CH3_SRCBEGADDRSHADOW_R=(uint32_t)(&SCR[2048]);
+                        DMA_CH3_SRCADDRSHADOW_R=(uint32_t)(&SCR[2048]);
+                        DMA_CH3_MODE_R|=0x8000;             //CHINTE: Enable interrupt
+                        DMA_CH3_CONTROL_R|=0x9;             //RUN: Enable CH3 PERINTFRC:Force peripheral event from CH3 (SCR)
+
+                        EDIS;
+                        i=k;
+                        k=0;
+                        SCRShift=false;
+                    }
+                    if(i>2208){
+                        i=0;
+                    }
+                }
+                i++;
+                j=0;
             }
-            i=i<383? i+1:0;
         }
     }
 //--------------CALIBRATION---------------//
-    if(Clb_Mode){                                   //(0) End of calibration  (1) Range Check   (2) Amplitude Check
+    if(Clb_Mode!=0){                                //(0) End of calibration  (1) Range Check   (2) Amplitude Check
         Clb_Windw++;
-        if(Clb_Windw==768){                         //Wait for a window of data of 1.2[s]*5=6 [s]     128*6=768
+        if(Clb_Windw==768){                         //Wait for a window of data of 1.5[s]*2=3 [s]     256*3=768
             if(Clb_Mode==1){                        //Range Check
                 if(Clb_Max<12288 && Clb_Min>5120){
                     Clb_Mode=2;                     //Move to Amplitude check
@@ -110,13 +200,13 @@ __interrupt void Inter_I2CA (void){
                 }
             }
             else{                                   //Amplitude Check
-                Clb_Ampl=Clb_Max-Clb_Min;            //Amplitude
+                Clb_Ampl=Clb_Max-Clb_Min;           //Amplitude
                 if(Clb_Ampl<3500 && Clb_Ampl>1200){
                     Clb_Mode=0;                     //End of calibration
                 }
                 else{
-                    if(Current<17){    //Max 50 [mA] & Min 7.5 [mA]
-                        if(Clb_Ampl<1500){
+                    if(Current<39){    //Max 100 [mA] & Min 2.5 [mA]
+                        if(Clb_Ampl<1200){
                             Current++;
                         }
                         if(Clb_Ampl>3500){
@@ -139,8 +229,9 @@ __interrupt void Inter_I2CA (void){
             Clb_Min=16383;
         }
     }
+//-------------------------------------------//
     Conmut^=1;
-    I2CA_FFRX_R|=0x40;                              //RXFFINTCLR: Limpia bandera FIFO Rx
+    I2CA_FFRX_R|=0x40;                              //RXFFINTCLR: Clean FIFO Rx flag
     PIE_ACK_R|=0x80;                                //Clean flag interrupt from Group 8
 }
 
@@ -161,9 +252,9 @@ __interrupt void Inter_SCIBRX (void){
                 switch(SCI_Mode){
                 case 0:                                     //AT Mode
                     if(strstr(SCI_RxData,"OK")!=NULL){
-                        SCI_State++;                        //Increase State
+                        HM10_State++;                       //Increase State
                         SCI_RxAvail=true;
-                        if(SCI_State==5){ SCI_Mode=1; }     //Switch to Connection Mode
+                        if(HM10_State==5){ SCI_Mode=1; }    //Switch to Connection Mode
                     }
                     break;
                 case 1:                                     //Connection Mode
@@ -226,11 +317,6 @@ void Config_Ports(void){
     GPIO_PORTA_MUX1_R|=0x0;                  //GPIO 0-2 Mux 0 (GPIO)
     GPIO_PORTA_DIR_R|=0x7;                   //GPIO 0-2 Output
 
-    GPIO_PORTC_GMUX1_R=0x0;                  //GPIO 67 a Grupo 0
-    GPIO_PORTC_MUX1_R|=0x0;                  //GPIO 67 Mux 0 (GPIO)
-    GPIO_PORTC_DIR_R|=0x0;                   //GPIO 67 Input
-    GPIO_PORTC_PUD_R&=~0x8;                  //GPIO 67 Enable Pull up resistor
-
     GPIO_PORTA_GMUX1_R=0x0;                  //GPIO 22 a Grupo 0
     GPIO_PORTA_MUX1_R|=0x0;                  //GPIO 22 Mux 0 (GPIO)
     GPIO_PORTA_DIR_R|=0x0;                   //GPIO 22 Input
@@ -241,7 +327,7 @@ void Config_Ports(void){
     GPIO_PORTA_QSEL2_R|=0xF0;                //GPIO 18-19 Async
 
     XINT2CR_R|=0x1;                          //Interrupt on falling edge & Enable XINT2
-    XBAR_IN_SEL5_R|=22;                      //Conect Input XBAR5 to GPIO22 for destiny XINT2
+    XBAR_IN_SEL5_R|=22;                      //Connect Input XBAR5 to GPIO22 for destiny XINT2
 }
 
 //--------------------------------------------------------------------
@@ -289,7 +375,25 @@ void Config_DMA(void){
     CPUSYS_SECMSEL_R=0x4;                    //PF2SEL:Puente conectado al DMA                    DOUBT!!!!
     DMA_DEBUGCTRL_R|=0x8000;                 //FREE: DMA corre durante un emulation halt
 
-    //CHANNEL 2 (Cubic Spline [Gauss])
+    //CHANNEL 1 (PRV_h)
+    DMA_CH1_MODE_R=0x4500;                   //DATASIZE: 32 bits of transfer (1)
+                                             //ONESHOT: Channel performs an entire transfer
+                                             //PERINTE: Enable pheripheral event trigger
+                                             //PERINTSEL: No peripheral (0)
+    DMA_CH1_BURSTSIZE_R=0;                   //Burst Size=0+1=1 words per burst
+    DMA_CH1_SRCBURSTSTEP_R=1;                //Source Step=1 word
+    DMA_CH1_DSTBUSRTSTEP_R|=1;               //Destination Step=1 word
+
+    DMA_CH1_SRCTRANSFERSTEP_R=1;             //Source Step=1 word
+    DMA_CH1_DSTTRANSFERSTEP_R|=1;            //Destination Step=1 word
+
+    DMA_CH1_DSTBEGADDRSHADOW_R=(uint32_t)(&PRV_h[0]);
+    DMA_CH1_DSTADDRESHADOW_R=(uint32_t)(&PRV_h[0]);
+
+    DMA_CH1_CONTROL_R|=0x90;                 //ERRCLR: Limpia bandera OVRFLG
+                                             //PERINTCLR: Limpia bandera PERINTFLG
+
+    //CHANNEL 2 (PRV_y)
     DMA_CH2_MODE_R=0x4500;                   //DATASIZE: 32 bits of transfer (1)
                                              //ONESHOT: Channel performs an entire transfer
                                              //PERINTE: Enable pheripheral event trigger
@@ -301,16 +405,16 @@ void Config_DMA(void){
     DMA_CH2_SRCTRANSFERSTEP_R=1;             //Source Step=1 word
     DMA_CH2_DSTTRANSFERSTEP_R|=1;            //Destination Step=1 word
 
-    DMA_CH2_DSTBEGADDRSHADOW_R=(uint32_t)(&Gauss[0]);
-    DMA_CH2_DSTADDRESHADOW_R=(uint32_t)(&Gauss[0]);
+    DMA_CH2_DSTBEGADDRSHADOW_R=(uint32_t)(&PRV_y[0]);
+    DMA_CH2_DSTADDRESHADOW_R=(uint32_t)(&PRV_y[0]);
 
-    DMA_CH2_CONTROL_R|=0x91;                 //RUN: Enable CH2
-                                             //ERRCLR: Limpia bandera OVRFLG
+    DMA_CH2_CONTROL_R|=0x90;                 //ERRCLR: Limpia bandera OVRFLG
                                              //PERINTCLR: Limpia bandera PERINTFLG
 
-    //CHANNEL 3 (Cubic Spline [d])
-    DMA_CH3_MODE_R=0x4500;                   //DATASIZE: 32 bits of transfer (1)
+    //CHANNEL 3 (SCR or CubSpl)
+    DMA_CH3_MODE_R=0x4520;                   //DATASIZE: 32 bits of transfer (1)
                                              //ONESHOT: Channel performs an entire transfer
+                                             //PERINTE: Enable pheripheral event trigger
                                              //PERINTE: Enable pheripheral event trigger
                                              //PERINTSEL: No peripheral (0)
     DMA_CH3_BURSTSIZE_R=0;                   //Burst Size=0+1=1 words per burst
@@ -320,14 +424,10 @@ void Config_DMA(void){
     DMA_CH3_SRCTRANSFERSTEP_R=1;             //Source Step=1 word
     DMA_CH3_DSTTRANSFERSTEP_R|=1;            //Destination Step=1 word
 
-    DMA_CH3_DSTBEGADDRSHADOW_R=(uint32_t)(&d[0]);
-    DMA_CH3_DSTADDRESHADOW_R=(uint32_t)(&d[0]);
-
-    DMA_CH3_CONTROL_R|=0x91;                 //RUN: Enable CH3
-                                             //ERRCLR: Limpia bandera OVRFLG
+    DMA_CH3_CONTROL_R|=0x90;                 //ERRCLR: Limpia bandera OVRFLG
                                              //PERINTCLR: Limpia bandera PERINTFLG
 
-    //CHANNEL 4 (Cubic Spline [S])
+    //CHANNEL 4 (Cubic Spline [Coeff_A])
     DMA_CH4_MODE_R=0x4500;                   //DATASIZE: 32 bits of transfer (1)
                                              //ONESHOT: Channel performs an entire transfer
                                              //PERINTE: Enable pheripheral event trigger
@@ -339,14 +439,13 @@ void Config_DMA(void){
     DMA_CH4_SRCTRANSFERSTEP_R=1;             //Source Step=1 word
     DMA_CH4_DSTTRANSFERSTEP_R|=1;            //Destination Step=1 word
 
-    DMA_CH4_DSTBEGADDRSHADOW_R=(uint32_t)(&S[1]);
-    DMA_CH4_DSTADDRESHADOW_R=(uint32_t)(&S[1]);
+    DMA_CH4_DSTBEGADDRSHADOW_R=(uint32_t)(&Coeff_A[0]);
+    DMA_CH4_DSTADDRESHADOW_R=(uint32_t)(&Coeff_A[0]);
 
-    DMA_CH4_CONTROL_R|=0x91;                 //RUN: Enable CH3
-                                             //ERRCLR: Limpia bandera OVRFLG
+    DMA_CH4_CONTROL_R|=0x90;                 //ERRCLR: Limpia bandera OVRFLG
                                              //PERINTCLR: Limpia bandera PERINTFLG
 
-    //CHANNEL 5 (PRV_h)
+    //CHANNEL 5 (Cubic Spline [Const_B])
     DMA_CH5_MODE_R=0x4500;                   //DATASIZE: 32 bits of transfer (1)
                                              //ONESHOT: Channel performs an entire transfer
                                              //PERINTE: Enable pheripheral event trigger
@@ -358,14 +457,13 @@ void Config_DMA(void){
     DMA_CH5_SRCTRANSFERSTEP_R=1;             //Source Step=1 word
     DMA_CH5_DSTTRANSFERSTEP_R|=1;            //Destination Step=1 word
 
-//    DMA_CH5_DSTBEGADDRSHADOW_R=(uint32_t)(&PRV_h[0]);
-//    DMA_CH5_DSTADDRESHADOW_R=(uint32_t)(&PRV_h[0]);
+    DMA_CH5_DSTBEGADDRSHADOW_R=(uint32_t)(&Const_B[0]);
+    DMA_CH5_DSTADDRESHADOW_R=(uint32_t)(&Const_B[0]);
 
-    DMA_CH5_CONTROL_R|=0x91;                 //RUN: Enable CH5
-                                             //ERRCLR: Limpia bandera OVRFLG
+    DMA_CH5_CONTROL_R|=0x90;                 //ERRCLR: Limpia bandera OVRFLG
                                              //PERINTCLR: Limpia bandera PERINTFLG
 
-    //CHANNEL 6 (PRV_y)
+    //CHANNEL 6 (Cubic Spline [S])
     DMA_CH6_MODE_R=0x4500;                   //DATASIZE: 32 bits of transfer (1)
                                              //ONESHOT: Channel performs an entire transfer
                                              //PERINTE: Enable pheripheral event trigger
@@ -377,11 +475,10 @@ void Config_DMA(void){
     DMA_CH6_SRCTRANSFERSTEP_R=1;             //Source Step=1 word
     DMA_CH6_DSTTRANSFERSTEP_R|=1;            //Destination Step=1 word
 
-//    DMA_CH6_DSTBEGADDRSHADOW_R=(uint32_t)(&PRV_y[0]);
-//    DMA_CH6_DSTADDRESHADOW_R=(uint32_t)(&PRV_y[0]);
+    DMA_CH6_DSTBEGADDRSHADOW_R=(uint32_t)(&S[1]);
+    DMA_CH6_DSTADDRESHADOW_R=(uint32_t)(&S[1]);
 
-    DMA_CH6_CONTROL_R|=0x91;                 //RUN: Enable CH6
-                                             //ERRCLR: Limpia bandera OVRFLG
+    DMA_CH6_CONTROL_R|=0x90;                 //ERRCLR: Limpia bandera OVRFLG
                                              //PERINTCLR: Limpia bandera PERINTFLG
 
     DMACLASSR_DMACHSRCSEL1_R=0x0;            //CH4, CH3, CH2, CH1 is triggered by Software

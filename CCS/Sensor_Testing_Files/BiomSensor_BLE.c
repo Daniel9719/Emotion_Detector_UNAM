@@ -8,8 +8,6 @@
 #include"HM10_BLE.h"
 #include"filtro.h"
 
-#define size 10
-
 volatile int SCI_State;
 volatile bool SCI_RxAvail=true;
 bool SCI_TxAvail=true;
@@ -18,9 +16,15 @@ int16_t* SCI_EndPt;
 uint16_t SCI_Data;
 volatile uint16_t SCI_Mode=0;                             //(0) AT Mode   (1) Connection Mode  (2) Standby Mode
 
+struct Raw_Data{
+    int16_t GR_LED;
+    int16_t int_EDA;
+};
+struct Raw_Data Raw;
+
 struct Sensor_Biometrico{
-    int16_t LED_V[size];
-    int16_t EDA[size];
+    int16_t LED_V[8];
+    int16_t EDA[2];
 };
 struct Sensor_Biometrico Biom1;
 
@@ -41,36 +45,43 @@ __interrupt void Inter_GPIO22 (void){
 //%%%%%%%%%%%%%%%%%%%%%%    I2CA INTERRUPT    %%%%%%%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 __interrupt void Inter_I2CA (void){
-    static uint16_t i=0;
+    static uint16_t i=0, j=0, k=4;
     static char Conmut=1;
     //-------Calibration variables---------//
-    static uint16_t Clb_Windw=0, Clb_Mode=1, Offset=10, Current=0;
+    static uint16_t Clb_Windw=0, Clb_Mode=1, Offset=7, Current=0;
     static int32_t Clb_Max=0, Clb_Min=16383, Clb_Ampl=0;
 
     if(Conmut){
         //OFE1 LED VERDE o LED IR
-        Biom1.LED_V[i]=(I2C_Read_Byte())>>2;
-        Biom1.LED_V[i]|=((I2C_Read_Byte())<<6);
+        Raw.GR_LED=(I2C_Read_Byte())>>2;
+        Raw.GR_LED|=((I2C_Read_Byte())<<6);
         if(Clb_Mode==2){                            //Amplitude Check
-            Clb_Max=__max(Clb_Max,Biom1.LED_V[i]);  //PPG Signal Pregain or PPG Signal After OFE1
-            Clb_Min=__min(Clb_Min,Biom1.LED_V[i]);
+            Clb_Max=__max(Clb_Max,Raw.GR_LED);  //PPG Signal Pregain or PPG Signal After OFE1
+            Clb_Min=__min(Clb_Min,Raw.GR_LED);
         }
         if(Clb_Mode==0){
-            Biom1.LED_V[i]=FIR_PPG(Biom1.LED_V[i]);
+            Biom1.LED_V[i]=FIR_PPG(Raw.GR_LED);
+//            Biom1.LED_V[i]=Raw.GR_LED;
+            i++;
         }
     }
     else{
         //EAF EDA
-        Biom1.EDA[i]=(I2C_Read_Byte())>>2;
-        Biom1.EDA[i]|=((I2C_Read_Byte())<<6);
+        Raw.int_EDA=(I2C_Read_Byte())>>2;
+        Raw.int_EDA|=((I2C_Read_Byte())<<6);
         if(Clb_Mode==1){                            //Range Check
-            Clb_Max=__max(Clb_Max,Biom1.EDA[i]);    //PPG Signal Pregain or PPG Signal After OFE1
-            Clb_Min=__min(Clb_Min,Biom1.EDA[i]);
+            Clb_Max=__max(Clb_Max,Raw.int_EDA);    //PPG Signal Pregain or PPG Signal After OFE1
+            Clb_Min=__min(Clb_Min,Raw.int_EDA);
         }
         if(Clb_Mode==0){
-            Biom1.EDA[i]=FIR_EDA(Biom1.EDA[i]);
+            k++;
+            if(k%4==0){
+//                Biom1.EDA[j]=FIR_EDA(Raw.int_EDA);
+                Biom1.EDA[j]=Raw.int_EDA;
+                j^=1;
+                k=0;
+            }
         }
-        i++;
     }
 //--------------CALIBRATION---------------//
 //Start the calibration showing PPG raw & PPG filtered signals
@@ -102,7 +113,7 @@ __interrupt void Inter_I2CA (void){
                     Clb_Mode=0;                     //End of calibration
                 }
                 else{
-                    if(Current<17){                 //Max 50 [mA]
+                    if(Current<39){                 //Max 100 [mA]
                         if(Clb_Ampl<1500){
                             Current++;
                         }
@@ -132,11 +143,11 @@ __interrupt void Inter_I2CA (void){
         }
     }
 //--------------SEND DATA TO SCI---------------//
-    if(i==size){
+    if(i==8){
         while(!SCI_TxAvail){}
         SCI_TxAvail=false;
         SCI_StartPt=&Biom1.LED_V[0];
-        SCI_EndPt=&Biom1.EDA[size];
+        SCI_EndPt=&Biom1.EDA[2];
         SCI_Data=Biom1.LED_V[0];
         SCIB_FFTX_R|=0x20;                          //TXFFIENA: Hab Inter Tx FIFO
         i=0;

@@ -54,8 +54,8 @@ PAGE 1 : /* Data Memory */
    RAMGS9      : origin = 0x015000, length = 0x001000
    RAMGS10     : origin = 0x016000, length = 0x001000
    RAMGS11     : origin = 0x017000, length = 0x001000
-   RAMGS12     : origin = 0x018000, length = 0x001000
-   RAMGS13     : origin = 0x019000, length = 0x001000
+   RAMGS12     : origin = 0x018000, length = 0x002000
+   //RAMGS13     : origin = 0x019000, length = 0x001000
 
    
    CPU2TOCPU1RAM   : origin = 0x03F800, length = 0x000400
@@ -97,7 +97,7 @@ SECTIONS
 						 
    /* Allocate uninitalized data sections: */
    .stack              : > RAMM1        PAGE = 1
-   .ebss               : >> RAMGS0 | RAMGS1 | RAMGS2 | RAMGS3 | RAMGS4 | RAMGS5        PAGE = 1
+   .ebss               : >> RAMGS0 | RAMGS1 | RAMGS2 | RAMGS3 | RAMGS4 | RAMGS5 | RAMGS6 | RAMGS12       PAGE = 1
    .esysmem            : > RAMLS5       PAGE = 1
 
    /* Initalized sections go in Flash */

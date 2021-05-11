@@ -1,6 +1,7 @@
 			.global _fft_float
 
-			.global _FFT_R				;Vars declared in C
+			.global _PSD				;Vars declared in C
+			.global _FFT_I
 
 Marip:		.usect  "ASM_VARS", 1, 8
 Groups:		.usect  "ASM_VARS", 1, 8
@@ -15,7 +16,7 @@ Stages 		.set 	11
 
 ;***** NOTE: This FFT gives the square of the magnitude of each spectrum component *****
 
-_fft_float	;XAR4=&PDS(FFT_I)	  AL=NFFT
+_fft_float	;XAR4=&Input	  AL=NFFT
 			MOVW	 DP, #Groups
 				LC       BR_ZR
 	;------- Counters Assignation ----------
@@ -54,7 +55,7 @@ CondEQ1     MOV		 T, @indA
 	;---------- W Estimation, A & B Assignation ----------
 			I16TOF32 R0H, @NFFT				;NFFT a Flotante
 			I16TOF32 R1H, @r				;r a Flotante
-			MOVL	 XAR6, #_FFT_R			;XAR5 = &FFT_R
+			MOVL	 XAR6, #_PSD			;XAR5 = &FFT_R
 			MOVL	 ACC, XAR6
 			DIVF32	 R0H, R1H, R0H			;R0H = r/TamFFT
 			ADD		 ACC, @indA
@@ -96,12 +97,14 @@ CondNEQ2	MOV		 AL, @indA
 			LSL 	 AL, #1
 			MOV 	 @Marip, AL				;Marip = Marip*2
 		BANZ STAGES, AR0 --					;AR0 = #Stages
-			MOVL	 XAR4, #_FFT_R
+			MOVL	 XAR4, #_PSD
 	LRETR
 
 ;**********  Bit Reverse, Hanning Windowing & Zero filling of FFT_I *********
 BR_ZR		;XAR4=&FFT_I
-			MOVL  	 XAR5, #_FFT_R			;XAR5=FFT_R
+			MOVL 	 XAR3, @XAR4			;XAR3=Input
+			MOVL	 XAR4, #_FFT_I			;XAR4 = &FFT_I
+			MOVL  	 XAR5, #_PSD			;XAR5=FFT_R
 			MOV		 @NFFT, AL				;NFFT=NFFT
 			MOV   	 AR0, AL				;AR0=NFFT
 			LSL		 AL, #1
@@ -122,7 +125,7 @@ CICLO1		NOP	 	 *, ARP1
 			MOV	 	 @indA, AL				;indA = AR2+BR(AR0)
 			I16TOF32 R1H, @indA				;n to Float
 			ZAPA
-			MOV32 	 R3H, *+XAR4[AR1]		;R3H = FFT_I[indA]
+			MOV32 	 R3H, *+XAR3[AR1]		;R3H = Input[indA]
 			DIVF32	 R2H, R1H, R0H			;R2H = n/2*NFFT
 			NOP
 			NOP

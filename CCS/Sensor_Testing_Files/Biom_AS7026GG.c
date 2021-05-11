@@ -8,8 +8,10 @@
 void Config_LEDs(int ADD){
     //------Config Corriente LED 1 (Verde)-------//
     I2C_Write_Byte(AS7026GG_LED1_CURRL);
-    I2C_Write_Byte(0x40);                //Corriente al LED4 de 7.5 mA (69=0x45)
-    I2C_Write_Byte(0x19);                //Escritura a AS7026GG_LED1_CURR
+    I2C_Write_Byte(0x80);                //Corriente al LED4 de 2.5 mA (18=0x12)
+    I2C_Write_Byte(0x04);                //Escritura a AS7026GG_LED1_CURR
+//    I2C_Write_Byte(0x40);                //Corriente al LED4 de 7.5 mA (69=0x45)
+//    I2C_Write_Byte(0x19);                //Escritura a AS7026GG_LED1_CURR
     I2C_StartWR(ADD, 3, WRITE);
     //------Config Corriente LED 4 (IR)-------//
     I2C_Write_Byte(AS7026GG_LED4_CURRL);
@@ -46,11 +48,11 @@ void Config_LEDs(int ADD){
 void Config_PD(int ADD){
     //------Config de Fotodetectores-------//
     I2C_Write_Byte(AS7026GG_PD_CFG);
-    I2C_Write_Byte(0x24);                //PD4 y PD1 conectados a fotoamplificador TIA
+    I2C_Write_Byte(0xC);                //PD1 y PD2 conectados a fotoamplificador TIA
     I2C_StartWR(ADD, 2, WRITE);
     //------Corriente Offset ON-------//
     I2C_Write_Byte(AS7026GG_PDOFFX_LEDON);
-    I2C_Write_Byte(10);
+    I2C_Write_Byte(7);
     I2C_StartWR(ADD, 2, WRITE);
 }
 
@@ -84,11 +86,11 @@ void Config_SEQ(int ADD){
     I2C_StartWR(ADD, 2, WRITE);
     //------Tiempo incio LED principal-------//
     I2C_Write_Byte(AS7026GG_SEQ_LED_STA);
-    I2C_Write_Byte(109);                 //SEQ_LED_START=109
+    I2C_Write_Byte(108);                 //SEQ_LED_START=109
     I2C_StartWR(ADD, 2, WRITE);
     //------Tiempo finalización LED principal-------//
     I2C_Write_Byte(AS7026GG_SEQ_LED_STO);
-    I2C_Write_Byte(118);                 //SEQ_LED_STOP=122
+    I2C_Write_Byte(116);                 //SEQ_LED_STOP=122
     I2C_StartWR(ADD, 2, WRITE);
     //------Tiempo incio del integrador-------//
     I2C_Write_Byte(AS7026GG_SEQ_ITG_STA);
@@ -96,23 +98,23 @@ void Config_SEQ(int ADD){
     I2C_StartWR(ADD, 2, WRITE);
     //------Tiempo inicio para el Demodulador Sincrono Positivo-------//
     I2C_Write_Byte(AS7026GG_SEQ_SDP1_STA);
-    I2C_Write_Byte(110);                 //SEQ_SDP1_START=110
+    I2C_Write_Byte(1);                 //SEQ_SDP1_START=110
     I2C_StartWR(ADD, 2, WRITE);
     //------Tiempo finalización para el Demodulador Sincrono Positivo-------//
     I2C_Write_Byte(AS7026GG_SEQ_SDP1_STO);
-    I2C_Write_Byte(118);                 //SEQ_SDP1_STOP=118
+    I2C_Write_Byte(9);                 //SEQ_SDP1_STOP=118
     I2C_StartWR(ADD, 2, WRITE);
     //------Tiempo inicio para el Demodulador Sincrono Negativo-------//
     I2C_Write_Byte(AS7026GG_SEQ_SDM1_STA);
-    I2C_Write_Byte(1);                  //SEQ_SDM1_START=1
+    I2C_Write_Byte(109);                  //SEQ_SDM1_START=1
     I2C_StartWR(ADD, 2, WRITE);
-    //------Tiempo finalizació´n para el Demodulador Sincrono Negativo-------//
+    //------Tiempo finalización para el Demodulador Sincrono Negativo-------//
     I2C_Write_Byte(AS7026GG_SEQ_SDM1_STO);
-    I2C_Write_Byte(20);                 //SEQ_SDM1_STOP=20
+    I2C_Write_Byte(116);                 //SEQ_SDM1_STOP=20
     I2C_StartWR(ADD, 2, WRITE);
     //------Tiempo inicio ADC-------//
     I2C_Write_Byte(AS7026GG_SEQ_ADC);
-    I2C_Write_Byte(110);                //SEQ_ADC=110
+    I2C_Write_Byte(109);                //SEQ_ADC=110
     I2C_StartWR(ADD, 2, WRITE);
     //------Inicio del Secuenciador-------//
     I2C_Write_Byte(AS7026GG_SEQ_START);
@@ -132,7 +134,8 @@ void Config_OFE(int ADD){
     I2C_StartWR(ADD, 2, WRITE);
     //------Config C de OFE-------//
     I2C_Write_Byte(AS7026GG_OFE_CFGC);
-    I2C_Write_Byte(0x2F);                //PREFILTER_AA_BYP (0): Usar filtro aa_freq
+    I2C_Write_Byte(0x07);                //PREFILTER_AA_BYP (0): Usar filtro aa_freq
+//    I2C_Write_Byte(0x2F);                //PREFILTER_AA_BYP (0): Usar filtro aa_freq
                                             //PREFILTER_HP_BYP (1): Bypass de filtro HP 200 Hz
                                             //PREFILTER_GAIN_BYP (1): Bypasss ganancia gain_sd
                                             //PREFILTER_BYPASS_EN (1): Bypass todo el prefiltro
@@ -147,7 +150,7 @@ void Config_OFE(int ADD){
     I2C_StartWR(ADD, 2, WRITE);
     //------Config A de OFE 1-------//
     I2C_Write_Byte(AS7026GG_OFE1_CFGA);
-    I2C_Write_Byte(0x71);                //OFE1_SD_EN (1): Hab Demodulador Sincrono OFE1
+    I2C_Write_Byte(0xF1);                //OFE1_SD_EN (1): Hab Demodulador Sincrono OFE1
                                             //OFE1_HP_EN (1): Hab Filtro HP OFE1
                                             //OFE1_GAIN_EN (1): Hab Ganancia OFE1
                                             //OFE1_SD_BYP (0): Demodulador usado
@@ -223,11 +226,11 @@ void Config_ECG(int ADD){
 void Config_ADC(int ADD){
     //------Config ADC B-------//
     I2C_Write_Byte(AS7026GG_ADC_CFGB);
-    I2C_Write_Byte(0x11);                //ADC_EN y ADC_CLOCK (2)=333[kHz]=3[us]
+    I2C_Write_Byte(0x01);                //ADC_EN y ADC_CLOCK (2)=333[kHz]=3[us]
     I2C_StartWR(ADD, 2, WRITE);
     //------Config ADC C-------//
     I2C_Write_Byte(AS7026GG_ADC_CFGC);
-    I2C_Write_Byte(0x1C);                //ADC_SELFPD Se apaga cada que no convierte el ADC
+    I2C_Write_Byte(0x1D);                //ADC_SELFPD Se apaga cada que no convierte el ADC
                                             //ADC_DISCHARGE Descarga Cap antes de tracking
                                             //ADC_SETTLING_TIME (4)= 32 Periodos = 3us*32 = 96us
     I2C_StartWR(ADD, 2, WRITE);
@@ -305,7 +308,7 @@ void Biom_Config(void){
 //--------------------------------------------------------------------
 void Biom_Calibration(uint16_t Mode, uint16_t Offset_Curr){
     uint32_t Curr;
-    if(Mode==1){
+    if(Mode==1 && Offset_Curr<256){
         while(I2CA_STR_R&0x1000){};             //Mientras el controlador esté ocupado BB
         //------Apagado del Secuenciador-------//
         I2C_Write_Byte(AS7026GG_SEQ_START);
@@ -321,7 +324,7 @@ void Biom_Calibration(uint16_t Mode, uint16_t Offset_Curr){
         I2C_StartWR(AS7026GG_ADD, 2, WRITE);
         I2C_Stop();
     }
-    else{
+    else if(Offset_Curr<39){
         while(I2CA_STR_R&0x1000){};             //Mientras el controlador esté ocupado BB
         //------Apagado del Secuenciador-------//
         I2C_Write_Byte(AS7026GG_SEQ_START);
@@ -334,7 +337,7 @@ void Biom_Calibration(uint16_t Mode, uint16_t Offset_Curr){
         I2C_StartWR(AS7026GG_ADD, 2, WRITE);
         //------Config Corriente LED 1 (Verde)-------//
         I2C_Write_Byte(AS7026GG_LED1_CURRL);
-        Curr=69+26*Offset_Curr;                 //7.5 [mA] + 2.5 [mA]*Offset
+        Curr=18+26*Offset_Curr;                 //7.5 [mA] + 2.5 [mA]*Offset
         I2C_Write_Byte((Curr<<6)&0xFF);      //Corriente al LED1
         I2C_Write_Byte((Curr>>2)&0xFF);      //Escritura a AS7026GG_LED1_CURRH
         I2C_StartWR(AS7026GG_ADD, 3, WRITE);

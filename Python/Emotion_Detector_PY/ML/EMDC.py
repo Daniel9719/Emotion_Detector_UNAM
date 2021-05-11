@@ -1060,12 +1060,12 @@ def train_LOOCV(features_csv,targets_csv):
 
 def EMDC(features_csv,targets_csv, LOOCV=False):
     if LOOCV:
-        list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv=train_LOOCV(features_csv,targets_csv) 
+        list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S=train_LOOCV(features_csv,targets_csv) 
     else:
-        list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv=train(features_csv,targets_csv) 
-    return list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv
+        list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S=train(features_csv,targets_csv) 
+    return list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S
 
 if __name__ == "__main__":
     features_csv="features.csv"
     targets_csv="targets.csv" 
-    list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv=EMDC(features_csv,targets_csv, LOOCV=True)    
+    list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S=EMDC(features_csv,targets_csv, LOOCV=False)    

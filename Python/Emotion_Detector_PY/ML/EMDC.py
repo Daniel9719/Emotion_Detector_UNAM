@@ -4,9 +4,12 @@ Created on Sat Oct 10 15:28:50 2020
 
 @author: Samuel Osorio Gutiérrez
 """
-import ML.FLD as FLD
-import ML.SFFS as SFFS
-import ML.LDA as LDA
+# import ML.FLD as FLD
+# import ML.SFFS as SFFS
+# import ML.LDA as LDA
+import FLD
+import SFFS
+import LDA
 from time import time
 import random
 import numpy as np
@@ -114,11 +117,11 @@ def train(features_csv,targets_csv):
     print("\x1b[1;33m"+"\n*********************LDA_1*********************")
     
     t_start=time()
-    S_inv_1,m_k_1,pi_k_1=LDA.train(new_features_train_1,targets_temp[:,0], pLDA=False, Terminal=False)
+    S_1,m_k_1,pi_k_1=LDA.train(new_features_train_1,targets_temp[:,0], pLDA=False, Terminal=False)
     t_final=time()
     print("\x1b[1;37m"+"\nTraining time: "  + str((t_final-t_start)*1000) + " ms")
     acc=LDA.LOOCV(new_features_train_1,targets_temp[:,0],pLDA=False)
-    print("\nAccuracy: " + str(acc*100) + " %")
+    print("\nAccuracy with LOOCV: " + str(acc*100) + " %")
 
     #Discard neutral samples
     features_train=list(features_train)
@@ -182,11 +185,11 @@ def train(features_csv,targets_csv):
     print("\x1b[1;33m"+"\n*********************LDA_2*********************")
     
     t_start=time()
-    S_inv_2,m_k_2,pi_k_2=LDA.train(new_features_train_2,targets_temp[:,1], pLDA=False, Terminal=False)
+    S_2,m_k_2,pi_k_2=LDA.train(new_features_train_2,targets_temp[:,1], pLDA=False, Terminal=False)
     t_final=time()
     print("\x1b[1;37m"+"\nTraining time: "  + str((t_final-t_start)*1000) + " ms")
     acc=LDA.LOOCV(new_features_train_2,targets_temp[:,1],pLDA=False)
-    print("\nAccuracy: " + str(acc*100) + " %")
+    print("\nAccuracy with LOOCV: " + str(acc*100) + " %")
 
     #Discard low arousal samples
     features_trainHA=list(features_train)
@@ -248,11 +251,11 @@ def train(features_csv,targets_csv):
     print("\x1b[1;33m"+"\n*********************LDA_3*********************")
     
     t_start=time()
-    S_inv_3,m_k_3,pi_k_3=LDA.train(new_features_train_3,targets_temp[:,2], pLDA=False, Terminal=False)
+    S_3,m_k_3,pi_k_3=LDA.train(new_features_train_3,targets_temp[:,2], pLDA=False, Terminal=False)
     t_final=time()
     print("\x1b[1;37m"+"\nTraining time: "  + str((t_final-t_start)*1000) + " ms")
     acc=LDA.LOOCV(new_features_train_3,targets_temp[:,2],pLDA=False)
-    print("\nAccuracy: " + str(acc*100) + " %")
+    print("\nAccuracy with LOOCV: " + str(acc*100) + " %")
     
     #Discard high arousal samples    
     features_trainLA=list(features_train)
@@ -314,11 +317,11 @@ def train(features_csv,targets_csv):
     print("\x1b[1;33m"+"\n*********************LDA_4*********************")
     
     t_start=time()
-    S_inv_4,m_k_4,pi_k_4=LDA.train(new_features_train_4,targets_temp[:,2], pLDA=False, Terminal=False)
+    S_4,m_k_4,pi_k_4=LDA.train(new_features_train_4,targets_temp[:,2], pLDA=False, Terminal=False)
     t_final=time()
     print("\x1b[1;37m"+"\nTraining time: "  + str((t_final-t_start)*1000) + " ms")
     acc=LDA.LOOCV(new_features_train_4,targets_temp[:,2],pLDA=False)
-    print("\nAccuracy: " + str(acc*100) + " %\n")
+    print("\nAccuracy with LOOCV: " + str(acc*100) + " %\n")
 
 
     del dim,i,j,k, keys_features, keys_targets, random_set, samples, t_final, t_start, targets_len, test_len, total_data, train_len,SFS_features_temp, targets_temp
@@ -332,13 +335,13 @@ def train(features_csv,targets_csv):
     print(f"W1={matrix_W_1} \n W2={matrix_W_2} \n W3={matrix_W_3} \n W4={matrix_W_4}")
     print(f"mk1={m_k_1} \n mk2={m_k_2} \n mk3={m_k_3} \n mk4={m_k_4}")
     print(f"pik1={pi_k_1} \n pik2={pi_k_2} \n pik3={pi_k_3} \n pik4={pi_k_4}")
-    print(f"S1={S_inv_1} \n S2={S_inv_2} \n S3={S_inv_3} \n S4={S_inv_4}")
+    print(f"S1={S_1} \n S2={S_2} \n S3={S_3} \n S4={S_4}")
     
     #Collection of parameters
     #SFFS
     list_SFFS=[index_cod_1,index_cod_2,index_cod_3,index_cod_4]
     
-    Q=16
+    Q=28
     #FLD
     matrix_W_1=matrix_W_1*2**Q
     matrix_W_1=np.int32(matrix_W_1)
@@ -530,70 +533,70 @@ def train(features_csv,targets_csv):
     
     list_LDA_pik=[list_pi_k_1,list_pi_k_2,list_pi_k_3,list_pi_k_4]
     
-    #S_inv
-    S_inv_1=S_inv_1*2**Q
-    S_inv_1=np.int32(S_inv_1)
-    list_S_inv_1=[]
-    S_inv_temp=S_inv_1&0xff
-    list_S_inv_1.append(S_inv_temp)
-    S_inv_temp=S_inv_1&0xff00
-    S_inv_temp=np.right_shift(S_inv_temp,8)
-    list_S_inv_1.append(S_inv_temp)
-    S_inv_temp=S_inv_1&0xff0000
-    S_inv_temp=np.right_shift(S_inv_temp,16)
-    list_S_inv_1.append(S_inv_temp)
-    S_inv_temp=S_inv_1&0xff000000
-    S_inv_temp=np.right_shift(S_inv_temp,24)
-    list_S_inv_1.append(S_inv_temp)
+    #S
+    S_1=S_1*2**Q
+    S_1=np.int32(S_1)
+    list_S_1=[]
+    S_temp=S_1&0xff
+    list_S_1.append(S_temp)
+    S_temp=S_1&0xff00
+    S_temp=np.right_shift(S_temp,8)
+    list_S_1.append(S_temp)
+    S_temp=S_1&0xff0000
+    S_temp=np.right_shift(S_temp,16)
+    list_S_1.append(S_temp)
+    S_temp=S_1&0xff000000
+    S_temp=np.right_shift(S_temp,24)
+    list_S_1.append(S_temp)
     
-    S_inv_2=S_inv_2*2**Q
-    S_inv_2=np.int32(S_inv_2)
-    list_S_inv_2=[]
-    S_inv_temp=S_inv_2&0xff
-    list_S_inv_2.append(S_inv_temp)
-    S_inv_temp=S_inv_2&0xff00
-    S_inv_temp=np.right_shift(S_inv_temp,8)
-    list_S_inv_2.append(S_inv_temp)
-    S_inv_temp=S_inv_2&0xff0000
-    S_inv_temp=np.right_shift(S_inv_temp,16)
-    list_S_inv_2.append(S_inv_temp)
-    S_inv_temp=S_inv_2&0xff000000
-    S_inv_temp=np.right_shift(S_inv_temp,24)
-    list_S_inv_2.append(S_inv_temp)
+    S_2=S_2*2**Q
+    S_2=np.int32(S_2)
+    list_S_2=[]
+    S_temp=S_2&0xff
+    list_S_2.append(S_temp)
+    S_temp=S_2&0xff00
+    S_temp=np.right_shift(S_temp,8)
+    list_S_2.append(S_temp)
+    S_temp=S_2&0xff0000
+    S_temp=np.right_shift(S_temp,16)
+    list_S_2.append(S_temp)
+    S_temp=S_2&0xff000000
+    S_temp=np.right_shift(S_temp,24)
+    list_S_2.append(S_temp)
 
-    S_inv_3=S_inv_3*2**Q
-    S_inv_3=np.int32(S_inv_3)
-    list_S_inv_3=[]
-    S_inv_temp=S_inv_3&0xff
-    list_S_inv_3.append(S_inv_temp)
-    S_inv_temp=S_inv_3&0xff00
-    S_inv_temp=np.right_shift(S_inv_temp,8)
-    list_S_inv_3.append(S_inv_temp)
-    S_inv_temp=S_inv_3&0xff0000
-    S_inv_temp=np.right_shift(S_inv_temp,16)
-    list_S_inv_3.append(S_inv_temp)
-    S_inv_temp=S_inv_3&0xff000000
-    S_inv_temp=np.right_shift(S_inv_temp,24)
-    list_S_inv_3.append(S_inv_temp)
+    S_3=S_3*2**Q
+    S_3=np.int32(S_3)
+    list_S_3=[]
+    S_temp=S_3&0xff
+    list_S_3.append(S_temp)
+    S_temp=S_3&0xff00
+    S_temp=np.right_shift(S_temp,8)
+    list_S_3.append(S_temp)
+    S_temp=S_3&0xff0000
+    S_temp=np.right_shift(S_temp,16)
+    list_S_3.append(S_temp)
+    S_temp=S_3&0xff000000
+    S_temp=np.right_shift(S_temp,24)
+    list_S_3.append(S_temp)
 
-    S_inv_4=S_inv_4*2**Q
-    S_inv_4=np.int32(S_inv_4)
-    list_S_inv_4=[]
-    S_inv_temp=S_inv_4&0xff
-    list_S_inv_4.append(S_inv_temp)
-    S_inv_temp=S_inv_4&0xff00
-    S_inv_temp=np.right_shift(S_inv_temp,8)
-    list_S_inv_4.append(S_inv_temp)
-    S_inv_temp=S_inv_4&0xff0000
-    S_inv_temp=np.right_shift(S_inv_temp,16)
-    list_S_inv_4.append(S_inv_temp)
-    S_inv_temp=S_inv_4&0xff000000
-    S_inv_temp=np.right_shift(S_inv_temp,24)
-    list_S_inv_4.append(S_inv_temp)
+    S_4=S_4*2**Q
+    S_4=np.int32(S_4)
+    list_S_4=[]
+    S_temp=S_4&0xff
+    list_S_4.append(S_temp)
+    S_temp=S_4&0xff00
+    S_temp=np.right_shift(S_temp,8)
+    list_S_4.append(S_temp)
+    S_temp=S_4&0xff0000
+    S_temp=np.right_shift(S_temp,16)
+    list_S_4.append(S_temp)
+    S_temp=S_4&0xff000000
+    S_temp=np.right_shift(S_temp,24)
+    list_S_4.append(S_temp)
     
-    list_LDA_S_inv=[list_S_inv_1,list_S_inv_2,list_S_inv_3,list_S_inv_4]
+    list_LDA_S=[list_S_1,list_S_2,list_S_3,list_S_4]
     
-    return list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv
+    return list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S
     
 def train_LOOCV(features_csv,targets_csv):    
 
@@ -646,11 +649,11 @@ def train_LOOCV(features_csv,targets_csv):
     print("\x1b[1;33m"+"\n*********************LDA_1*********************")
     
     t_start=time()
-    S_inv_1,m_k_1,pi_k_1=LDA.train(new_features_train_1,targets_train[:,0], pLDA=False, Terminal=False)
+    S_1,m_k_1,pi_k_1=LDA.train(new_features_train_1,targets_train[:,0], pLDA=False, Terminal=False)
     t_final=time()
     print("\x1b[1;37m"+"\nTraining time: "  + str((t_final-t_start)*1000) + " ms")
     acc=LDA.LOOCV(new_features_train_1,targets_train[:,0],pLDA=False)
-    print("\nAccuracy: " + str(acc*100) + " %")
+    print("\nAccuracy with LOOCV: " + str(acc*100) + " %")
    
     #Discard neutral samples
     features_train=list(features_train)
@@ -689,11 +692,11 @@ def train_LOOCV(features_csv,targets_csv):
     print("\x1b[1;33m"+"\n*********************LDA_2*********************")
     
     t_start=time()
-    S_inv_2,m_k_2,pi_k_2=LDA.train(new_features_train_2,targets_train[:,1], pLDA=False, Terminal=False)
+    S_2,m_k_2,pi_k_2=LDA.train(new_features_train_2,targets_train[:,1], pLDA=False, Terminal=False)
     t_final=time()
     print("\x1b[1;37m"+"\nTraining time: "  + str((t_final-t_start)*1000) + " ms")
     acc=LDA.LOOCV(new_features_train_2,targets_train[:,1],pLDA=False)
-    print("\nAccuracy: " + str(acc*100) + " %")
+    print("\nAccuracy with LOOCV: " + str(acc*100) + " %")
 
     #Discard low arousal samples
     
@@ -733,11 +736,11 @@ def train_LOOCV(features_csv,targets_csv):
     print("\x1b[1;33m"+"\n*********************LDA_3*********************")
     
     t_start=time()
-    S_inv_3,m_k_3,pi_k_3=LDA.train(new_features_train_3,targets_trainHA[:,2], pLDA=False, Terminal=False)
+    S_3,m_k_3,pi_k_3=LDA.train(new_features_train_3,targets_trainHA[:,2], pLDA=False, Terminal=False)
     t_final=time()
     print("\x1b[1;37m"+"\nTraining time: "  + str((t_final-t_start)*1000) + " ms")
     acc=LDA.LOOCV(new_features_train_3,targets_trainHA[:,2],pLDA=False)
-    print("\nAccuracy: " + str(acc*100) + " %")
+    print("\nAccuracy with LOOCV: " + str(acc*100) + " %")
 
     #Discard high arousal samples
     
@@ -777,11 +780,11 @@ def train_LOOCV(features_csv,targets_csv):
     print("\x1b[1;33m"+"\n*********************LDA_4*********************")
     
     t_start=time()
-    S_inv_4,m_k_4,pi_k_4=LDA.train(new_features_train_4,targets_trainLA[:,2], pLDA=False, Terminal=False)
+    S_4,m_k_4,pi_k_4=LDA.train(new_features_train_4,targets_trainLA[:,2], pLDA=False, Terminal=False)
     t_final=time()
     print("\x1b[1;37m"+"\nTraining time: "  + str((t_final-t_start)*1000) + " ms")
     acc=LDA.LOOCV(new_features_train_4,targets_trainLA[:,2],pLDA=False)
-    print("\nAccuracy: " + str(acc*100) + " %\n")
+    print("\nAccuracy with LOOCV: " + str(acc*100) + " %\n")
 
     del acc,dim,i,j,K_FLD, keys_features, keys_targets, samples, t_final, t_start, targets_len
     
@@ -794,13 +797,13 @@ def train_LOOCV(features_csv,targets_csv):
     print(f"W1={matrix_W_1} \n W2={matrix_W_2} \n W3={matrix_W_3} \n W4={matrix_W_4}")
     print(f"mk1={m_k_1} \n mk2={m_k_2} \n mk3={m_k_3} \n mk4={m_k_4}")
     print(f"pik1={pi_k_1} \n pik2={pi_k_2} \n pik3={pi_k_3} \n pik4={pi_k_4}")
-    print(f"S1={S_inv_1} \n S2={S_inv_2} \n S3={S_inv_3} \n S4={S_inv_4}")
+    print(f"S1={S_1} \n S2={S_2} \n S3={S_3} \n S4={S_4}")
     
     #Collection of parameters
     #SFFS
     list_SFFS=[index_cod_1,index_cod_2,index_cod_3,index_cod_4]
     
-    Q=16
+    Q=28
     #LDF
     matrix_W_1=matrix_W_1*2**Q
     matrix_W_1=np.int32(matrix_W_1)
@@ -993,70 +996,70 @@ def train_LOOCV(features_csv,targets_csv):
     
     list_LDA_pik=[list_pi_k_1,list_pi_k_2,list_pi_k_3,list_pi_k_4]
     
-    #S_inv
-    S_inv_1=S_inv_1*2**Q
-    S_inv_1=np.int32(S_inv_1)
-    list_S_inv_1=[]
-    S_inv_temp=S_inv_1&0xff
-    list_S_inv_1.append(S_inv_temp)
-    S_inv_temp=S_inv_1&0xff00
-    S_inv_temp=np.right_shift(S_inv_temp,8)
-    list_S_inv_1.append(S_inv_temp)
-    S_inv_temp=S_inv_1&0xff0000
-    S_inv_temp=np.right_shift(S_inv_temp,16)
-    list_S_inv_1.append(S_inv_temp)
-    S_inv_temp=S_inv_1&0xff000000
-    S_inv_temp=np.right_shift(S_inv_temp,24)
-    list_S_inv_1.append(S_inv_temp)
+    #S
+    S_1=S_1*2**Q
+    S_1=np.int32(S_1)
+    list_S_1=[]
+    S_temp=S_1&0xff
+    list_S_1.append(S_temp)
+    S_temp=S_1&0xff00
+    S_temp=np.right_shift(S_temp,8)
+    list_S_1.append(S_temp)
+    S_temp=S_1&0xff0000
+    S_temp=np.right_shift(S_temp,16)
+    list_S_1.append(S_temp)
+    S_temp=S_1&0xff000000
+    S_temp=np.right_shift(S_temp,24)
+    list_S_1.append(S_temp)
     
-    S_inv_2=S_inv_2*2**Q
-    S_inv_2=np.int32(S_inv_2)
-    list_S_inv_2=[]
-    S_inv_temp=S_inv_2&0xff
-    list_S_inv_2.append(S_inv_temp)
-    S_inv_temp=S_inv_2&0xff00
-    S_inv_temp=np.right_shift(S_inv_temp,8)
-    list_S_inv_2.append(S_inv_temp)
-    S_inv_temp=S_inv_2&0xff0000
-    S_inv_temp=np.right_shift(S_inv_temp,16)
-    list_S_inv_2.append(S_inv_temp)
-    S_inv_temp=S_inv_2&0xff000000
-    S_inv_temp=np.right_shift(S_inv_temp,24)
-    list_S_inv_2.append(S_inv_temp)
+    S_2=S_2*2**Q
+    S_2=np.int32(S_2)
+    list_S_2=[]
+    S_temp=S_2&0xff
+    list_S_2.append(S_temp)
+    S_temp=S_2&0xff00
+    S_temp=np.right_shift(S_temp,8)
+    list_S_2.append(S_temp)
+    S_temp=S_2&0xff0000
+    S_temp=np.right_shift(S_temp,16)
+    list_S_2.append(S_temp)
+    S_temp=S_2&0xff000000
+    S_temp=np.right_shift(S_temp,24)
+    list_S_2.append(S_temp)
 
-    S_inv_3=S_inv_3*2**Q
-    S_inv_3=np.int32(S_inv_3)
-    list_S_inv_3=[]
-    S_inv_temp=S_inv_3&0xff
-    list_S_inv_3.append(S_inv_temp)
-    S_inv_temp=S_inv_3&0xff00
-    S_inv_temp=np.right_shift(S_inv_temp,8)
-    list_S_inv_3.append(S_inv_temp)
-    S_inv_temp=S_inv_3&0xff0000
-    S_inv_temp=np.right_shift(S_inv_temp,16)
-    list_S_inv_3.append(S_inv_temp)
-    S_inv_temp=S_inv_3&0xff000000
-    S_inv_temp=np.right_shift(S_inv_temp,24)
-    list_S_inv_3.append(S_inv_temp)
+    S_3=S_3*2**Q
+    S_3=np.int32(S_3)
+    list_S_3=[]
+    S_temp=S_3&0xff
+    list_S_3.append(S_temp)
+    S_temp=S_3&0xff00
+    S_temp=np.right_shift(S_temp,8)
+    list_S_3.append(S_temp)
+    S_temp=S_3&0xff0000
+    S_temp=np.right_shift(S_temp,16)
+    list_S_3.append(S_temp)
+    S_temp=S_3&0xff000000
+    S_temp=np.right_shift(S_temp,24)
+    list_S_3.append(S_temp)
 
-    S_inv_4=S_inv_4*2**Q
-    S_inv_4=np.int32(S_inv_4)
-    list_S_inv_4=[]
-    S_inv_temp=S_inv_4&0xff
-    list_S_inv_4.append(S_inv_temp)
-    S_inv_temp=S_inv_4&0xff00
-    S_inv_temp=np.right_shift(S_inv_temp,8)
-    list_S_inv_4.append(S_inv_temp)
-    S_inv_temp=S_inv_4&0xff0000
-    S_inv_temp=np.right_shift(S_inv_temp,16)
-    list_S_inv_4.append(S_inv_temp)
-    S_inv_temp=S_inv_4&0xff000000
-    S_inv_temp=np.right_shift(S_inv_temp,24)
-    list_S_inv_4.append(S_inv_temp)
+    S_4=S_4*2**Q
+    S_4=np.int32(S_4)
+    list_S_4=[]
+    S_temp=S_4&0xff
+    list_S_4.append(S_temp)
+    S_temp=S_4&0xff00
+    S_temp=np.right_shift(S_temp,8)
+    list_S_4.append(S_temp)
+    S_temp=S_4&0xff0000
+    S_temp=np.right_shift(S_temp,16)
+    list_S_4.append(S_temp)
+    S_temp=S_4&0xff000000
+    S_temp=np.right_shift(S_temp,24)
+    list_S_4.append(S_temp)
     
-    list_LDA_S_inv=[list_S_inv_1,list_S_inv_2,list_S_inv_3,list_S_inv_4]
+    list_LDA_S=[list_S_1,list_S_2,list_S_3,list_S_4]
     
-    return list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv
+    return list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S
 
 def EMDC(features_csv,targets_csv, LOOCV=False):
     if LOOCV:
@@ -1068,4 +1071,4 @@ def EMDC(features_csv,targets_csv, LOOCV=False):
 if __name__ == "__main__":
     features_csv="features.csv"
     targets_csv="targets.csv" 
-    list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv=EMDC(features_csv,targets_csv, LOOCV=False)    
+    list_SFFS, list_FLD, list_LDA_mk,list_LDA_pik,list_LDA_S_inv=EMDC(features_csv,targets_csv, LOOCV=True)    

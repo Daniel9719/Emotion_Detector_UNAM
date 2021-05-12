@@ -255,7 +255,7 @@ def SFFS_wrapper_LOOCV(features_train, targets_train, pLDA):
     #8-11 features
     s=""
     for d in range(ind_car,ind_car+8):
-        if d>=ind_carn+4:
+        if d>=ind_car+4:
             break
         if d in IndexAdd:
             s+="1"

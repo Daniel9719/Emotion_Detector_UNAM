@@ -17,7 +17,7 @@ volatile float FLD_W[4][21];
 //--------------------------------------------------------------------
 
 extern float mult(float features, float W, float y);
-extern float func_LDA(float cons, float x, float ConvS, float ApriVect);
+extern float func_LDA(float cons, float x, float Cov_S, float ApriVect);
 extern float sub(float a, float b);
 
 //--------------------------------------------------------------------
@@ -30,7 +30,7 @@ extern float sub(float a, float b);
 float FLD(float* features,volatile float* W, uint32_t index){
     float y=0;
     uint32_t aux=0x1;
-    while(*W&&aux<=0x100000){
+    while(aux<=0x100000){
         if(index&aux){
             y=mult(*features, *(W++),y);
         }
@@ -52,10 +52,13 @@ float FLD(float* features,volatile float* W, uint32_t index){
 uint16_t LDA(volatile float* MeanVect, volatile float* ApriVect, volatile float* Cov_S, float entry, uint16_t level){
     float y_1, y_2;
     float x_1,x_2;
+    float Cov_S1, Cov_S2;
     x_1=sub(entry, MeanVect[level*2]);
     x_2=sub(entry, MeanVect[level*2+1]);
-    y_1=func_LDA(-0.5, x_1, Cov_S[level*2], ApriVect[level*2]);
-    y_2=func_LDA(-0.5, x_2, Cov_S[level*2+1], ApriVect[level*2+1]);
+    Cov_S1=__einvf32(Cov_S[level*2]);
+    Cov_S2=__einvf32(Cov_S[level*2+1]);
+    y_1=func_LDA(-0.5, x_1, Cov_S1, ApriVect[level*2]);
+    y_2=func_LDA(-0.5, x_2, Cov_S2, ApriVect[level*2+1]);
     if (y_1<y_2){
         return 1;
     }

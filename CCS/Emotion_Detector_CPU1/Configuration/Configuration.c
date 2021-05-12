@@ -131,19 +131,19 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
                     SCIB_WData(Buffer);
                     break;
                 case 0x07:       //----------------FLD MATRIX Wn 1--------------//
-                    DataQ16=(uint32_t)(FLD_W_Pt[W_Row*FEAT_LENGTH+W_Col]*Q16);
+                    DataQ16=(int32_t)(FLD_W_Pt[W_Row*FEAT_LENGTH+W_Col]*Q28);
                     SCIB_WData(DataQ16);
                     break;
                 case 0x08:       //----------------FLD MATRIX Wn 2--------------//
-                    DataQ16=(uint32_t)(FLD_W_Pt[W_Row*FEAT_LENGTH+W_Col]*Q16);
+                    DataQ16=(int32_t)(FLD_W_Pt[W_Row*FEAT_LENGTH+W_Col]*Q28);
                     SCIB_WData(DataQ16>>8);
                     break;
                 case 0x09:       //----------------FLD MATRIX Wn 3--------------//
-                    DataQ16=(uint32_t)(FLD_W_Pt[W_Row*FEAT_LENGTH+W_Col]*Q16);
+                    DataQ16=(int32_t)(FLD_W_Pt[W_Row*FEAT_LENGTH+W_Col]*Q28);
                     SCIB_WData(DataQ16>>16);
                     break;
                 case 0x0A:       //----------------FLD MATRIX Wn 4--------------//
-                    DataQ16=(int32_t)(FLD_W_Pt[W_Row*FEAT_LENGTH+W_Col]*Q16);
+                    DataQ16=(int32_t)(FLD_W_Pt[W_Row*FEAT_LENGTH+W_Col]*Q28);
                     SCIB_WData(DataQ16>>24);
                     break;
                 case 0x0B:       //----------------VECT CONFIG------------------//
@@ -151,19 +151,19 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
                     SCIB_WData(Buffer);
                     break;
                 case 0x0C:       //----------------mk/pik/S VECTOR 1------------//
-                    DataQ16=(uint32_t)(Pointer1[Vect_Col]*Q16);
+                    DataQ16=(int32_t)(Pointer1[Vect_Col]*Q28);
                     SCIB_WData(DataQ16);
                     break;
                 case 0x0D:       //----------------mk/pik/S VECTOR 2------------//
-                    DataQ16=(uint32_t)(Pointer1[Vect_Col]*Q16);
+                    DataQ16=(int32_t)(Pointer1[Vect_Col]*Q28);
                     SCIB_WData(DataQ16>>8);
                     break;
                 case 0x0E:       //----------------mk/pik/S VECTOR 3------------//
-                    DataQ16=(uint32_t)(Pointer1[Vect_Col]*Q16);
+                    DataQ16=(int32_t)(Pointer1[Vect_Col]*Q28);
                     SCIB_WData(DataQ16>>16);
                     break;
                 case 0x0F:       //----------------mk/pik/S VECTOR 4------------//
-                    DataQ16=(int32_t)(Pointer1[Vect_Col]*Q16);
+                    DataQ16=(int32_t)(Pointer1[Vect_Col]*Q28);
                     SCIB_WData(DataQ16>>24);
                     break;
                 case 0x10:       //-------------------EMOTION-------------------//
@@ -251,7 +251,7 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
                 break;
             case 0x0A:       //----------------FLD MATRIX Wn 4--------------//
                 DataQ16=(DataQ16 & 0x00FFFFFF)|((int32_t)(Data)<<24);
-                FLD_W_Pt[W_Row*FEAT_LENGTH+W_Col]=(float)(DataQ16)/Q16;
+                FLD_W_Pt[W_Row*FEAT_LENGTH+W_Col]=(float)(DataQ16)/Q28;
                 Config_Auto=0;
                 break;
             case 0x0B:       //----------------VECT CONFIG------------------//
@@ -284,7 +284,7 @@ void VariablesMap(uint16_t Var_Addr, uint16_t Data){
                 break;
             case 0x0F:       //----------------mk/pik/S VECTOR 4------------//
                 DataQ16=(DataQ16&0x00FFFFFF)|((int32_t)(Data)<<24);
-                Pointer1[Vect_Col]=(float)(DataQ16)/Q16;
+                Pointer1[Vect_Col]=(float)(DataQ16)/Q28;
                 Config_Auto=0;
                 break;
             case 0x11:       //----------------CHARACT CONFIG---------------//

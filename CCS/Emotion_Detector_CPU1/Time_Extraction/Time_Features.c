@@ -4,9 +4,6 @@
 
 extern volatile struct Features_Value Feat_Val;
 
-//Intrinsic
-float __sqrt(float scr);
-
 void TFeat_PreEstimation(float* PPI, int* num_PPI, float* pre_NN50, float* sum_PPI, float* pre_SDNN, float* pre_RMSSD){
 
     //Number of interval differences of successive PPI greater than 50ms

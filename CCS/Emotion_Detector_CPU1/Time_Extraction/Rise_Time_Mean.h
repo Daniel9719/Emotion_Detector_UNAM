@@ -14,6 +14,6 @@
 //--------------------------------------------------------------------
 #include <stdbool.h>
 
-float Rise_Time_Mean(float* scr, float Amp, int16_t numSCR, bool rdy);
+float Rise_Time_Mean(float* scr, float Amp, int16_t numSCR, uint16_t flag);
 
 #endif /* RISE_TIME_MEAN_H_ */

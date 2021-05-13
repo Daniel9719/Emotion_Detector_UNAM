@@ -63,6 +63,11 @@ void Quantiles(float* Amp, uint16_t numSCR){
     else{
         Feat_Val.ctl90 = Amp[n];
     }
+
+    Send_Feature(ctl25);
+    Send_Feature(ctl50);
+    Send_Feature(ctl75);
+    Send_Feature(ctl90);
 }
 
 

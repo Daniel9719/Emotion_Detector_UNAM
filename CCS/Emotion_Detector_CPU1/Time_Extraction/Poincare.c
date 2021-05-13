@@ -5,9 +5,6 @@
 
 extern volatile struct Features_Value Feat_Val;
 
-//Intrinsic
-float __sqrt(float scr);
-
 void PFeat_PreEstimation(float* PPI, uint16_t* num_PPI, float* sum_prj_SD1, float* sum_prj_SD2, float* meanSD1, float* meanSD2){
     float prj_SD2 = 0, prj_SD1 = 0;
 

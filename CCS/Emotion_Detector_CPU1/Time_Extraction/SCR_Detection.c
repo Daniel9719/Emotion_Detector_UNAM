@@ -19,6 +19,7 @@ void SCR_Detection(int16_t x_SCR, uint16_t flag){
     if((SCR_data[1] > 0 && SCR_data[0] < 0) || SCR_flg){
         SCR_flg = true;
         det_scr[k] = (float)SCR_data[1];
+        k++;
         if(SCR_data[1] - SCR_data[0] < 0){
             Amp[NumSCR] = (float)SCR_data[0];
             mTL[NumSCR] = Rise_Time_Mean(det_scr, Amp[NumSCR], NumSCR, flag);
@@ -26,7 +27,6 @@ void SCR_Detection(int16_t x_SCR, uint16_t flag){
             SCR_flg = false;
             k = 0;
         }
-        k++;
     }
 
     SCR_data[0] = x_SCR;

@@ -12,6 +12,6 @@
 //%%%%%%%%%%%%%%%    SCR DETECTION FUNCTION   %%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 
-void SCR_Detection(int16_t x_SCR, bool rdy);
+void SCR_Detection(int16_t x_SCR, uint16_t flag);
 
 #endif /* SCR_DETECTION_H_ */

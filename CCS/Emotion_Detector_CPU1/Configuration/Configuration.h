@@ -12,7 +12,8 @@
 #include <tms320f28379d.h>
 
 #define FEAT_LENGTH 21
-#define Q16 65536
+#define Q16 65536.0
+#define Q28 268435456.0
 
 struct Features_Asignation{
     uint16_t PRV[4];

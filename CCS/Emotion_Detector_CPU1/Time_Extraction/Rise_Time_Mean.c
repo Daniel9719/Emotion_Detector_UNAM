@@ -4,16 +4,17 @@
 
 extern volatile struct Features_Value Feat_Val;
 
-float Rise_Time_Mean(float* scr, float Amp, int16_t numSCR, bool rdy){
-    static float mTL = 0;
+float Rise_Time_Mean(float* scr, float Amp, int16_t numSCR, uint16_t flag){
+    static float mTLev = 0;
     int16_t indx_10 = -1, indx_90 = 0, i = 0;
     float p_10 = 0, p_90 = 0;
 
-    if(rdy){
+    if(flag>3){
         for(i=0; i<numSCR; i++){
            Feat_Val.mTL += scr[i];
         }
         Feat_Val.mTL = Feat_Val.mTL/numSCR;
+        Send_Feature(mTL);
     }
     else{
         p_10 = Amp*0.1;
@@ -27,8 +28,8 @@ float Rise_Time_Mean(float* scr, float Amp, int16_t numSCR, bool rdy){
                 else{
                     indx_90 = i - 1;
                 }
-                mTL = (indx_90 - indx_10)/32.0;
-                return mTL;
+                mTLev = (indx_90 - indx_10)/32.0;
+                return mTLev;
             }
             else if(scr[i] > p_10 && indx_10 == -1){
                 if((scr[i] - p_10) < (p_10 - scr[i-1])){
@@ -40,4 +41,5 @@ float Rise_Time_Mean(float* scr, float Amp, int16_t numSCR, bool rdy){
             }
         }
     }
+    return 0;
 }

@@ -29,6 +29,7 @@ bool PPI_Estimation(int x_PPG, float* Y, float* X){
         Poincare_Graph(PPI, sum_flg);
         Time_Features(PPI, sum_flg);
         sum_flg--;
+        indx_dist++;
         return 0;
     }
 

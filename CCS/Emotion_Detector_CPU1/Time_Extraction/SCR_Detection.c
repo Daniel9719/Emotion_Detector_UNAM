@@ -33,6 +33,7 @@ void SCR_Detection(int16_t x_SCR, uint16_t flag){
 
     if(flag>3){
         MergeSort(Amp, 0, NumSCR-1);
+	MergeSort(mTL, 0, NumSCR-1);
         for(i=0; i<NumSCR; i++){
             if(Amp[i] > 0.1*Amp[NumSCR-1]){
                 Amp[j] = Amp[i];

@@ -7,6 +7,7 @@
 #include "Configuration/Configuration.h"
 #include "Freq_Extraction/Cubic_Spline.h"
 #include "Time_Extraction/PPI_Estimation.h"
+#include "Time_Extraction/SCR_Detection.h"
 #include "Conditioning/FIR_filter.h"
 
 //%%%%%%%%%%%%%%%%%%    MAIN VARIABLES    %%%%%%%%%%%%%%%%%%
@@ -84,6 +85,7 @@ __interrupt void Inter_XINT2 (void){
 __interrupt void Inter_I2CA (void){
     static char Conmut=1;
     static uint16_t i=0, j=3, k=0;
+    int16_t SCR_aux=0;
     //-------Calibration variables---------//
     static uint16_t Clb_Windw=0, Offset=7, Current=0;
     static int32_t Clb_Max=0, Clb_Min=16383, Clb_Ampl=0;
@@ -142,7 +144,9 @@ __interrupt void Inter_I2CA (void){
                     }
                 }
                 if(sum_flg>=3){
-                    SCR[i]=FIR_EDA(Biom1.int_EDA);
+                    SCR_aux=FIR_EDA(Biom1.int_EDA);
+                    SCR_Detection(SCR_aux,sum_flg);
+                    SCR[i]=(float)SCR_aux;
                     if(WDW_ready==true){
                         Main_Running=true;
                         WDW_ready=false;

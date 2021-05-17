@@ -1,4 +1,4 @@
-		.global _mult,_func_LDA,_sub
+		.global _mult,_func_LDA,_sub,_div
 
 _mult ; R0H=features,R1H=W, R2H=y
 		MPYF32 R0H, R0H, R1H
@@ -22,5 +22,13 @@ _func_LDA ; R0H=-0.5,R1H=x, R2H=Conv_S, R3H=ApriVect
 
 _sub ; R0H=entry,R1H=Mean_Vect
 		SUBF32 R0H, R0H, R1H
-		LRETR
+		LRETR              ;Return to C program
 
+_div ; R0H=entry
+		MOVF32 R1H, #1.0
+		DIVF32 R0H, R1H, R0H
+		NOP
+		NOP
+		NOP
+		NOP
+		LRETR              ;Return to C program

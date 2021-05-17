@@ -10,7 +10,7 @@ n_PPGBand=200;
 f_PPGLow = 0.4;      %Cut-off frequency of PPG
 f_PPGHigh = 3.58;         %Cut-off frequency of PPG
 
-wn_EDA = (f_EDA)/(Fs_EDA/2); 
+wn_EDA = (f_EDAHigh)/(Fs_EDA/2); 
 h_EDA = fir1(n_EDA,wn_EDA);
 
 wnBand_PPG = [(f_PPGLow)/(Fs_PPG/2) (f_PPGHigh)/(Fs_PPG/2)]; 

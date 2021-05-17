@@ -19,6 +19,7 @@ volatile float FLD_W[4][21];
 extern float mult(float features, float W, float y);
 extern float func_LDA(float cons, float x, float Cov_S, float ApriVect);
 extern float sub(float a, float b);
+extern float div(float a);
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%%%    FLD FUNCTION    %%%%%%%%%%%%%%%%%%%%
@@ -55,8 +56,8 @@ uint16_t LDA(volatile float* MeanVect, volatile float* ApriVect, volatile float*
     float Cov_S1, Cov_S2;
     x_1=sub(entry, MeanVect[level*2]);
     x_2=sub(entry, MeanVect[level*2+1]);
-    Cov_S1=__einvf32(Cov_S[level*2]);
-    Cov_S2=__einvf32(Cov_S[level*2+1]);
+    Cov_S1=div(Cov_S[level]);
+    Cov_S2=div(Cov_S[level+1]);
     y_1=func_LDA(-0.5, x_1, Cov_S1, ApriVect[level*2]);
     y_2=func_LDA(-0.5, x_2, Cov_S2, ApriVect[level*2+1]);
     if (y_1<y_2){

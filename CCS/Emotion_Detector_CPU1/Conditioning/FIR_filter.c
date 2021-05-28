@@ -13,7 +13,7 @@ int16_t xb_PPG[order];
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%%%    ASM FUNCTIONS    %%%%%%%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
-extern int16_t firFilter(int16_t sample,int16_t Num_coef,int16_t* coef_Adress, int16_t* buffer_Adress);
+extern int16_t firFilter(int16_t sample,int16_t Num_coef,int16_t* coef_Address, int16_t* buffer_Address);
 
 //--------------------------------------------------------------------
 //%%%%%%%%%%%%%%%%%%%%    FILTERS FUNCTIONS    %%%%%%%%%%%%%%%%%%%%

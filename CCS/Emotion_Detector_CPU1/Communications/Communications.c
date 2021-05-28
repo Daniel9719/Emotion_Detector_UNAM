@@ -145,7 +145,7 @@ __interrupt void Inter_I2CA (void){
                 }
                 EDA_aux=FIR_EDA(Biom1.int_EDA);
                 if(sum_flg>=3){
-//                    SCR_Detection(EDA_aux,sum_flg);
+                    SCR_Detection(EDA_aux,sum_flg);
                     SCR[i]=(float)EDA_aux;
                     if(WDW_ready==true){
                         Main_Running=true;

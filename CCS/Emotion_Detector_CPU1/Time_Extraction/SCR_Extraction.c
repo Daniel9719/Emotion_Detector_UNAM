@@ -10,7 +10,7 @@ int16_t buff[N];
 //--------------------------------------------------------------------
 extern int16_t convol(int16_t sample,int16_t Num_window, int16_t* bartlett_Add, int16_t* buffer_Add);
 
-void SCR_Extraction(int16_t x_EDA, bool rdy){
+void SCR_Extraction(int16_t x_EDA, uint16_t rdy){
     int16_t y = 0, diff_SCR = 0;
     int16_t EDA[2];
 

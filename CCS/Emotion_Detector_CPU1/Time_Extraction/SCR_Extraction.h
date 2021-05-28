@@ -6,7 +6,7 @@
 //%%%%%%%%%%%%%%%    SCR EXTRACTION FUNCTION   %%%%%%%%%%%%%%%
 //--------------------------------------------------------------------
 
-void SCR_Extraction(int16_t x_EDA, bool rdy);
+void SCR_Extraction(int16_t x_EDA, uint16_t rdy);
 
 
 #endif /* SCR_EXTRACTION_H_ */

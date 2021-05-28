@@ -3,7 +3,10 @@ restore_data_on_startup = True
 save_data_on_exit = True
 save_history = True
 save_non_project_files = False
+project_type = empty-project-type
+recent_files = ['Main.py']
 
 [main]
 version = 0.2.0
-recent_files = ['ML\\EMDC.py', 'ML\\LDA.py', 'ML\\SFFS.py', 'ML\\FLD.py', 'D:\\Documentos\\IEEE\\Fundamentos de aprendizaje automático\\ML\\LDA\\test.py']
+recent_files = []
+

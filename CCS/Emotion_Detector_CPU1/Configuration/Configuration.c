@@ -80,7 +80,7 @@ void Send_Feature(enum Features_Labels Number){
                 VariablesMap(0x94,0);
                 VariablesMap(0x95,0);
             }
-            Features=0x0;
+            Features=0;
         }
     }
 }

@@ -85,7 +85,7 @@ __interrupt void Inter_XINT2 (void){
 __interrupt void Inter_I2CA (void){
     static char Conmut=1;
     static uint16_t i=0, j=3, k=0;
-    int16_t SCR_aux=0;
+    int16_t EDA_aux=0;
     //-------Calibration variables---------//
     static uint16_t Clb_Windw=0, Offset=7, Current=0;
     static int32_t Clb_Max=0, Clb_Min=16383, Clb_Ampl=0;
@@ -143,10 +143,10 @@ __interrupt void Inter_I2CA (void){
                         i=0;
                     }
                 }
+                EDA_aux=FIR_EDA(Biom1.int_EDA);
                 if(sum_flg>=3){
-                    SCR_aux=FIR_EDA(Biom1.int_EDA);
-                    SCR_Detection(SCR_aux,sum_flg);
-                    SCR[i]=(float)SCR_aux;
+                    SCR_Detection(EDA_aux,sum_flg);
+                    SCR[i]=(float)EDA_aux;
                     if(WDW_ready==true){
                         Main_Running=true;
                         WDW_ready=false;
